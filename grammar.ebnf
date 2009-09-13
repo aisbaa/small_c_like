@@ -9,17 +9,32 @@
 +---------------------------------+
 
 
-+- FUNCTION DECLARATION ----------+
++- FUNCTION ----------------------+
 <declare_function>  ::= <data_type> <function_name> "(" [<parameter_list>] ")" "{" <function_body> "};"
 
-+- FUNCTION CALL -----------------+
 <function_call>     ::= [<variable> "="] <function_name> "(" [<parameter_list>] ");"
 
-+- FUNCTION STUFF-----------------+
++-+
 <function_name>     ::= <word>
 
 <function_body>     ::= <code_block> <return> <code_block>
 
++- ARRAY -------------------------+
+<array_declaration> ::= <data_type> <word> "[" <natural_number> "]" ["=" <fill_array_values>] ";"
+
+<array_usage>       ::= word "[" <natural_number> "]"
+
++-+
+<fill_array_values> ::= <numeric_array_fill> | <char_array_fill>
+
+<numeric_array_fill>::= "{" <int> {"," <int>} "}"
+
+<char_array_fill>   ::= '"' <word> '"'
+
++- STRUCT ------------------------+
+<struct>            ::= <name> "{" <struct_body> "};"
+
+<struct_body>       ::= [ { <variable_declaration> | <struct_declaration> } ]
 
 +- SIMPLE DATA TYPES -------------+
 <data_type>         ::= "int" | "char"
@@ -29,16 +44,13 @@
 <char>              ::= "'" (<letter> | <digit>) "'"
 
 +- GENERIC -----------------------+
-
-<parameter_list>    ::= <parameter> ["," <parameter_list>]
+<parameter_list>    ::= <parameter> [ {"," <parameter>} ]
 
 <parameter>         ::= <data_type> <word>
 
-<code_block>        ::= [
-                          {
-                            ( <variable_declaration> | <function_call> | <while> | <for> | <if> | <return> )
-                          }
-                        ]
+<code_block>        ::= [ { ( <simple_code_block> | <return> ) } ]
+
+<simple_code_block> ::= <variable_declaration> | <function_call> | <while> | <for> | <if>
 
 +-+
 <natural_number>    ::= <digit> | <digit_exclude_zero> {<digit>}
@@ -48,7 +60,7 @@
 <digit>             ::= "0" | <digit_exclude_zero>
 
 +-+
-<word>              ::= <letter> {(<word>| <digit>)}
+<word>              ::= <letter> {(<letter>| <digit>)}
 
 <letter>            ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
                       | "H" | "I" | "J" | "K" | "L" | "M" | "N"
