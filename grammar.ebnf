@@ -1,0 +1,62 @@
++---------------------------------+
+|                                 |
+| <> - for non terminal statement |
+| [] - optional items             |
+| {} - repeat 0 or more times     |
+| () - group                      |
+| |  - alternative's              |
+|                                 |
++---------------------------------+
+
+
++- FUNCTION DECLARATION ----------+
+<declare_function>  ::= <data_type> <function_name> "(" [<parameter_list>] ")" "{" <function_body> "};"
+
++- FUNCTION CALL -----------------+
+<function_call>     ::= [<variable> "="] <function_name> "(" [<parameter_list>] ");"
+
++- FUNCTION STUFF-----------------+
+<function_name>     ::= <word>
+
+<function_body>     ::= <code_block> <return> <code_block>
+
+
++- SIMPLE DATA TYPES -------------+
+<data_type>         ::= "int" | "char"
+
+<int>               ::= "0" | [ "-" ] <natural_number>
+
+<char>              ::= "'" (<letter> | <digit>) "'"
+
++- GENERIC -----------------------+
+
+<parameter_list>    ::= <parameter> ["," <parameter_list>]
+
+<parameter>         ::= <data_type> <word>
+
+<code_block>        ::= [
+                          {
+                            ( <variable_declaration> | <function_call> | <while> | <for> | <if> | <return> )
+                          }
+                        ]
+
++-+
+<natural_number>    ::= <digit> | <digit_exclude_zero> {<digit>}
+
+<digit_exclude_zero>::= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+<digit>             ::= "0" | <digit_exclude_zero>
+
++-+
+<word>              ::= <letter> {(<word>| <digit>)}
+
+<letter>            ::= "A" | "B" | "C" | "D" | "E" | "F" | "G"
+                      | "H" | "I" | "J" | "K" | "L" | "M" | "N"
+                      | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+                      | "V" | "W" | "X" | "Y" | "Z" |
+                      | "a" | "b" | "c" | "d" | "e" | "f" | "g"
+                      | "h" | "i" | "j" | "k" | "l" | "m" | "n"
+                      | "o" | "p" | "q" | "r" | "s" | "t" | "u"
+                      | "v" | "w" | "x" | "y" | "z"
+
++---------------------------------+
