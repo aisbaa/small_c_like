@@ -9,15 +9,108 @@
 +---------------------------------+
 
 
-+- FUNCTION ----------------------+
-<declare_function>  ::= <data_type> <function_name> "(" [<parameter_list>] ")" "{" <function_body> "};"
+* simple program scheme
+** function declaration
+*** code block
+** main function
+*** code block
 
-<function_call>     ::= [<variable> "="] <function_name> "(" [<parameter_list>] ");"
+
+* code block
+** var declration
+*** simple
+*** with assignment
+**** data
+**** expresion
+***** arithmetic
+***** boolean
+** var assignment
+*** data
+*** expresion
+**** arithmetic
+**** boolean
+** control structures
+*** if
+*** if else
+** loop structures
+*** for
+**** code block
+*** while
+**** code block
+** function calls
+*** simple
+*** with assignment
+** io structures
+*** input
+*** output
+** return
+*** return code
+**** var
+**** value
+
+
+* bnf
+
++- PROGRAM -----------------------+
+<PROGRAM>              ::= {[<function_declaration>]}
+                           "int main() {" <code_block> "}"
+
++- FUNCTION ----------------------+
+<function_declaration> ::= <data_type> <function_name> "(" [<parameter_list>] ")" "{" <function_body> "};"
+
+<function_call>        ::= [<variable> "="] <function_name> "(" [<parameter_list>] ");"
 
 +-+
-<function_name>     ::= <word>
+<function_name>        ::= <word>
 
-<function_body>     ::= <code_block> <return> <code_block>
+<function_body>        ::= <code_block> <return> <code_block>
+
++- CODE BLOCK --------------------+
+<code_block>        ::= [ { ( <simple_code_block> | <return> ) } ]
+
+<simple_code_block> ::= <variable_declaration> | <function_call> | <while> | <for> | <if>
+
+
++- OUTPUT ----------------------------+
+<output_declaration>   ::= "printf(" <output_data> ");"
+<output_data>          ::= ["'" <word> "'"] | <variable>
+
+// ar tik viena kintamajį galima išspausdint?
+
+
++- INPUT -----------------------------+
+<input_declaration>    ::= "scanf(" <variable> ");"
+
+
++- CONTROL STATMENTS -----------------+
+<if>                   ::= "if (" <if_body> ")" "{" <simple_code_block> "}"
+<if_body>              ::= <if_declaration> | <if_declaration> <logical_operator> <if_body>
+<if_declaration>       ::= <type> <comparison_operator> <type>
+<type>                 ::= <variable> | <digit> | '"' <word> '"'
+
++- CYCLES ----------------------------+
+<for>                  ::= "for (" <for_body> ")" "{" <simple_code_block> "}"
+<for_body>             ::= "int" <variable> "=" <digit> ";" <variable> <for_comparison> <digit> ";" <variable> "=" <variable> "+" <digit> 
+<for_comparison>       ::= "<" | "<="
+
+<while>                ::= "while (" <while_body> ")" "{" <simple_code_block> "}"
+<while_body>           ::= ( <variable> <comparison_operator> ) <digit> | '"' <word> '"'
+
+<comparison_operator>  ::= "==" | "!=" | "<>" | ">" | "<" | "<=" | ">="
+<logical_operator>     ::= "&&" | "||"
+
++- ARITHMETIC ------------------------+
+<arithmetic_syntax>    ::= <variable> | <variable_declaration> "=" <expression> ";"
+<expression>           ::= <term> | <factor> <composition> <term>
+<term>                 ::= <factor> | <factor> <multi_div> <term>
+<factor>               ::= <digit> | "(" <expression> ")"
+<composition>          ::= "+" | "-"
+<multi_div>            ::= "*" | "/"
+
++- VARIABLE --------------------------+
+<variable_declaration> ::= <data_type> <variable> ";" | <data_type> <variable> "=" <variable_value> ";"
+<variable>             ::= <word>
+<variable_value>       ::= <digit> | '"' <word> '"'
 
 +- ARRAY -------------------------+
 <array_declaration> ::= <data_type> <word> "[" <natural_number> "]" ["=" <fill_array_values>] ";"
@@ -43,14 +136,11 @@
 
 <char>              ::= "'" (<letter> | <digit>) "'"
 
+
 +- GENERIC -----------------------+
 <parameter_list>    ::= <parameter> [ {"," <parameter>} ]
 
 <parameter>         ::= <data_type> <word>
-
-<code_block>        ::= [ { ( <simple_code_block> | <return> ) } ]
-
-<simple_code_block> ::= <variable_declaration> | <function_call> | <while> | <for> | <if>
 
 +-+
 <natural_number>    ::= <digit> | <digit_exclude_zero> {<digit>}
@@ -72,45 +162,3 @@
                       | "v" | "w" | "x" | "y" | "z"
 
 +---------------------------------+
-
-
-
-+- CYCLES ----------------------------+
-<if>                   ::= "if (" <if_body> ")" "{" <simple_code_block> "}"
-<if_body>              ::= <if_declaration> | <if_declaration> <logical_operator> <if_body>
-<if_declaration>       ::= <type> <comparison_operator> <type>
-<type>                 ::= <variable> | <digit> | '"' <word> '"'
-
-<for>                  ::= "for (" <for_body> ")" "{" <simple_code_block> "}"
-<for_body>             ::= "int" <variable> "=" <digit> ";" <variable> <for_comparison> <digit> ";" <variable> "=" <variable> "+" <digit> 
-<for_comparison>       ::= "<" | "<="
-
-<while>                ::= "while (" <while_body> ")" "{" <simple_code_block> "}"
-<while_body>           ::= ( <variable> <comparison_operator> ) <digit> | '"' <word> '"'
-
-<comparison_operator>  ::= "==" | "!=" | "<>" | ">" | "<" | "<=" | ">="
-<logical_operator>     ::= "&&" | "||"
-
-
-+- VARIABLE --------------------------+
-<variable_declaration> ::= <data_type> <variable> ";" | <data_type> <variable> "=" <variable_value> ";"
-<variable>             ::= <word>
-<variable_value>       ::= <digit> | '"' <word> '"'
-
-
-+- OUTPUT ----------------------------+
-<output_declaration>   ::= "printf(" <output_data> ");"
-<output_data>          ::= ["'" <word> "'"] | <variable>
-
-
-+- INPUT -----------------------------+
-<input_declaration>    ::= "scanf(" <variable> ");"
-
-
-+- ARITHMETIC ------------------------+
-<arithmetic_syntax>    ::= <variable> | <variable_declaration> "=" <expression> ";"
-<expression>           ::= <term> | <factor> <composition> <term>
-<term>                 ::= <factor> | <factor> <multi_div> <term>
-<factor>               ::= <digit> | "(" <expression> ")"
-<composition>          ::= "+" | "-"
-<multi_div>            ::= "*" | "/"
