@@ -1,0 +1,9 @@
+** OUTPUT
+<output_declaration>    ::= "printf(" <output_data> ");"
+
+*** OUTPUT INTERNALS
+
+<output_data>           ::= <out_word> | <out_var> | <mixed>
+<out_word>              ::= '"' <word> '"'
+<out_var>               ::= <variable_name>
+<mixed>                 ::= [ <out_word> | <out_var> ] "+" <output_data>
