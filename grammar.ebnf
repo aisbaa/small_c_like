@@ -78,7 +78,10 @@
 <input_declaration>     ::= "scanf(" <variable_name> ");"
 
 ** CONTROL STATEMENTS
-<if>                    ::= "if (" <condition> ")" "{" <code_block> "}" [ "else {" <code_block> "}" ]
+<if>                    ::= "if (" <condition> ")" "{" <code_block> "}" [ <else_declaration> ]
+<else_declaration>		::= <else_if> | <else>
+<else_if>				::= "else" <if>
+<else>					::= "else {" <code_block> "}"
 
 *** CONTROL STATEMENTS INTERNALS
 <condition>             ::= <bool_value> | <comparison> | <logic_operation>
@@ -86,17 +89,16 @@
 <comparison>            ::= <comparable> <comparison_operator> <comparable>
 <comparable>            ::= <variable_name> | <digit> | '"' <word> '"'
 
-// <if_expression>          ::= <if_declaration> [ <logical_operator> <if_expression> ]
-// <if_declaration>        ::= <type> <comparison_operator> <type>
-
 *** COMPARISON OPERATORS
 <comparison_operator>   ::= "==" | "!=" | "<>" | ">" | "<" | "<=" | ">="
 <logical_operator>      ::= "&&" | "||"
 
 ** CYCLES
 *** FOR
-<for>                   ::= "for (" <for_inside_decl> ";" <for_inside_test>; <for_inside_action> ")" "{" <code_block> "}"
+<for>                   ::= "for (" <forever_for> | <for_dec> ")" "{" <code_block> "}"
 **** FOR INTERNALS
+<forever_for>			::= ";;"
+<for_dec>				::= <for_inside_decl> ";" <for_inside_test>; <for_inside_action>
 <for_inside_decl>       ::= "int" <variable_name> "=" <int>
 <for_inside_test>       ::= <variable_name> <for_comparison> <int>
 <for_inside_action>     ::= <variable_name> "=" <variable_name> "+" <int>
@@ -110,8 +112,10 @@
 <while>                 ::= "while (" <while_body> ")" "{" <code_block> "}"
 
 **** WHILE INTERNALS
-<while_body>            ::= <variable_name> <comparison_operator> <digit> | '"' <word> '"'
-// okay kodėl while body gali turėti <word> ?
+<while_body>			::= <bool_operator> | <digit_operator> | <logic_op>
+<logic_op>				:: <while_body> <logical_operator> <while_body>
+<bool_operator>			::= <variable> <comparison_operator> <bool_value>
+<digit_operator>		::= <variable> <comparison_operator> <digit>
 
 ** STRUCT
 <struct_schedule>       ::= <struct_name> "{" <struct_body> "};"
@@ -144,9 +148,6 @@
 <mul>                   ::= "*"
 <div>                   ::= "/"
 <mod>                   ::= "%"
-
-*** manau nereikalingas
-<arithmetic_syntax>     ::= <variable_name> | <variable_declaration> "=" <expression> ";"
 
 ** ARRAY
 <array_declaration>     ::= <data_type> <word> "[" <natural_number> "]" ["=" <fill_array_values>] ";"
