@@ -79,9 +79,9 @@
 
 ** CONTROL STATEMENTS
 <if>                    ::= "if (" <condition> ")" "{" <code_block> "}" [ <else_declaration> ]
-<else_declaration>		::= <else_if> | <else>
-<else_if>				::= "else" <if>
-<else>					::= "else {" <code_block> "}"
+<else_declaration>      ::= <else_if> | <else>
+<else_if>               ::= "else" <if>
+<else>                  ::= "else {" <code_block> "}"
 
 *** CONTROL STATEMENTS INTERNALS
 <condition>             ::= <bool_value> | <comparison> | <logic_operation>
@@ -97,8 +97,8 @@
 *** FOR
 <for>                   ::= "for (" <forever_for> | <for_dec> ")" "{" <code_block> "}"
 **** FOR INTERNALS
-<forever_for>			::= ";;"
-<for_dec>				::= <for_inside_decl> ";" <for_inside_test>; <for_inside_action>
+<forever_for>           ::= ";;"
+<for_dec>               ::= <for_inside_decl> ";" <for_inside_test>; <for_inside_action>
 <for_inside_decl>       ::= "int" <variable_name> "=" <int>
 <for_inside_test>       ::= <variable_name> <for_comparison> <int>
 <for_inside_action>     ::= <variable_name> "=" <variable_name> "+" <int>
@@ -112,10 +112,10 @@
 <while>                 ::= "while (" <while_body> ")" "{" <code_block> "}"
 
 **** WHILE INTERNALS
-<while_body>			::= <bool_operator> | <digit_operator> | <logic_op>
-<logic_op>				:: <while_body> <logical_operator> <while_body>
-<bool_operator>			::= <variable> <comparison_operator> <bool_value>
-<digit_operator>		::= <variable> <comparison_operator> <digit>
+<while_body>            ::= <bool_operator> | <digit_operator> | <logic_op>
+<logic_op>              :: <while_body> <logical_operator> <while_body>
+<bool_operator>         ::= <variable> <comparison_operator> <bool_value>
+<digit_operator>        ::= <variable> <comparison_operator> <digit>
 
 ** STRUCT
 <struct_schedule>       ::= <struct_name> "{" <struct_body> "};"
