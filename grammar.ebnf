@@ -95,10 +95,10 @@
 
 ** CYCLES
 *** FOR
-<for>                   ::= "for (" <forever_for> | <for_dec> ")" "{" <code_block> "}"
+<for>                   ::= "for (" <infinite_loop> | <for_dec> ")" "{" <code_block> "}"
 **** FOR INTERNALS
-<forever_for>           ::= ";;"
-<for_dec>               ::= <for_inside_decl> ";" <for_inside_test>; <for_inside_action>
+<infinite_loop>         ::= ";;"
+<for_dec>               ::= <for_inside_decl> ";" <for_inside_test> ";" <for_inside_action>
 <for_inside_decl>       ::= "int" <variable_name> "=" <int>
 <for_inside_test>       ::= <variable_name> <for_comparison> <int>
 <for_inside_action>     ::= <variable_name> "=" <variable_name> "+" <int>
