@@ -1,39 +1,4 @@
-* BNF Syntax
-  |--------------+----------------------------|
-  | symbol       | explanation                |
-  |--------------+----------------------------|
-  | []           | optional items             |
-  | {}           | repeat 0 or more times     |
-
-* notes
-** gali būti klaidų
-** use <natural_number> instead of <digit>
-** no groups
-** add <string>
-** check <data_types>
-
-* structure
-** [r1] program
-** [r1] function
-** [r1] function call
-** [r1] Io structures
-*** output
-*** input
-** [r1] control structures
-*** if { else if } [ else ]
-** [r1] cycles structures
-*** for
-*** while
-** [r1] structures
-** [r1] arrays
-** [r1] variables
-** [rock solid] arithmetic
-** return
-*** return code
-**** var
-**** value
-
-* EBNF FORM
+* EBNF
 ** PROGRAM
 <PROGRAM>               ::= { <declaration> } "int main() {" <code_block> "}"
 
@@ -65,7 +30,7 @@
 <mixed>                 ::= [ <out_word> | <out_var> ] "+" <output_data>
 
 ** INPUT
-<input_declaration>     ::= <variable_name> = "scanf();"
+<input_declaration>     ::= <variable_name> = "scanf(" <natral_number> ");"
 
 ** CONTROL STATEMENTS
 <if>                    ::= "if (" <condition> ")" "{" <code_block> "}" [ <else_declaration> ]
@@ -196,3 +161,54 @@
 
 
 
+
+* EXAMPLE
+struct coordinates3d {
+  int x, y, z;
+} coordinates3d;
+
+int add(int a, int b) {
+  return (a +b);
+};
+
+int grt(int a, int b) {
+  if (a > b)
+    return true;
+  else
+    return false;
+};
+
+int main() {
+  int sveikas = 5;
+  char raide = 'a';
+
+  int  aibe [5] = {1, 2, 3, 4, 5};
+  char raides[5] = "abcd\0";
+  char zodis[6] = "Labas\0";
+
+
+  sveikas = sveikas +5 *10 /2 -6;
+
+
+  while (sveikas > 5)
+    sveikas -= 5;
+
+  printf("\n%d\n", sveikas);
+
+  if (sveikas == 5) {
+    printf("puikumelis sveikas == 5\n");
+  } else if (sveikas > 3) {
+    printf("puikumelis sveikas > 3\n");
+  } else if (sveikas < 4) {
+    printf("puikumelis sveikas < 4\n");
+  } else if (sveikas <= 3) {
+    printf("puikumelis sveikas <= 3\n");
+  } else if (sveikas >= 1) {
+    printf("puikumelis sveikas >= 1\n");
+
+  printf("zodis = " +zodis +"\ngalite pakeisti zodzio reiksme: ");
+  scanf(5);
+  printf(zodis +"\n" +raides);
+
+  return 0;
+}
