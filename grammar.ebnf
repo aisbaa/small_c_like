@@ -1,42 +1,9 @@
-* Syntax explanation
+* BNF Syntax
   |--------------+----------------------------|
   | symbol       | explanation                |
   |--------------+----------------------------|
   | []           | optional items             |
   | {}           | repeat 0 or more times     |
-
-* simple program scheme
-** [done] function declaration
-*** code block
-** [done] main function
-*** code block
-
-* code block
-** [done] function calls
-*** simple
-*** with assignment
-** [done] Io structures
-*** [done] output
-*** [done] input
-** [done] control structures
-*** [done] if
-*** [done] if { else if } else
-** [half semi] cycles structures
-*** [semi] for
-**** code block
-*** while
-**** code block
-** variable
-*** [done] var declaration
-*** [done] var assignment
-*** [done] arithmetic
-*** [done] array
-*** data types
-** [done] structures
-** return
-*** return code
-**** var
-**** value
 
 * notes
 ** gali būti klaidų
@@ -45,16 +12,32 @@
 ** add <string>
 ** check <data_types>
 
+* structure
+** [r1] program
+** [r1] function
+** [r1] function call
+** [r1] Io structures
+*** output
+*** input
+** [r1] control structures
+*** if { else if } [ else ]
+** [r1] cycles structures
+*** for
+*** while
+** [r1] structures
+** [r1] arrays
+** [r1] variables
+** [rock solid] arithmetic
+** return
+*** return code
+**** var
+**** value
+
 * EBNF FORM
 ** PROGRAM
-<PROGRAM>               ::= [ { <declaration> } ] "int main() {" <code_block> "}"
+<PROGRAM>               ::= { <declaration> } "int main() {" <code_block> "}"
 
 <declaration>           ::= <function_declaration> | <struct_schedule>
-
-** CODE BLOCK
-<code_block>            ::= [ { <simple_code_block> | <return> } ]
-
-<simple_code_block>     ::= <variable_declaration> | <variable_assignment> | <function_call> | <while> | <for> | <if>
 
 ** FUNCTION
 <function_declaration>  ::= <data_type> <function_name> "(" [<parameter_list>] ")" "{" <function_body> "};"
@@ -66,16 +49,23 @@
 
 <function_body>         ::= <code_block> 
 
+** CODE BLOCK
+<code_block>            ::= { <simple_code_block> | <return> }
+
+<simple_code_block>     ::= <variable_declaration> | <variable_assignment> | <function_call> | <while> | <for> | <if>
+
 ** OUTPUT
 <output_declaration>    ::= "printf(" <output_data> ");"
 
 *** OUTPUT INTERNALS
-<output_data>           ::= '"' <word> '"' | <variable_name>
-// c like (hard one)
-// <output_data>        ::= "'" <word> "'" [ <variable_name> [{, <variable_name>}] ]
+
+<output_data>           ::= <out_word> | <out_var> | <mixed>
+<out_word>              ::= '"' <word> '"'
+<out_var>               ::= <variable_name>
+<mixed>                 ::= [ <out_word> | <out_var> ] "+" <output_data>
 
 ** INPUT
-<input_declaration>     ::= "scanf(" <variable_name> ");"
+<input_declaration>     ::= <variable_name> = "scanf();"
 
 ** CONTROL STATEMENTS
 <if>                    ::= "if (" <condition> ")" "{" <code_block> "}" [ <else_declaration> ]
@@ -83,61 +73,73 @@
 <else_if>               ::= "else" <if>
 <else>                  ::= "else {" <code_block> "}"
 
-*** CONTROL STATEMENTS INTERNALS
+*** CONTROL STATEMENT INTERNALS
 <condition>             ::= <bool_value> | <comparison> | <logic_operation>
 <logic_operation>       ::= <bool_value> <logical_operator> <bool_value>
 <comparison>            ::= <comparable> <comparison_operator> <comparable>
 <comparable>            ::= <variable_name> | <digit> | '"' <word> '"'
 
 *** COMPARISON OPERATORS
-<comparison_operator>   ::= "==" | "!=" | "<>" | ">" | "<" | "<=" | ">="
+<comparison_operator>   ::= "==" | "!=" | ">" | "<" | "<=" | ">="
 <logical_operator>      ::= "&&" | "||"
 
 ** CYCLES
 *** FOR
-<for>                   ::= "for (" <infinite_loop> | <for_dec> ")" "{" <code_block> "}"
+<for>                   ::= "for (" <for_inside_decl> ";" <for_inside_test> ";" <for_inside_action> ")" "{" <code_block> "}"
 **** FOR INTERNALS
-<infinite_loop>         ::= ";;"
-<for_dec>               ::= <for_inside_decl> ";" <for_inside_test> ";" <for_inside_action>
-<for_inside_decl>       ::= "int" <variable_name> "=" <int>
-<for_inside_test>       ::= <variable_name> <for_comparison> <int>
-<for_inside_action>     ::= <variable_name> "=" <variable_name> "+" <int>
-
-**** old
-<for>                   ::= "for (" <for_body> ")" "{" <simple_code_block> "}"
-<for_body>              ::= "int" <variable_name> "=" <int> ";" <variable_name> <for_comparison> <int> ";" <variable_name> "=" <variable_name> "+" <int>
-<for_comparison>        ::= "<" | "<="
+<for_inside_decl>       ::= <variable_declaration> | <nothing>
+<for_inside_test>       ::= <condition>
+<for_inside_action>     ::= <var_minimal_assignment>  | <nothing>
 
 *** WHILE
-<while>                 ::= "while (" <while_body> ")" "{" <code_block> "}"
-
-**** WHILE INTERNALS
-<while_body>            ::= <bool_operator> | <digit_operator> | <logic_op>
-<logic_op>              :: <while_body> <logical_operator> <while_body>
-<bool_operator>         ::= <variable> <comparison_operator> <bool_value>
-<digit_operator>        ::= <variable> <comparison_operator> <digit>
+<while>                 ::= "while (" <condition> ")" "{" <code_block> "}"
 
 ** STRUCT
-<struct_schedule>       ::= <struct_name> "{" <struct_body> "};"
+<struct_schedule>       ::= "struct" <struct_name> "{" <struct_body> "};"
+
+<struct_body>           ::= { <variable_declaration> }
 
 <struct_declaration>    ::= <struct_name> <variable_name> ";"
 
-*** STRUCT INTERNALS
+<struct_usage_get_val>  ::= <variable_name> "->" <variable_name> ";"
+
+<struct_usage_set_val>  ::= <variable_name> "->" <variable_name> "=" <value> ";"
+
 <struct_name>           ::= <word>
 
-<struct_body>           ::= [ { <variable_declaration> } ]
+** ARRAY
+<array_declaration>     ::= <data_type> <array_name> "[" <natural_number> "]" ["=" <fill_array_values>] ";"
+
+<array_usage>           ::= <array_name> "[" <array_indicator> "]"
+
+<array_indicator>       ::= <natural_number> | <variable_name> | <arithmetic_expression>
+
+<array_name>            ::= <word>
+
+*** ARRAY INTERNALS
+<fill_array_values>     ::= <numeric_array_fill> | <char_array_fill>
+
+<numeric_array_fill>    ::= "{" <nubmers_in_array> "}"
+
+<nubmers_in_array>      ::= <int> { "," <int> }
+
+<char_array_fill>       ::= <string>
 
 ** VARIABLE
-<variable_declaration>  ::= <data_type> <variable_name> [ "=" <arithmetic_expression> ] ";"
+<variable_declaration>        ::= <data_type> <variable_single_declaration> {"," <variable_single_declaration>} ";"
 
-<variable_assignment>   ::= <variable_name> "=" <arithmetic_expression> ";"
+<variable_single_declaration> ::= <variable_name> [ "=" <arithmetic_expression> ]
 
-<variable_name>         ::= <word>
+<variable_assignment>         ::= <var_minimal_assignment> ";"
+
+<var_minimal_assignment>      ::= <variable_name> "=" <arithmetic_expression>
+
+<variable_name>               ::= <word>
 
 ** ARITHMETIC
 <arithmetic_expression> ::= <term> | <factor> <composition> <term>
 <term>                  ::= <factor> | <factor> <multi_div> <term>
-<factor>                ::= <int> | "(" <arithmetic_expression> ")"
+<factor>                ::= <int> | <array_usage> | <struct_usage_get_val> | "(" <arithmetic_expression> ")"
 
 <composition>           ::= <add> | <sub>
 <multi_div>             ::= <mul> | <div> | <mod>
@@ -149,35 +151,24 @@
 <div>                   ::= "/"
 <mod>                   ::= "%"
 
-** ARRAY
-<array_declaration>     ::= <data_type> <word> "[" <natural_number> "]" ["=" <fill_array_values>] ";"
-
-<array_usage>           ::= word "[" <array_indicator> "]"
-
-<array_indicator>       ::= <natural_number> | <variable_name>
-
-*** ARRAY INTERNALS
-<fill_array_values>     ::= <numeric_array_fill> | <char_array_fill>
-
-<numeric_array_fill>    ::= "{" <numers_in_array> "}"
-
-<numers_in_array>       ::= <int> { "," <int> }
-
-<char_array_fill>       ::= <string>
-
 ** SIMPLE DATA TYPES
 <data_type>         ::= "int" | "char" | <struct_name>
 
 <int>               ::= "0" | [ "-" ] <natural_number>
 
-<char>              ::= "'" (<letter> | <digit>) "'"
+<char>              ::= "'" <letter_or_digit> "'"
 
-<bool_value>       ::= "true" | "false"
+<letter_or_digit>   ::= <letter> | <digit>
+
+<bool_value>        ::= "true" | "false"
 
 ** RETURN
-<return>            ::= "return" (<natural_number> | <variable_name>) ";"
+<return>            ::= "return" <return_value> ) ";"
+<return_value>      ::= <arithmetic_expression> | <variable_name> | <int>
 
 ** GENERIC
+<nothing>           ::=
+
 <parameter_list>    ::= <parameter> [ {"," <parameter>} ]
 
 <parameter>         ::= <data_type> <word>
