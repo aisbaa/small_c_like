@@ -9,6 +9,6 @@
 #define SMALL_C_LIKE_INNER_LANG_VALUES
 
 #define NOTHING 0
-#define FOR_DEC 1
+#define FOR_DEC 70
 
 #endif

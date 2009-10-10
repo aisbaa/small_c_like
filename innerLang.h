@@ -6,6 +6,8 @@
  *
  * Is able to recognize reserved Lang words and
  * return proper value
+ *
+ * Is able to return correct innerLangValue
  */
 
 #ifndef SMALL_C_LIKE_INNER_LANG
@@ -19,23 +21,24 @@ using namespace std;
 typedef struct {
   string outervalue;
   int    innervalue;
-} innerValue;
+} innerValueEntry;
 
 class InnerLang {
  private:
-  queue<innerValue> LangReservedWords;
+  queue<innerValueEntry *> LangReservedWords;
 
  private:
+  /* for loading LangReservedWords */
   string fgetNextStringValue();
   int    fgetNextIntValue();
 
-  innerValue fgetNextInnerValue();
+  innerValueEntry * fgetNextInnerValue();
 
  public:
-  InnerLang(char*);
+  InnerLang(string);
   ~InnerLang();
 
-  int getInnerLangValue(string);
+  int getInnerLangValue(string *);
 };
 
 #endif

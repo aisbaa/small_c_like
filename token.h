@@ -6,7 +6,8 @@
 #ifndef SMALL_C_LIKE_TOKEN
 #define SMALL_C_LIKE_TOKEN
 
-#include <string>
+#include <iostream>
+//#include <string>
 
 #include "position.h"
 #include "innerLang.h"
@@ -15,19 +16,21 @@ using namespace std;
 
 class Token {
  private:
-  int       innerLang;
-  string    sourceText;
-  Position* foundIn;
+  int        innerLangCode;
+  string     sourceText;
+  Position * foundIn;
 
  public:
-  Token(innerValue*, Position*);
-  ~Token(){};
+  Token(innerValueEntry *, Position *);
+  ~Token();
 
   int getInnerLang();
-
   string getSourceText();
-  const Position * getPosition();
 
+  const Position * getPosition();
+  /*
+   * sould have operator<< for cout
+   */
 };
 
 #endif
