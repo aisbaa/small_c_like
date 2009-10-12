@@ -1,3 +1,12 @@
 #include "innerLangValues.h"
 
-for FOR_DEC
+/*
+ * This file used for describeing grammar for 
+ * InnerLang class
+ */
+
+/*
+rezerved    defined
+*/
+for         FOR_DEC
+int main()  MAIN

@@ -39,6 +39,7 @@ class InnerLang {
   ~InnerLang();
 
   int getInnerLangValue(string *);
+  
 };
 
 #endif

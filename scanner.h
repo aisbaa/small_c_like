@@ -15,13 +15,41 @@
 
 using namespace std;
 
+const char   defaultDelimiter = ' ';
+
+const string defaultCharacterThatCanApearInSigles  = "( ) { } [ ] + - * / = ;";
+const string defaultCharacterThatCanApearInDoubles = "() {} [] ++ -- += -= *= /= ==";
+
+const string defaultComment0 = "// \n";
+const string defaultComment1 = "/* */";
+
+typedef struct {
+  string * characterThatCanApearInSigles;
+  string * characterThatCanApearInDoubles;
+
+  string * commentOneLine;
+  string * commentMultyLine;
+
+} scanerSettings;
+
 class Scanner {
-  ifstream  *file;
-  InnerLang *lang;
+  ifstream   * file;
+  TextStream * stream;
+  InnerLang  * lang;
+
+  const char     defaultDelimiter;
+
+  const string * characterThatCanApearInSigles;
+  const string * characterThatCanApearInDoubles;
+
+  const string * commentOneLine;
+  const string * commentMultyLine;
 
  private:
-  /* skips space character until finds non space */
-  void skipWhiteSpaces();
+
+
+  /* tells if given string is start of comment (witch is second string) */
+  bool isStartOfCommrnt(const string *, const string *);
 
   /*
    * skips comments,
@@ -30,29 +58,10 @@ class Scanner {
    */
   void skipComments(string, string);
 
-  /* gets next word, file pointer must point to first letter */
-  string getNextWord();
-
-  /* gets next natural number, file pointer must point to first digit */
-  string getNextNumber();
-
-  /* gets next statement (+ - * / ... ), file pointer must point to first ...? */
-  string getNextStatement();
-
-  /*
-   * gets next entity, which could be any of
-   *   getNextWord
-   *   getNextNumber
-   *   getNextStatement
-   *
-   * automatically skips white spaces and comments
-   */
-  string getNextEntity();
-
  public:
   /* if file fails to opens - throws exemption (not implemented) */
-  Scanner(string, InnerLang*);
-  ~Scaner();
+  Scanner(string, InnerLang *, scanerSettings * = NULL);
+  ~Scanner();
   
   Token::Token * getNextToken();
 };

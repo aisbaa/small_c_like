@@ -3,7 +3,7 @@ NAME   = smallclike
 CC     = g++
 CFLAGS = -Wall
 
-SRC    = scaner.cpp innerLang.cpp token.cpp stringinfo.cpp
+SRC    = scanner.cpp innerLang.cpp token.cpp stringinfo.cpp
 HDR    = $(SRC: .cpp=.h)
 OBJS   = $(SRC: .cpp=.o)
 OBJS  += main.o
