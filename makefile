@@ -1,21 +1,22 @@
 NAME   = smallclike
 
 CC     = g++
-CFLAGS = -Wall
+CFLAGS = -Wall -c
+LFALGS = -g
 
-SRC    = scanner.cpp innerLang.cpp token.cpp stringinfo.cpp
-HDR    = $(SRC: .cpp=.h)
-OBJS   = $(SRC: .cpp=.o)
-OBJS  += main.o
+SRC   = scanner.cpp innerLang.cpp token.cpp textstream.cpp
+HDR   = $(SRC:.cpp=.h)
+OBJS  = $(SRC:.cpp=.o)
+MAIN  = $(OBJS) main.o
 
-all: clean compiler
+all: compile run
 
-compiler: $(OBJS)
-	$(CC) $(OBJS) -g -o $(NAME)
+compile: $(MAIN)
+	$(CC) $(LFLAGS) $(MAIN) -o $(NAME)
 
 
-.cpp.o: $*.cpp $(HDR)
-	$(CC) $(CFLAGS) -c $*.cpp
+.cpp.o:
+	$(CC) $(CFLAGS) $<
 
 run:
 	./$(NAME)

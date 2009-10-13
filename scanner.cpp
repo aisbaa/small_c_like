@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <istream>
+//#include <string>
 
-#include "stringinfo.h"
 #include "scanner.h"
 
 using namespace std;
@@ -11,23 +11,24 @@ using namespace std;
  * INIT && DESTROY
  */
 
-Scanner::Scanner(string fileName, InnerLang * lang, scanerSettings * settings ) {
+Scanner::Scanner(string fileName, InnerLang * lang) {
   this -> file = new ifstream(
                               fileName.c_str(),
                               ios_base::in
                               );
+  this -> stream = new TextStream((istream *)this -> file);
   this -> lang = lang;
 
-  if (settings != NULL) {
-    this -> characterThatCanApearInSigles  = settings -> characterThatCanApearInSigles;
-    this -> characterThatCanApearInDoubles = settings -> characterThatCanApearInDoubles;
-  } else {
-    this -> characterThatCanApearInSigles  = &defaultCharacterThatCanApearInSigles;
-    this -> characterThatCanApearInDoubles = &defaultCharacterThatCanApearInDoubles;
-  }
+  /* ASSIGN DEFAULTS */
+  this -> commentOneLineStart   = &defaultCommentOneLineStart;
+  this -> commentOneLineEnd     = &defaultCommentOneLineEnd;
+  this -> commentMultyLineStart = &defaultCommentMultyLineStart;
+  this -> commentMultyLineEnd   = & defaultCommentMultyLineEnd;
 }
 
 Scanner::~Scanner() {
+  delete this -> stream;
+
   if (this -> file -> is_open())
     this -> file -> close();
 }
@@ -36,16 +37,63 @@ Scanner::~Scanner() {
  * PRIVATE UTILS
  */
 
+bool Scanner::containsAtBegining(const string * base, const string * needle) {
+  string compare =  base -> substr(0, needle -> length());
+  return (compare == *needle);  
+}
+
+bool Scanner::isCommentOneLine() {
+  return containsAtBegining(
+                            &(this -> buff),
+                            this -> commentOneLineStart
+                            );
+}
+
+bool Scanner::isCommentMultyLine() {
+  return containsAtBegining(
+                            &(this -> buff),
+                            this -> commentMultyLineStart
+                            );
+}
+
+bool Scanner::isComment() {
+  return (
+          isCommentOneLine() ||
+          isCommentMultyLine()
+          );
+}
+
+void Scanner::skipComment() {
+  string skippedComment;
+
+  if (isCommentOneLine())
+    skippedComment = this -> stream -> skipToCharacterSequence(this -> commentOneLineEnd);
+
+  if (isCommentMultyLine())
+    skippedComment = this -> stream -> skipToCharacterSequence(this -> commentMultyLineEnd);
+
+  /*
+   * should I check if skippedComment contains end of comment
+   * if end of comment isn't present - what when?
+   */
+}
 
 /*
  * USER METHODS
  */
 
 Token::Token * Scanner::getNextToken() {
-  string sourceString = Scanner::getNextEntity();
-  cout << sourceString << endl;
-  return ( this -> file -> is_open() ?
-           (Token::Token *)!NULL:
-           (Token::Token *)NULL
-           );
+  do {
+    this -> buff = this -> stream -> getNextEntity();
+    if (isComment()) skipComment();
+  } while (isComment());
+
+  cout.width(15);
+  cout << this -> buff << endl;
+
+  return (this -> file -> good() ?
+          (Token::Token *)!NULL:
+          (Token::Token *)NULL
+          );
+
 }

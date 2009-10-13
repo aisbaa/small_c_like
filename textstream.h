@@ -1,5 +1,10 @@
 /*
- * !!! NOT IMPLEMENTED IN ABSTRACT WAY !!!
+ * UNIT TESTING TELLS THAT methods 
+ *   isLetter
+ *   isWhiteSpace
+ *   isSpecialCharacter
+ * does NOT work!!!
+ * but maybe it's because of me low knolage on unit testing XD
  */
 
 /* TEXTSTREAM CLASS
@@ -13,15 +18,15 @@
 
 using namespace std;
 
-#include <iostream>
-#include <fstream>
+//#include <iostream>
+#include <istream>
 
 class TextStream {
  private:
-  ifstream * stream;
+  istream * stream;
 
  public:
-  TextStream(ifstream *);
+  TextStream(istream *);
   ~TextStream();
 
   /*
@@ -35,8 +40,8 @@ class TextStream {
   bool isLetter();
 
   /*
-   * tells if current character (pointed by filepointer) is special character 
-   * these are
+   * tells if current character (pointed by filepointer) is special character.
+   * and these are
    *   non decimal
    *   non letter
    *   non white space
@@ -53,15 +58,14 @@ class TextStream {
   /* skips whote space characters until finds non white space */
   void skipWhiteSpaces();
 
- private:
-  string makeCompareBufferForSkipping(int);
+  /* extracts that much characters from stream */
+  string getThatMuchCharacters(int);
 
- public:
   /*
    * skips any number of character until finds given pattern
    * return 0 on success or positive value of characters read
    */
-  int skipToCharacterSequence(const string *);
+  string skipToCharacterSequence(const string *);
 
   /*
    * GETTERS
@@ -76,6 +80,9 @@ class TextStream {
   /* gets next statement (+ - * / ... ), file pointer must point to first ...? */
   string getNextSpecialCharacterSequence();
   string getNextSpecCharSeq();
+
+  
+  string getCharSeqcToPatter(string *);
 
   /*
    * SUMMARY

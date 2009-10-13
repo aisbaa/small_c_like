@@ -1,8 +1,10 @@
 #include "textstream.h"
 
+#include <iostream>
+
 using namespace std;
 
-TextStream::TextStream(ifstream * stream) {
+TextStream::TextStream(istream * stream) {
   this -> stream = stream;
 }
 
@@ -25,35 +27,33 @@ bool TextStream::isWhiteSpace() {
   /*
    * acourding ascii table, all below space (including)
    * originally intended NOT to represent printable
-   * information
+   * information, so it might not be space, but it should
+   * be white
    *
    * and 127 officialy is delete
    */
-  char currentCharacter = this -> stream -> peek();
-  return (
-          currentCharacter <= ' ' ||
-          currentCharacter >= 127
-          );
+  char currentCharacter = (char) this -> stream -> peek();
+  return (currentCharacter <= ' ' || currentCharacter == (char)127);
 }
 
 bool TextStream::isDecimalDigit() {
-  char currentCharacter = this -> stream -> peek();
+  char currentCharacter = (char) this -> stream -> peek();
   return (currentCharacter >= '0' && currentCharacter <= '9');
 }
 
 bool TextStream::isLetter() {
-  char currentCharacter = this -> stream -> peek();
-  if (currentCharacter >= 'a' && currentCharacter <= 'z') return true;
-  if (currentCharacter >= 'A' && currentCharacter <= 'Z') return true;
+  char currentCharacter = (char) this -> stream -> peek();
+  if ('a' <= currentCharacter && currentCharacter <= 'z') return true;
+  if ('A' <= currentCharacter && currentCharacter <= 'Z') return true;
   return false;
 }
 
 bool TextStream::isSpecialCharacter() {
-  char currentCharacter = this -> stream -> peek();
-  if (currentCharacter >= '!' && currentCharacter <= '/') return true;
-  if (currentCharacter >= ':' && currentCharacter <= '@') return true;
-  if (currentCharacter >= '[' && currentCharacter <= '`') return true;
-  if (currentCharacter >= '{' && currentCharacter <= '~') return true;
+  char currentCharacter = (char) this -> stream -> peek();
+  if ('!' <= currentCharacter && currentCharacter <= '/') return true;
+  if (':' <= currentCharacter && currentCharacter <= '@') return true;
+  if ('[' <= currentCharacter && currentCharacter <= '`') return true;
+  if ('{' <= currentCharacter && currentCharacter <= '~') return true;
   return false;
 } /* Now it seems that ascii designed exponentially XD */
 
@@ -69,38 +69,35 @@ void TextStream::skipWhiteSpaces() {
     this -> stream -> ignore(1);
 }
 
-string TextStream::makeCompareBufferForSkipping(int length) {
-  string compareBuffer;
-  
-  for (int i = 0; i < length; i++)
-    if (this -> stream -> good())
-      compareBuffer += this -> stream -> get();
-    else
-      break;
+string TextStream::getThatMuchCharacters(int length) {
+  char * charBuff = new char[length];
+  this -> stream -> readsome (charBuff, length);
 
-  return compareBuffer;
+  string buffer(charBuff, length);
+  delete charBuff;
+  
+  return buffer;
 }
 
-int TextStream::skipToCharacterSequence(const string *pattern) {
+string TextStream::skipToCharacterSequence(const string * pattern) {
   int length = pattern -> length();
-  int offset = length;
 
-  string compareBuffer = makeCompareBufferForSkipping(length);
+  string compareBuffer = getThatMuchCharacters(length);
+  string returnBuffer   = compareBuffer;
 
-  if (compareBuffer.length() < length)
-    return compareBuffer.length();
-
-  /* tries to match the pattern */
   while (
          this -> stream -> good() &&
-         &compareBuffer != pattern
-         ) {
-    compareBuffer += this -> stream -> get();
-    compareBuffer.substr(1, length);
-    offset++;
-  }
+         compareBuffer != *pattern
+         )
+    {
+      returnBuffer += this -> stream -> get();
+      compareBuffer = returnBuffer.substr(
+                                          returnBuffer.length() -length,
+                                          length
+                                          );
+    }
 
-  return &compareBuffer == pattern ? 0: offset;
+  return returnBuffer;
 }
 
 /*
@@ -122,7 +119,6 @@ string TextStream::getNextNumber() {
 
 string TextStream::getNextSpecCharSeq() {
   string buffer;
-
   while (
          this -> stream -> good() &&
          isSpecialCharacter()
@@ -160,16 +156,18 @@ string TextStream::getNextEntity() {
   skipWhiteSpaces();
   
   if (!this -> stream -> good()) {
-    return "file closed";
+    return "bad stream";
     /* I gues it should throw exception */
   }
 
-  if (isDecimalDigit())
+  if (TextStream::isDecimalDigit())
     return getNextNumber();
 
-  if (isSpecialCharacter())
+  if (TextStream::isSpecialCharacter())
     return getNextSpecCharSeq();
 
-  if (isLetter())
+  if (TextStream::isLetter())
     return getNextWord();
+
+  return "";
 }
