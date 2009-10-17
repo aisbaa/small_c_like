@@ -51,7 +51,8 @@ void InnerLang::skipComment() {
 }
 
 bool InnerLang::isDigit() {
-  if (atoi(this->buff.c_str()) ? true : false);
+  if (atoi((this->buff).c_str())) return true;
+  return false;
 }
 
 innerValueEntry * InnerLang::fgetNextInnerValue() {
