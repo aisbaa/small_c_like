@@ -22,7 +22,7 @@
 #define RETURN 11
 #define TRUE 12
 #define FALSE 13
-#define BRACKETS 14
-#define OPEN_BRACKET 15
-#define CLOSE_BRACKET 16
+#define BRACE 14
+#define OPEN_BRACE 15
+#define CLOSE_BRACE 16
 #endif
