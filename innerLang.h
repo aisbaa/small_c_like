@@ -15,6 +15,7 @@
 
 #include <fstream>
 #include <queue>
+#include "textstream.h"
 
 using namespace std;
 
@@ -24,6 +25,10 @@ typedef struct {
 } innerValueEntry;
 
 class InnerLang {
+
+  ifstream   * file;
+  TextStream * stream;
+
  private:
   queue<innerValueEntry *> LangReservedWords;
 
@@ -31,6 +36,7 @@ class InnerLang {
   /* for loading LangReservedWords */
   string fgetNextStringValue();
   int    fgetNextIntValue();
+  int    searchInnerLangValue(string);
 
   innerValueEntry * fgetNextInnerValue();
 
@@ -38,8 +44,8 @@ class InnerLang {
   InnerLang(string);
   ~InnerLang();
 
-  int getInnerLangValue(string *);
-  
+  int getInnerLangValue(string);
+
 };
 
 #endif

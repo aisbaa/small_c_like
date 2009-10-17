@@ -9,6 +9,20 @@
 #define SMALL_C_LIKE_INNER_LANG_VALUES
 
 #define NOTHING 0
-#define FOR_DEC 70
+#define MAIN 1
+#define STRUCT_DEC 2
+#define INT 3
+#define CHAR 4
+#define FOR_DEC 5
+#define WHILE_DEC 6
+#define PRINTF 7
+#define SCANF 8
+#define IF_DEC 9
+#define ELSE 10
+#define RETURN 11
+#define TRUE 12
+#define FALSE 13
+#define OPEN_BRACES 14
+#define CLOSE_BRACES 15
 
 #endif

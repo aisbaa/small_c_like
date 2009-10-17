@@ -8,5 +8,18 @@
 /*
 rezerved    defined
 */
+
+main        MAIN
+struct      STRUCT_DEC
+int         INT
+char        CHAR
 for         FOR_DEC
-int main()  MAIN
+while       WHILE_DEC
+printf      PRINTF
+scanf       SCANF
+if          IF_DEC
+else        ELSE
+return      RETURN
+true        TRUE
+false       FALSE
+
