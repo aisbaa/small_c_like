@@ -69,7 +69,7 @@ innerValueEntry * InnerLang::fgetNextInnerValue() {
 
   value->innervalue = atoi((this->buff).c_str());
 
-  //cout << value->outervalue << " - " << value->innervalue << endl;
+  cout << value->outervalue << " - " << value->innervalue << endl;
 
   return value;
 }

@@ -5,7 +5,7 @@
 # 1 "innerLangValues.h" 1
 # 2 "humangrammar.c" 2
 # 12 "humangrammar.c"
-main 1
+main() 1
 struct 2
 int 3
 char 4
@@ -18,3 +18,6 @@ else 10
 return 11
 true 12
 false 13
+() 14
+( 15
+) 16
