@@ -50,6 +50,10 @@ void InnerLang::skipComment() {
     skippedComment = this -> stream -> skipToCharacterSequence(this -> commentLineEnd);
 }
 
+bool InnerLang::isDigit() {
+  if (atoi(this->buff.c_str()) ? true : false);
+}
+
 innerValueEntry * InnerLang::fgetNextInnerValue() {
   do {
     this -> buff = this -> stream -> getNextEntity();
@@ -57,14 +61,19 @@ innerValueEntry * InnerLang::fgetNextInnerValue() {
   } while (isComment());
 
   innerValueEntry * value = new innerValueEntry;
-  value -> outervalue = this -> buff;
-  value -> innervalue = fgetNextIntValue();
+
+  do {
+    value->outervalue += this->buff;
+    this->buff = this->stream->getNextEntity();
+  } while (!isDigit() && this->file->good());
+
+  value->innervalue = atoi((this->buff).c_str());
 
   //cout << value->outervalue << " - " << value->innervalue << endl;
 
   return value;
 }
-
+/*
 string InnerLang::fgetNextStringValue() {
   return this->stream->getNextEntity();
 }
@@ -72,7 +81,7 @@ string InnerLang::fgetNextStringValue() {
 int InnerLang::fgetNextIntValue() {
   return atoi(this->stream->getNextEntity().c_str());
 }
-
+*/
 int InnerLang::searchInnerLangValue(string outerValue) {
 	queue<innerValueEntry *> tempLangReservedWords = this->LangReservedWords;
 	while (!tempLangReservedWords.empty()) {

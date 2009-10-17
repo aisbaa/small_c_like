@@ -41,14 +41,16 @@ class InnerLang {
 
  private:
   /* for loading LangReservedWords */
-  string fgetNextStringValue();
-  int    fgetNextIntValue();
+  //string fgetNextStringValue();
+  //int    fgetNextIntValue();
   int    searchInnerLangValue(string);
 
   bool   containsAtBegining(const string *, const string *);
   bool   isCommentOneLine();
   bool   isComment();
   void   skipComment();
+
+  bool   isDigit();
 
   innerValueEntry * fgetNextInnerValue();
 

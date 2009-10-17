@@ -22,4 +22,6 @@ else        ELSE
 return      RETURN
 true        TRUE
 false       FALSE
-
+()          BRACKETS
+(           OPEN_BRACKET
+)           CLOSE_BRACKET
