@@ -13,13 +13,13 @@ InnerLang::InnerLang(string fileName) {
   this->file   = new ifstream(fileName.c_str(), ios_base::in);
   this->stream = new TextStream(file);
 
-  /* if no file exception should be thrown */
-  //fstream file(fileName.c_str(), ios_base::in);
+  this -> comment        = &defaultComment;
+  this -> commentLineEnd = &defaultCommentLineEnd;
 
-  //while (!file.fail()) {
   while (this->file->good()) {
     this -> LangReservedWords.push(fgetNextInnerValue());
   }
+
 }
 
 InnerLang::~InnerLang() {
@@ -29,10 +29,38 @@ InnerLang::~InnerLang() {
   }
 }
 
+bool InnerLang::containsAtBegining(const string * base, const string * needle) {
+  string compare =  base -> substr(0, needle -> length());
+  return (compare == *needle);
+}
+
+bool InnerLang::isCommentOneLine() {
+  return containsAtBegining(&(this -> buff), this -> comment);
+}
+
+
+bool InnerLang::isComment() {
+  return isCommentOneLine();
+}
+
+void InnerLang::skipComment() {
+  string skippedComment;
+
+  if (isCommentOneLine())
+    skippedComment = this -> stream -> skipToCharacterSequence(this -> commentLineEnd);
+}
+
 innerValueEntry * InnerLang::fgetNextInnerValue() {
+  do {
+    this -> buff = this -> stream -> getNextEntity();
+    if (isComment()) skipComment();
+  } while (isComment());
+
   innerValueEntry * value = new innerValueEntry;
-  value -> outervalue = fgetNextStringValue();
+  value -> outervalue = this -> buff;
   value -> innervalue = fgetNextIntValue();
+
+  //cout << value->outervalue << " - " << value->innervalue << endl;
 
   return value;
 }

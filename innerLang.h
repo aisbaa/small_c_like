@@ -19,6 +19,9 @@
 
 using namespace std;
 
+const string defaultComment        = "#";
+const string defaultCommentLineEnd = "\n";
+
 typedef struct {
   string outervalue;
   int    innervalue;
@@ -28,15 +31,24 @@ class InnerLang {
 
   ifstream   * file;
   TextStream * stream;
+  string       buff;
 
  private:
   queue<innerValueEntry *> LangReservedWords;
+
+  const string * comment;
+  const string * commentLineEnd;
 
  private:
   /* for loading LangReservedWords */
   string fgetNextStringValue();
   int    fgetNextIntValue();
   int    searchInnerLangValue(string);
+
+  bool   containsAtBegining(const string *, const string *);
+  bool   isCommentOneLine();
+  bool   isComment();
+  void   skipComment();
 
   innerValueEntry * fgetNextInnerValue();
 
