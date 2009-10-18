@@ -12,7 +12,10 @@ using namespace std;
  * INIT && DESTROY
  */
 
-Token::Token(innerValueEntry * value, Position::Position * pos) {
+Token::Token(int innerLangCode, string sourceText, Position::Position * foundIn) {
+  this -> innerLangCode = innerLangCode;
+  this -> sourceText = sourceText;
+  this -> foundIn = foundIn;
 }
 
 Token::~Token() {
@@ -36,21 +39,3 @@ string Token::getSourceText() {
 const Position::Position * Token::getPosition() {
   return this -> foundIn;
 }
-
-/*
- * OPERATORS
- */
-/*
-string Token::<<opperator () {
-  string printThis;
-
-  printThis.append("LangcCode: ");
-  printThis.append(itoa(this -> innerLangCode));
-  printThis.append(", ");
-  printThis.append("SourceText: ");
-  printThis.append(this -> sourceText);
-  printThis.append(", possitoin to write");
-
-  return printThis;
-}
-*/

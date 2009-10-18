@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 #include "token.h"
 #include "innerLang.h"
@@ -16,7 +17,7 @@
 
 using namespace std;
 
-const char   defaultDelimiter = ' ';
+const string defaultDelimiter = " ";
 
 const string defaultCharacterThatCanApearInSigles  = "( ) { } [ ] + - * / = ;";
 const string defaultCharacterThatCanApearInDoubles = "() {} [] ++ -- += -= *= /= ==";
@@ -24,59 +25,72 @@ const string defaultCharacterThatCanApearInDoubles = "() {} [] ++ -- += -= *= /=
 const string defaultCommentOneLineStart = "//";
 const string defaultCommentOneLineEnd   = "\n";
 
-const string defaultCommentMultyLineStart = "/*";
-const string defaultCommentMultyLineEnd   = "*/";
+const string defaultCommentMultiLineStart = "/*";
+const string defaultCommentMultiLineEnd   = "*/";
 
 typedef struct {
   string * characterThatCanApearInSigles;
   string * characterThatCanApearInDoubles;
 
   string * commentOneLine;
-  string * commentMultyLine;
+  string * commentMultiLine;
 
 } scanerSettings;
 
 class Scanner {
-  string       buff;
-  InnerLang  * lang;
+ private:
+  string       buff;   // contains value got from stream -> getNextEntity()
+  InnerLang  * lang;   // pointer to inner language object
 
-  ifstream   * file;
-  TextStream * stream;
+  ifstream   * file;   // source file
+  TextStream * stream; // object for text stream functionality
 
-  /*
-  //const char     delimiter;
 
-  const string * characterThatCanApearInSigles;
-  const string * characterThatCanApearInDoubles;
-  */
+  const string * delimiter;
+
+  queue<string>       characterThatCanApearInSigles;
+  map<string, string> characterThatCanApearInDoubles;
 
   const string * commentOneLineStart;
   const string * commentOneLineEnd;
 
-  const string * commentMultyLineStart;
-  const string * commentMultyLineEnd;
-
- private:
-  /* tells if first string contains second string at its begening */
-  bool containsAtBegining(const string *, const string *);
-  /* tells if content in buff is single line comment start */
-  bool isCommentOneLine();
-
-  /* tells if content in buff is multy line comment start */
-  bool isCommentMultyLine();
-
-  /* checks if content in buff is comment */
-  bool isComment();
-
-  /* skips comment */
-  void skipComment();
+  const string * commentMultiLineStart;
+  const string * commentMultiLineEnd;
 
  public:
   /* if file fails to opens - throws exemption (not implemented) */
-  Scanner(string, InnerLang *);
+  Scanner(string, InnerLang *, scanerSettings * =NULL);
   ~Scanner();
   
+  /*
+   * returns pointer to new Token
+   * or NULL if no tokens left
+   *
+   * maybe should return end of source token
+   */
   Token::Token * getNextToken();
+
+ private:
+  /*
+   * Diagnostic
+   */
+
+  /**/
+  bool containsOneLineCommentStart();
+  bool containsMultiLineCommentStart();
+  bool containsMultiLineCommentEnd();
+
+  void removeOneLineComment();
+  void removeMultiLineComment();
+
+  void skipCommentOneLine();
+  void skipCommentMultiLine();
+
+  /*
+   * removes 
+   */
+  bool handlingComments();
+
 };
 
 #endif

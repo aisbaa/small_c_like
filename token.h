@@ -21,7 +21,7 @@ class Token {
   Position * foundIn;
 
  public:
-  Token(innerValueEntry *, Position *);
+  Token(int, string, Position *);
   ~Token();
 
   int getInnerLang();
@@ -29,7 +29,7 @@ class Token {
 
   const Position * getPosition();
   /*
-   * sould have operator<< for cout
+   * sould have operator << for cout
    */
 };
 

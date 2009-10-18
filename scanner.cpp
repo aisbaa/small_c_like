@@ -11,7 +11,7 @@ using namespace std;
  * INIT && DESTROY
  */
 
-Scanner::Scanner(string fileName, InnerLang * lang) {
+Scanner::Scanner(string fileName, InnerLang * lang, scanerSettings * settings) {
   this -> file = new ifstream(
                               fileName.c_str(),
                               ios_base::in
@@ -20,10 +20,16 @@ Scanner::Scanner(string fileName, InnerLang * lang) {
   this -> lang = lang;
 
   /* ASSIGN DEFAULTS */
+  this -> delimiter = &defaultDelimiter;
+
   this -> commentOneLineStart   = &defaultCommentOneLineStart;
   this -> commentOneLineEnd     = &defaultCommentOneLineEnd;
-  this -> commentMultyLineStart = &defaultCommentMultyLineStart;
-  this -> commentMultyLineEnd   = & defaultCommentMultyLineEnd;
+  this -> commentMultiLineStart = &defaultCommentMultiLineStart;
+  this -> commentMultiLineEnd   = & defaultCommentMultiLineEnd;
+
+  /*
+   * gues I should write setting loader
+   */
 }
 
 Scanner::~Scanner() {
@@ -34,66 +40,147 @@ Scanner::~Scanner() {
 }
 
 /*
- * PRIVATE UTILS
+ * COMMENT HANDLING
  */
 
-bool Scanner::containsAtBegining(const string * base, const string * needle) {
-  string compare =  base -> substr(0, needle -> length());
-  return (compare == *needle);  
+/* Diagnostic */
+
+bool Scanner::containsOneLineCommentStart() {
+  return (this -> buff.find(*this -> commentOneLineStart) != string::npos);
 }
 
-bool Scanner::isCommentOneLine() {
-  return containsAtBegining(
-                            &(this -> buff),
-                            this -> commentOneLineStart
-                            );
+bool Scanner::containsMultiLineCommentStart() {
+  return (this -> buff.find(*this -> commentMultiLineStart, 0) != string::npos);
 }
 
-bool Scanner::isCommentMultyLine() {
-  return containsAtBegining(
-                            &(this -> buff),
-                            this -> commentMultyLineStart
-                            );
+bool Scanner::containsMultiLineCommentEnd() {
+  return (this -> buff.find(*this -> commentMultiLineEnd, 0) != string::npos);
 }
 
-bool Scanner::isComment() {
-  return (
-          isCommentOneLine() ||
-          isCommentMultyLine()
-          );
+/* removing from buff */
+
+void Scanner::removeOneLineComment() {
+  this -> buff.erase(this -> buff.find(*this -> commentOneLineStart));
 }
 
-void Scanner::skipComment() {
-  string skippedComment;
+void Scanner::removeMultiLineComment() {
+  this -> buff.erase(
+                     this -> buff.find(*this -> commentMultiLineStart),
+                     this -> buff.length()
+                     -
+                     this -> buff.find(*this -> commentMultiLineEnd)
+                     );
+}
 
-  if (isCommentOneLine())
-    skippedComment = this -> stream -> skipToCharacterSequence(this -> commentOneLineEnd);
+/* skipping characters in stream */
 
-  if (isCommentMultyLine())
-    skippedComment = this -> stream -> skipToCharacterSequence(this -> commentMultyLineEnd);
+void Scanner::skipCommentOneLine() {
+  string skippedComment = this -> stream -> skipToCharacterSequence(this -> commentOneLineEnd);
+}
 
-  /*
-   * should I check if skippedComment contains end of comment
-   * if end of comment isn't present - what when?
-   */
+void Scanner::skipCommentMultiLine() {
+  string skippedComment = this -> stream -> skipToCharacterSequence(this -> commentMultiLineEnd);
+}
+
+
+bool Scanner::handlingComments() {
+  if (containsOneLineCommentStart()) {
+
+    /* I'm not checking if end of One line comment
+     * is in the buffer because it should be new line
+     * simbol, and those are skiped by textstream
+     */
+
+    removeOneLineComment();
+    skipCommentOneLine();
+
+    /* I'll return false here
+     * because there shouldn't
+     * be any comments left after
+     */
+    return false;
+  }
+
+  if (containsMultiLineCommentStart()) {
+    
+    /* end of comment is not in the buffer
+     * so I skip character in stream to
+     * right after comment end
+     */
+    if (!containsMultiLineCommentEnd())
+      skipCommentMultiLine();
+
+    removeMultiLineComment();
+
+    /* I'll return true because
+     * it might be atleast one
+     * comment left
+     *
+     * other wise false will be
+     * return on next call
+     */
+    return true;
+  }
+
+  return false;
 }
 
 /*
- * USER METHODS
+ * BUFFER HANDLING
  */
 
+string extractLangEntity() {
+  if (startsWithDoubleSimbol()) {
+    string langEntity = this -> buff.substr(0, 2);
+    this -> buff.erase(0, 2);
+    return langEntity;
+  }
+
+  if (startsWithStandAloneSimbol()) {
+    string langEntity = this -> buff.substr(0, 1);
+    this -> buff.erase(0, 1);
+    return langEntity;
+  }
+
+  string langEntity = this -> buff.substr();
+  this -> buff.clear();
+  return langEntity;
+}
+
+/*
+ * PUBLIC
+ */ 
+
 Token::Token * Scanner::getNextToken() {
-  do {
-    this -> buff = this -> stream -> getNextEntity();
-    if (isComment()) skipComment();
-  } while (isComment());
+  /*
+   * 0) padarysiu kad scanneris mokėtų stringus perduot
+   */
+  if (this -> buff.empty())
+    do {
+      this -> buff = this -> stream -> getNextEntity();
+      while (handlingComments());
+    } while (
+             this -> buff.empty() &&
+             this -> file -> good()
+             );
+
+  string singleEntity  = extractLangEntity();
+
+  Token::Token * token = new Token(
+                                   this -> lang -> getInnerLangValue(singleEntity),
+                                   this -> buff,
+                                   (Position *)NULL /* not implemented
+                                                     * text stream should be
+                                                     * able to tell this info
+                                                     */
+                                   );
+
+  if (!this -> file -> good())
+    return (Token *)NULL;
 
   cout.width(15);
   cout << this -> buff << endl;
 
-  return (this -> file -> good() ?
-          (Token::Token *)!NULL:
-          (Token::Token *)NULL
-          );
+  return token;
 
 }
