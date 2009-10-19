@@ -1,7 +1,6 @@
 #include <iostream>
-#include <fstream>
-#include <istream>
-#include <queue>
+#include <map>
+#include <stdlib.h>
 
 #include "innerLang.h"
 #include "textstream.h"
@@ -17,16 +16,14 @@ InnerLang::InnerLang(string fileName) {
   this -> commentLineEnd = &defaultCommentLineEnd;
 
   while (this->file->good()) {
-    this -> LangReservedWords.push(fgetNextInnerValue());
+	fgetNextInnerValue();
   }
-
 }
 
 InnerLang::~InnerLang() {
-  while (!this -> LangReservedWords.empty()) {
-    delete (innerValueEntry *) (this -> LangReservedWords.front());
-    this -> LangReservedWords.pop();
-  }
+  map<string,int>::iterator it;
+  for (it = this->LangReservedWords.begin() ; it != this->LangReservedWords.end(); it++)
+    this->LangReservedWords.erase(it);
 }
 
 bool InnerLang::containsAtBegining(const string * base, const string * needle) {
@@ -55,43 +52,25 @@ bool InnerLang::isDigit() {
   return false;
 }
 
-innerValueEntry * InnerLang::fgetNextInnerValue() {
+void InnerLang::fgetNextInnerValue() {
   do {
     this -> buff = this -> stream -> getNextEntity();
     if (isComment()) skipComment();
   } while (isComment());
 
-  innerValueEntry * value = new innerValueEntry;
+  string outerValue;
+  int    innerValue;
 
   do {
-    value->outervalue += this->buff;
+	outerValue += this->buff;
     this->buff = this->stream->getNextEntity();
   } while (!isDigit() && this->file->good());
 
-  value->innervalue = atoi((this->buff).c_str());
+  innerValue = atoi((this->buff).c_str());
 
-  cout << value->outervalue << " - " << value->innervalue << endl;
+  this->LangReservedWords.insert(pair<string, int>(outerValue, innerValue));
 
-  return value;
-}
-/*
-string InnerLang::fgetNextStringValue() {
-  return this->stream->getNextEntity();
-}
-
-int InnerLang::fgetNextIntValue() {
-  return atoi(this->stream->getNextEntity().c_str());
-}
-*/
-int InnerLang::searchInnerLangValue(string outerValue) {
-	queue<innerValueEntry *> tempLangReservedWords = this->LangReservedWords;
-	while (!tempLangReservedWords.empty()) {
-		if (tempLangReservedWords.front()->outervalue == outerValue) {
-			return tempLangReservedWords.front()->innervalue;
-		}
-		tempLangReservedWords.pop();
-	}
-	return -1;
+  //cout << outerValue << " - " << innerValue << endl;
 }
 
 /*
@@ -99,11 +78,15 @@ int InnerLang::searchInnerLangValue(string outerValue) {
  */
 
 int InnerLang::getInnerLangValue(string outerValue) {
-  if (this -> LangReservedWords.empty()) {
+  if (this ->LangReservedWords.empty()) {
     /* throw noty exception */
   }
 
   /* search for value */
   //return LangReservedWords.front() -> innervalue;
-  return searchInnerLangValue(outerValue);
+
+  map<string,int>::iterator it;
+
+  it = this->LangReservedWords.find(outerValue);
+  return it->second;
 }

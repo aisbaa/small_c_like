@@ -15,6 +15,8 @@
 
 #include <fstream>
 #include <queue>
+#include <map>
+
 #include "textstream.h"
 
 using namespace std;
@@ -22,10 +24,7 @@ using namespace std;
 const string defaultComment        = "#";
 const string defaultCommentLineEnd = "\n";
 
-typedef struct {
-  string outervalue;
-  int    innervalue;
-} innerValueEntry;
+typedef map<string, int> innerValueMap;
 
 class InnerLang {
 
@@ -34,17 +33,12 @@ class InnerLang {
   string       buff;
 
  private:
-  queue<innerValueEntry *> LangReservedWords;
+  innerValueMap LangReservedWords;
 
   const string * comment;
   const string * commentLineEnd;
 
  private:
-  /* for loading LangReservedWords */
-  //string fgetNextStringValue();
-  //int    fgetNextIntValue();
-  int    searchInnerLangValue(string);
-
   bool   containsAtBegining(const string *, const string *);
   bool   isCommentOneLine();
   bool   isComment();
@@ -52,7 +46,7 @@ class InnerLang {
 
   bool   isDigit();
 
-  innerValueEntry * fgetNextInnerValue();
+  void fgetNextInnerValue();
 
  public:
   InnerLang(string);
