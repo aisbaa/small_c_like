@@ -161,7 +161,8 @@ string Scanner::extractLangEntity() {
 
 Token::Token * Scanner::getNextToken() {
   /*
-   * 0) padarysiu kad scanneris mokėtų stringus perduot
+   * 0) padaryti kad scanneris mokėtų stringus perduot
+   * t.y. "stringas"
    */
   if (this -> buff.empty())
     do {
