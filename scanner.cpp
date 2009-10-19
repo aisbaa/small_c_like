@@ -129,8 +129,16 @@ bool Scanner::handlingComments() {
  * BUFFER HANDLING
  */
 
-string extractLangEntity() {
-  if (startsWithDoubleSimbol()) {
+bool Scanner::startsWithStandAloneSimbol(){
+  return false;
+}
+
+bool Scanner::startsWithStandDoubleSimbol(){
+  return false;
+}
+
+string Scanner::extractLangEntity() {
+  if (startsWithStandDoubleSimbol()) {
     string langEntity = this -> buff.substr(0, 2);
     this -> buff.erase(0, 2);
     return langEntity;
@@ -166,20 +174,20 @@ Token::Token * Scanner::getNextToken() {
 
   string singleEntity  = extractLangEntity();
 
+  cout << "single: " << singleEntity << ", buff: " << this -> buff << endl;
+
   Token::Token * token = new Token(
                                    this -> lang -> getInnerLangValue(singleEntity),
                                    this -> buff,
-                                   (Position *)NULL /* not implemented
-                                                     * text stream should be
-                                                     * able to tell this info
-                                                     */
+                                   (Position *)NULL
+                                   /* not implemented
+                                    * text stream should be
+                                    * able to tell this info
+                                    */
                                    );
 
   if (!this -> file -> good())
     return (Token *)NULL;
-
-  cout.width(15);
-  cout << this -> buff << endl;
 
   return token;
 

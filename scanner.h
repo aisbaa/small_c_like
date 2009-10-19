@@ -71,25 +71,24 @@ class Scanner {
   Token::Token * getNextToken();
 
  private:
-  /*
-   * Diagnostic
-   */
+  /* big helpers */
+  string extractLangEntity();
+  bool handlingComments();
 
-  /**/
+  /* diagnostic */
   bool containsOneLineCommentStart();
   bool containsMultiLineCommentStart();
   bool containsMultiLineCommentEnd();
 
+  bool startsWithStandAloneSimbol();
+  bool startsWithStandDoubleSimbol();
+
+  /* small helpers */
   void removeOneLineComment();
   void removeMultiLineComment();
 
   void skipCommentOneLine();
   void skipCommentMultiLine();
-
-  /*
-   * removes 
-   */
-  bool handlingComments();
 
 };
 
