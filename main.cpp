@@ -8,7 +8,7 @@ using namespace std;
 
 int main() {
   InnerLang lang("grammar.i");
-  Scanner scanner("testcompiler/simple.c", &lang);
+  Scanner scanner("testcompiler/example.c", &lang);
 
   Token::Token * token = NULL;
   while (

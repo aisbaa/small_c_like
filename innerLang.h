@@ -23,6 +23,7 @@ using namespace std;
 
 const string defaultComment        = "#";
 const string defaultCommentLineEnd = "\n";
+const int    defaultUndefinedValue = 99;
 
 typedef map<string, int> innerValueMap;
 
@@ -35,6 +36,7 @@ class InnerLang {
  private:
   innerValueMap LangReservedWords;
   map<string,int>::iterator it;
+
   int otherInnerValue;
 
   const string * comment;
@@ -49,8 +51,6 @@ class InnerLang {
   bool   isDigit();
 
   void fgetNextInnerValue();
-
-  void getOtherInnerValue(string);
 
  public:
   InnerLang(string);

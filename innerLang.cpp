@@ -72,11 +72,6 @@ void InnerLang::fgetNextInnerValue() {
   //cout << outerValue << " - " << innerValue << endl;
 }
 
-void InnerLang::getOtherInnerValue(string outerValue) {
-  if (atoi((outerValue).c_str())) this->otherInnerValue = 99;
-  else this->otherInnerValue = 100;
-}
-
 /*
  * Functionality for user
  */
@@ -89,10 +84,12 @@ int InnerLang::getInnerLangValue(string outerValue) {
   /* search for value */
 
   this->it = this->LangReservedWords.find(outerValue);
-  if (this->it->second <= this->LangReservedWords.size())
+
+  int idOfReservedWord = this->it->second;
+  int maximumIdOfWords = this->LangReservedWords.size();
+
+  if (idOfReservedWord <= maximumIdOfWords && idOfReservedWord >= 0)
     return this->it->second;
 
-  getOtherInnerValue(outerValue);
-
-  return this->otherInnerValue;
+  return defaultUndefinedValue;
 }
