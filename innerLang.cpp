@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <iostream>
 #include <fstream>
 #include <istream>
@@ -75,7 +74,15 @@ innerValueEntry * InnerLang::fgetNextInnerValue() {
 
   return value;
 }
+/*
+string InnerLang::fgetNextStringValue() {
+  return this->stream->getNextEntity();
+}
 
+int InnerLang::fgetNextIntValue() {
+  return atoi(this->stream->getNextEntity().c_str());
+}
+*/
 int InnerLang::searchInnerLangValue(string outerValue) {
 	queue<innerValueEntry *> tempLangReservedWords = this->LangReservedWords;
 	while (!tempLangReservedWords.empty()) {
