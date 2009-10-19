@@ -25,3 +25,10 @@ false       FALSE
 ()          BRACE
 (           OPEN_BRACE
 )           CLOSE_BRACE
+{}          EMPTY_BLOCK
+{           BEGIN
+}           END
+=           EQUALITY
+;           SEMICOLON
+,           COMMA
+.           DOT

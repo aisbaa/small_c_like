@@ -21,9 +21,8 @@ InnerLang::InnerLang(string fileName) {
 }
 
 InnerLang::~InnerLang() {
-  map<string,int>::iterator it;
-  for (it = this->LangReservedWords.begin() ; it != this->LangReservedWords.end(); it++)
-    this->LangReservedWords.erase(it);
+  for (this->it = this->LangReservedWords.begin() ; this->it != this->LangReservedWords.end(); this->it++)
+    this->LangReservedWords.erase(this->it);
 }
 
 bool InnerLang::containsAtBegining(const string * base, const string * needle) {
@@ -73,6 +72,11 @@ void InnerLang::fgetNextInnerValue() {
   //cout << outerValue << " - " << innerValue << endl;
 }
 
+void InnerLang::getOtherInnerValue(string outerValue) {
+  if (atoi((outerValue).c_str())) this->otherInnerValue = 99;
+  else this->otherInnerValue = 100;
+}
+
 /*
  * Functionality for user
  */
@@ -83,10 +87,12 @@ int InnerLang::getInnerLangValue(string outerValue) {
   }
 
   /* search for value */
-  //return LangReservedWords.front() -> innervalue;
 
-  map<string,int>::iterator it;
+  this->it = this->LangReservedWords.find(outerValue);
+  if (this->it->second <= this->LangReservedWords.size())
+    return this->it->second;
 
-  it = this->LangReservedWords.find(outerValue);
-  return it->second;
+  getOtherInnerValue(outerValue);
+
+  return this->otherInnerValue;
 }

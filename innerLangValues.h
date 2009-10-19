@@ -25,4 +25,11 @@
 #define BRACE 14
 #define OPEN_BRACE 15
 #define CLOSE_BRACE 16
+#define EMPTY_BLOCK 17
+#define BEGIN 18
+#define END 19
+#define EQUALITY 20
+#define SEMICOLON 21
+#define COMMA 22
+#define DOT 23
 #endif
