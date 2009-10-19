@@ -9,7 +9,7 @@
 rezerved    defined
 */
 
-main()      MAIN
+main        MAIN
 struct      STRUCT_DEC
 int         INT
 char        CHAR
