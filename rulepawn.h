@@ -22,6 +22,8 @@
 
 using namespace std;
 
+const string defaultWhiteSpace = " ";
+
 class RulePawn {
  private:
   unsigned int current;
@@ -29,12 +31,21 @@ class RulePawn {
   string rule;
   string buff;
 
+  bool notStarted;
+  bool isPassed;
+  const string * whiteSpace;
+
+  bool isPartOfRule(char);
+
  public:
-  /* rule must be pased */
   RulePawn(string);
+  ~RulePawn();
 
   /*tells if rule passed */
-  bool pass();
+  bool passed();
+
+  /* reset all values */
+  void reset();
 
   /* tells if char matches with current char in rule */
   bool pass(char);
