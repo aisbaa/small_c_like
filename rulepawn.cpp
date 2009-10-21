@@ -175,6 +175,7 @@ bool RulePawn::isPartOfRule(char value) {
 void RulePawn::reset() {
   this->current  = 0;
   this->isPassed = false;
+  this->buff     = "";
 }
 
 bool RulePawn::passed() {
