@@ -53,7 +53,6 @@ string Scanner::getNextLex() {
 
   if (this -> whiteSpaceSkip) skipWhiteSpace();
 
-  bool stillHave = false;
   bool haveMatched = false;
 
   string lex;
