@@ -163,8 +163,6 @@ void RulePawn::reset() {
 
 bool RulePawn::passed() {
   checkIfPassed();
-  cout << "Rule: " << this->rule << endl;
-  cout << "Buff: " << this->buff << endl;
   return this->isPassed;
 }
 
