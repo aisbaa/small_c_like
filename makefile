@@ -4,7 +4,7 @@ CC     = g++
 CFLAGS = -Wall -c
 LFALGS = -g
 
-SRC   = scanner.cpp innerLang.cpp token.cpp textstream.cpp
+SRC   = rulemaster.cpp rulepawn.cpp token.cpp
 HDR   = $(SRC:.cpp=.h)
 OBJS  = $(SRC:.cpp=.o)
 MAIN  = $(OBJS) main.o

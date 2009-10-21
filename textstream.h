@@ -63,7 +63,6 @@ class TextStream {
 
   /*
    * skips any number of character until finds given pattern
-   * return 0 on success or positive value of characters read
    */
   string skipToCharacterSequence(const string *);
 
@@ -80,9 +79,9 @@ class TextStream {
   /* gets next statement (+ - * / ... ), file pointer must point to first ...? */
   string getNextSpecialCharacterSequence();
   string getNextSpecCharSeq();
-
   
-  string getCharSeqcToPatter(string *);
+  string getCharSeqcToPatter(const string *);
+  string getCharSeqcToPatter(const string);
 
   /*
    * SUMMARY

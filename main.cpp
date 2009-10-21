@@ -1,25 +1,19 @@
 #include <iostream>
 
-#include "innerLang.h"
-#include "scanner.h"
+#include "rulemaster.h"
+//#include "scanner.h"
 #include "token.h"
 
 using namespace std;
 
 int main() {
-  InnerLang lang("grammar.i");
-  Scanner scanner("testcompiler/example.c", &lang);
+  RuleMaster rules("rules");
+  string testLex = "ford";
 
-  Token::Token * token = NULL;
-  while (
-         (token = scanner.getNextToken()) != NULL
-         )
-    {
-      cout << token -> getSourceText()
-           << " "
-           << token -> getInnerLang()
-           << endl;
+  for (unsigned int index = 0; index < testLex.length(); index++) {
+    cout << (rules.match(testLex[index]) ? "yey": "boo") << " ";
+    cout << rules.haveComplete() << endl;
+  }
 
-      delete token;
-    }
+  return 0;
 }

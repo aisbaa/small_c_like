@@ -104,6 +104,18 @@ string TextStream::skipToCharacterSequence(const string * pattern) {
  * GETTERS
  */
 
+string TextStream::getNextWord() {
+  string buffer;
+
+  while (
+         this -> stream -> good() &&
+         isLetter()
+         )
+    buffer += this -> stream -> get();
+
+  return buffer;
+}
+
 string TextStream::getNextNumber() {
   string buffer;
 
@@ -132,16 +144,25 @@ string TextStream::getNextSpecialCharacterSequence() {
   return getNextSpecCharSeq();
 }
 
-string TextStream::getNextWord() {
-  string buffer;
+string TextStream::getCharSeqcToPatter(const string * pattern) {
+  int length = pattern -> length();
+
+  string compareBuffer = getThatMuchCharacters(length);
+  string returnBuffer  = compareBuffer;
 
   while (
          this -> stream -> good() &&
-         isLetter()
+         compareBuffer != *pattern
          )
-    buffer += this -> stream -> get();
+    {
+      returnBuffer += this -> stream -> get();
+      compareBuffer = returnBuffer.substr(
+                                          returnBuffer.length() -length,
+                                          length
+                                          );
+    }
 
-  return buffer;
+  return returnBuffer;
 }
 
 /*
