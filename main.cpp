@@ -1,12 +1,27 @@
 #include <iostream>
 
 #include "rulemaster.h"
-//#include "scanner.h"
+#include "rulepawn.h"
 #include "token.h"
 
 using namespace std;
 
 int main() {
+  /* test rulepawn */
+  string str = "3rAAgfgBB33737CC3h3hAAyryBB3737CC";
+  RulePawn rule("*AA@BB$CC*AA@BB$CC");
+
+  int loop = str.length();
+  for (int i = 0; i < loop; i++) {
+    rule.pass(str[i]);
+  }
+
+  if (rule.passed())
+    cout << "Priklauso" << endl;
+  else
+    cout << "Nepriklauso" << endl;
+
+  /* test rulemaster */
   RuleMaster rules("rules");
   string testLex = "ford";
 
@@ -16,4 +31,5 @@ int main() {
   }
 
   return 0;
+
 }
