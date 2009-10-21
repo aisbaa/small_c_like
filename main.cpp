@@ -10,18 +10,19 @@ using namespace std;
 int main() {
   /* test rulepawn */
 
-  string str = "cordinates { }";
-  RulePawn rule("@");
-
-  int loop = str.length();
-  for (int i = 0; i < loop; i++) {
+  string str = ",";
+  RulePawn rule(",");
+  for (unsigned int i = 0; i < str.length(); i++) {
     rule.pass(str[i]);
   }
+  cout << "rule  " << (rule.passed() ? "passed": "didn't") << endl;
 
-  if (rule.passed())
-    cout << "Priklauso" << endl;
-  else
-    cout << "Nepriklauso" << endl;
+  RuleMaster testRules("rules");
+  for (unsigned int i = 0; i < str.length(); i++) {
+    testRules.match(str[i]);
+  }
+
+  cout << "rules " <<(testRules.haveComplete() ? "passed": "didn't") << endl;
 
 
   RuleMaster rules("rules");

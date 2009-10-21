@@ -1,4 +1,5 @@
-struct coordinates {
+a bc
+struct coordinates{
   int x, y, z;
 };
  

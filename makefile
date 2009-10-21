@@ -20,6 +20,9 @@ compile: $(MAIN)
 .cpp.o:
 	$(CC) $(CFLAGS) $<
 
+.c.o:
+	$(CC) $(CFLAGS) $<
+
 run:
 	./$(NAME)
 
