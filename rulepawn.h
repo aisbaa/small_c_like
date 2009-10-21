@@ -62,6 +62,9 @@ class RulePawn {
 
   void checkIfPassed();
 
+  bool isLetter(char);
+  bool isNumber(char);
+
   bool skipAnyAlnum(char);
   bool skipAnyAlpha(char);
   bool skipAnyNumber(char);
