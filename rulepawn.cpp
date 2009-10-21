@@ -88,6 +88,18 @@ void RulePawn::checkIfPassed() {
     this->isPassed = false;
 }
 
+bool RulePawn::isLetter(char value) {
+  char currentCharacter = value;
+  if ('a' <= currentCharacter && currentCharacter <= 'z') return true;
+  if ('A' <= currentCharacter && currentCharacter <= 'Z') return true;
+  return false;
+}
+
+bool RulePawn::isNumber(char value) {
+  if (atoi(&value)) return true;
+  return false;
+}
+
 bool RulePawn::skipAnyAlnum(char value) {
   if (!this->buff[this->current]) this->buff += this->anyAlnum;
   int nextCharacter = this->current + 1;
@@ -97,7 +109,11 @@ bool RulePawn::skipAnyAlnum(char value) {
     getNextAlnumPosition();
     return true;
   }
-  return true;
+  if (isLetter(value)) return true;
+  if (isNumber(value)) return true;
+  this->buff += value;
+  this->current += 1;
+  return false;
 }
 bool RulePawn::skipAnyAlpha(char value) {
   if (!this->buff[this->current]) this->buff += this->anyAlpha;
@@ -108,7 +124,7 @@ bool RulePawn::skipAnyAlpha(char value) {
     getNextAlphaPosition();
     return true;
   }
-  if (!atoi(&value)) return true;
+  if (isLetter(value)) return true;
   this->buff += this->anyAlpha;
   this->buff += value;
   this->current += 1;
@@ -124,7 +140,7 @@ bool RulePawn::skipAnyNumber(char value) {
     getNextNumberPosition();
     return true;
   }
-  if (atoi(&value)) return true;
+  if (isNumber(value)) return true;
   this->buff += this->anyNumber;
   this->buff += value;
   this->current += 1;
