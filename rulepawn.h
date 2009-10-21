@@ -23,7 +23,8 @@
 
 using namespace std;
 
-const string defaultAnyLetter = "@";
+const string defaultAnyAlnum  = "*";
+const string defaultAnyAlpha  = "@";
 const string defaultAnyNumber = "$";
 
 class RulePawn {
@@ -34,11 +35,26 @@ class RulePawn {
   string buff;
 
   bool isPassed;
-  bool hasAnyChar;
+  bool hasAny;
+  bool hasAnyAlnum;
+  bool hasAnyAlpha;
+  bool hasAnyNumber;
+
+  string anyAlnum;
+  string anyAlpha;
+  string anyNumber;
+
+  int anyAlnumPosition;
+  int anyAlphaPosition;
+  int anyNumberPosition;
 
   int anyCharacterPosition;
 
   void checkIfPassed();
+
+  bool skipAnyAlnum(char);
+  bool skipAnyAlpha(char);
+  bool skipAnyNumber(char);
 
   bool isPartOfRule(char);
   bool isPartOfRuleWithSpec(char);
