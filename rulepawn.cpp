@@ -89,9 +89,9 @@ void RulePawn::checkIfPassed() {
 }
 
 bool RulePawn::skipAnyAlnum(char value) {
+  if (!this->buff[this->current]) this->buff += this->anyAlnum;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value) {
-    this->buff += this->anyAlnum;
     this->buff += value;
     this->current += 2;
     getNextAlnumPosition();
@@ -100,9 +100,9 @@ bool RulePawn::skipAnyAlnum(char value) {
   return true;
 }
 bool RulePawn::skipAnyAlpha(char value) {
+  if (!this->buff[this->current]) this->buff += this->anyAlpha;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value) {
-    this->buff += this->anyAlpha;
     this->buff += value;
     this->current += 2;
     getNextAlphaPosition();
@@ -116,9 +116,9 @@ bool RulePawn::skipAnyAlpha(char value) {
 }
 
 bool RulePawn::skipAnyNumber(char value) {
+  if (!this->buff[this->current]) this->buff += this->anyNumber;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value) {
-    this->buff += this->anyNumber;
     this->buff += value;
     this->current += 2;
     getNextNumberPosition();
@@ -169,6 +169,5 @@ bool RulePawn::passed() {
 }
 
 bool RulePawn::pass(char value) {
-	cout << this->current << endl;
   return isPartOfRule(value);
 }
