@@ -11,8 +11,9 @@
  *   alphabetic
  *   special char
  *
- * for example a@b should match
- * ab, abb, acb, aaab, asdfghjklb...
+ * "@" - match any letter
+ * "$" - match any number
+ * "*" - match any letter and number
  */
 
 #ifndef SMALL_C_LIKE_RULEPAWN
