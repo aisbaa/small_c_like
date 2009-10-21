@@ -3,11 +3,9 @@
 using namespace std;
 
 RulePawn::RulePawn(string rule) {
-  this->rule       = rule;
-  this->whiteSpace = &defaultWhiteSpace;
-  this->current    = -1;
-  this->isPassed   = false;
-  this->notStarted = true;
+  this->rule     = rule;
+  this->current  = -1;
+  this->isPassed = false;
 }
 
 RulePawn::~RulePawn() {}
@@ -16,7 +14,15 @@ RulePawn::~RulePawn() {}
  * Private methods
  */
 
+void RulePawn::checkIfPassed() {
+  if (this->buff == this->rule)
+    this->isPassed = true;
+  else
+    this->isPassed = false;
+}
+
 bool RulePawn::isPartOfRule(char value) {
+  checkIfPassed();
   if (this->rule[this->current] == value) return true;
   return false;
 }
@@ -26,10 +32,9 @@ bool RulePawn::isPartOfRule(char value) {
  */
 
 void RulePawn::reset() {
-  this->current    = -1;
-  this->buff       = "";
-  this->isPassed   = false;
-  this->notStarted = true;
+  this->buff     = "";
+  this->current  = -1;
+  this->isPassed = false;
 }
 
 bool RulePawn::passed() {
@@ -37,13 +42,7 @@ bool RulePawn::passed() {
 }
 
 bool RulePawn::pass(char value) {
-  if (!passed()) {
-    if (value == this->whiteSpace[0]) {
-      this->current += 1;
-      this->buff += value;
-      return isPartOfRule(value);
-    }
-    return true;
-  }
-  return false;
+  this->buff += value;
+  this->current += 1;
+  return isPartOfRule(value);
 }

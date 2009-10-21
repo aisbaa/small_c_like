@@ -22,8 +22,6 @@
 
 using namespace std;
 
-const string defaultWhiteSpace = " ";
-
 class RulePawn {
  private:
   unsigned int current;
@@ -31,10 +29,9 @@ class RulePawn {
   string rule;
   string buff;
 
-  bool notStarted;
   bool isPassed;
-  const string * whiteSpace;
 
+  void checkIfPassed();
   bool isPartOfRule(char);
 
  public:
