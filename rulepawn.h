@@ -19,6 +19,7 @@
 #define SMALL_C_LIKE_RULEPAWN
 
 #include <iostream>
+#include <queue>
 #include <string>
 
 using namespace std;
@@ -44,11 +45,19 @@ class RulePawn {
   string anyAlpha;
   string anyNumber;
 
-  int anyAlnumPosition;
-  int anyAlphaPosition;
-  int anyNumberPosition;
+  queue<int> anyAlnumPositions;
+  queue<int> anyAlphaPositions;
+  queue<int> anyNumberPositions;
+
+  int currentAnyAlnumPosition;
+  int currentAnyAlphaPosition;
+  int currentAnyNumberPosition;
 
   int anyCharacterPosition;
+
+  void getNextAlnumPosition();
+  void getNextAlphaPosition();
+  void getNextNumberPosition();
 
   void checkIfPassed();
 
