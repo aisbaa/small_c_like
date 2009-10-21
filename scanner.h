@@ -10,6 +10,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "rulemaster.h"
+#include "rulepawn.h"
 #include "token.h"
 
 using namespace std;
@@ -19,11 +21,11 @@ class Scanner {
   ifstream   * file;
   RuleMaster * rules;
 
-  bool skipWhiteSpace = true;
-  bool skipComments   = false;
+  bool whiteSpaceSkip;
+  bool commentSkip;
 
  public:
-  Scanner(string, RuleMaster *, bool, bool);
+  Scanner(string, RuleMaster *, bool =true, bool =false);
   ~Scanner();
   
   /*

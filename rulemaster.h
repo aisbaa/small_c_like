@@ -1,6 +1,6 @@
 /* RULEMASTER CLASS
  *
- * 
+ * Handles a bunch of rules
  */
 
 #ifndef SMALL_C_LIKE_RULE_MASTER

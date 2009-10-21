@@ -2,13 +2,17 @@
 #include <fstream>
 #include <istream>
 
+#include "ascii_info.h"
 
+#include "rulemaster.h"
+#include "rulepawn.h"
 #include "scanner.h"
+#include "token.h"
 
 using namespace std;
 
 /*
- * INIT && DESTROY
+ * PUBLIC
  */
 
 Scanner::Scanner(string fileName, RuleMaster * rules, bool skipWhiteSpace, bool skipComments) {
@@ -18,22 +22,36 @@ Scanner::Scanner(string fileName, RuleMaster * rules, bool skipWhiteSpace, bool 
                               );
   this -> rules = rules;
 
-  this -> skipWhiteSpace = skipWhiteSpace;
-  this -> skipComments   = skipComments;
+  this -> whiteSpaceSkip = skipWhiteSpace;
+  this -> commentSkip    = skipComments;
 }
 
 Scanner::~Scanner() {
-  /*
-   * Should I take care of king ?
-   */
   if (this -> file -> is_open())
     this -> file -> close();
 }
 
+Token::Token * Scanner::getNextToken() {
+  string lex = getNextLex();
+
+  cout << "match: " 
+       << lex
+       << endl;
+
+  return (lex.length() == 0 ?
+          (Token *)NULL:
+          (Token *)!NULL
+          );
+}
+
+/*
+ * PRIVATE
+ */
+
 string Scanner::getNextLex() {
   this -> rules -> reset();
 
-  if (this -> skipWhiteSpace) skipWhiteSpace();
+  if (this -> whiteSpaceSkip) skipWhiteSpace();
 
   bool stillHave = false;
   bool haveMatched = false;
@@ -42,17 +60,14 @@ string Scanner::getNextLex() {
 
   while (
          this -> file -> good() &&
-         bool pass = rules.match(this -> file -> peek()) 
+         this -> rules -> match(this -> file -> peek())
          )
     {
-      /* these has one step back info */
-      stillHave   = pass;
-      haveMatched = rules.haveComplete();
-
+      haveMatched = this -> rules -> haveComplete();
       lex += (char)this -> file -> get();
     }
 
-  if (haveMatched && stillHave)
+  if (haveMatched)
     return lex;
 
   return "";
@@ -64,5 +79,5 @@ void Scanner::skipWhiteSpace() {
          this -> file -> good() &&
          isWhiteSpace(this -> file -> peek())
          )
-    this -> file -> ignore(1)
+    this -> file -> ignore(1);
 }

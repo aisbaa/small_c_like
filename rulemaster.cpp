@@ -10,11 +10,11 @@ RuleMaster::RuleMaster(string ruleFileName) {
   ifstream   file(ruleFileName.c_str(), ifstream::in);
 
   while (file.good()) {
-    string strRule;
-    getline(file, strRule);
+    string rule;
+    getline(file, rule);
     
-    if (!strRule.empty())
-      this -> ruleflock.push_back(new RulePawn(strRule));
+    if (!rule.empty())
+      this -> ruleflock.push_back(new RulePawn(rule));
   }
 
   file.close();

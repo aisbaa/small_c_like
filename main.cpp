@@ -2,14 +2,16 @@
 
 #include "rulemaster.h"
 #include "rulepawn.h"
+#include "scanner.h"
 #include "token.h"
 
 using namespace std;
 
 int main() {
   /* test rulepawn */
-  string str = "3rAAgfgBB33737CC3h3hAAyryBB3737CC";
-  RulePawn rule("*AA@BB$CC*AA@BB$CC");
+
+  string str = "cordinates { }";
+  RulePawn rule("@");
 
   int loop = str.length();
   for (int i = 0; i < loop; i++) {
@@ -21,14 +23,11 @@ int main() {
   else
     cout << "Nepriklauso" << endl;
 
-  /* test rulemaster */
-  RuleMaster rules("rules");
-  string testLex = "ford";
 
-  for (unsigned int index = 0; index < testLex.length(); index++) {
-    cout << (rules.match(testLex[index]) ? "yey": "boo") << " ";
-    cout << rules.haveComplete() << endl;
-  }
+  RuleMaster rules("rules");
+  Scanner scanner("testcompiler/example.c", &rules);
+
+  while (scanner.getNextToken() != NULL);
 
   return 0;
 

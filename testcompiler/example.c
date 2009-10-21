@@ -1,5 +1,4 @@
-// this must compile 
-struct coordinates3d {
+struct coordinates {
   int x, y, z;
 };
  
@@ -14,7 +13,6 @@ int grt(int a, int b) {
     return false;
 };
 
-/* main */
 int main() {
   int sveikas = 5;
   char raide = 'a';

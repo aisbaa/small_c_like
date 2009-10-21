@@ -4,10 +4,12 @@ CC     = g++
 CFLAGS = -Wall -c
 LFALGS = -g
 
-SRC   = rulemaster.cpp rulepawn.cpp token.cpp
-HDR   = $(SRC:.cpp=.h)
-OBJS  = $(SRC:.cpp=.o)
-MAIN  = $(OBJS) main.o
+SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp
+HDRCPP = $(SRCCPP:.cpp=.h)
+
+HDRS  = $(HDRCPP) ascii_info.h
+OBJS  = $(SRCCPP:.cpp=.o) ascii_info.o
+MAIN  = $(OBJS) main.o 
 
 all: compile run
 
