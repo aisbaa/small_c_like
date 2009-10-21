@@ -18,21 +18,33 @@
 #ifndef SMALL_C_LIKE_RULEPAWN
 #define SMALL_C_LIKE_RULEPAWN
 
+#include <iostream>
 #include <string>
 
 using namespace std;
 
+const string defaultAnyLetter = "@";
+const string defaultAnyNumber = "$";
+
 class RulePawn {
  private:
-  unsigned int current;
+  int current;
 
   string rule;
   string buff;
 
   bool isPassed;
+  bool hasAnyChar;
+
+  int anyCharacterPosition;
 
   void checkIfPassed();
+
   bool isPartOfRule(char);
+  bool isPartOfRuleWithSpec(char);
+  bool isPartOfRuleWithoutSpec(char);
+
+  void hasRuleAnyCharacter();
 
  public:
   RulePawn(string);
