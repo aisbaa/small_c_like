@@ -10,8 +10,8 @@ using namespace std;
 int main() {
   /* test rulepawn */
   /*
-  string str = "x,";
-  RulePawn rule("@");
+  string str = "xab";
+  RulePawn rule("ab");
   for (unsigned int i = 0; i < str.length(); i++) {
     rule.pass(str[i]);
   }
@@ -24,6 +24,7 @@ int main() {
 
   cout << "rules " <<(testRules.haveComplete() ? "passed": "didn't") << endl;
   */
+
   RuleMaster rules("rules");
   Scanner scanner("testcompiler/example.c", &rules);
 
