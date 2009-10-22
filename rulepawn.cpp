@@ -11,10 +11,9 @@ RulePawn::RulePawn(string rule) {
   this->current  = 0;
   this->isPassed = false;
 
-  this->hasAny       = false;
-  this->hasAnyAlnum  = false;
-  this->hasAnyAlpha  = false;
-  this->hasAnyNumber = false;
+  this->alnumCounter  = 0;
+  this->alphaCounter  = 0;
+  this->numberCounter = 0;
 
   this->anyAlnum  = defaultAnyAlnum;
   this->anyAlpha  = defaultAnyAlpha;
@@ -23,10 +22,6 @@ RulePawn::RulePawn(string rule) {
   this->currentAnyAlnumPosition  = -1;
   this->currentAnyAlphaPosition  = -1;
   this->currentAnyNumberPosition = -1;
-
-  this->alnumCounter = 0;
-  this->alphaCounter = 0;
-  this->numberCounter = 0;
 
   hasRuleAnyCharacter();
 }
@@ -42,17 +37,14 @@ void RulePawn::hasRuleAnyCharacter() {
   for (int i = 0; i < loopTo; i++) {
 	  if (this->rule[i] == this->anyAlnum[0]) {
         this->hasAny = true;
-        this->hasAnyAlnum = true;
         this->anyAlnumPositions.push(i);
 	  }
 	  else if (this->rule[i] == this->anyAlpha[0]) {
         this->hasAny = true;
-        this->hasAnyAlpha = true;
         this->anyAlphaPositions.push(i);
 	  }
 	  else if (this->rule[i] == this->anyNumber[0]) {
         this->hasAny = true;
-        this->hasAnyNumber = true;
         this->anyNumberPositions.push(i);
 	  }
   }
@@ -198,8 +190,8 @@ void RulePawn::reset() {
   this->isPassed = false;
   this->buff     = "";
 
-  this->alnumCounter = 0;
-  this->alphaCounter = 0;
+  this->alnumCounter  = 0;
+  this->alphaCounter  = 0;
   this->numberCounter = 0;
 }
 
