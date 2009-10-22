@@ -25,9 +25,11 @@
 
 using namespace std;
 
-const string defaultAnyAlnum  = "*";
-const string defaultAnyAlpha  = "@";
-const string defaultAnyNumber = "$";
+const string reservedChars  = "@$*\\";
+
+const string anyLetterDigit = "*";
+const string anyLetter      = "@";
+const string anyDigit       = "$";
 
 class RulePawn {
  private:
@@ -36,47 +38,15 @@ class RulePawn {
   string rule;
   string buff;
 
-  bool isPassed;
-  bool hasAny;
-
-  bool multipleRule;
-
-  string anyAlnum;
-  string anyAlpha;
-  string anyNumber;
-
-  queue<int> anyAlnumPositions;
-  queue<int> anyAlphaPositions;
-  queue<int> anyNumberPositions;
-
-  int currentAnyAlnumPosition;
-  int currentAnyAlphaPosition;
-  int currentAnyNumberPosition;
-
-  int alnumCounter;
-  int alphaCounter;
-  int numberCounter;
-
-  void getNextAlnumPosition();
-  void getNextAlphaPosition();
-  void getNextNumberPosition();
-
-  void checkIfPassed();
+  int handlerCounter;
 
   bool isLetter(char);
-  bool isNumber(char);
+  bool isDigit(char);
 
-  bool checkNextRulePosition(char);
-
-  bool skipAnyAlnum(char);
-  bool skipAnyAlpha(char);
-  bool skipAnyNumber(char);
-
-  bool isPartOfRule(char);
-  bool isPartOfRuleWithSpec(char);
-  bool isPartOfRuleWithoutSpec(char);
-
-  void hasRuleAnyCharacter();
+  bool letterHandler(char);
+  bool digitHandler(char);
+  bool letterDigitHandler(char);
+  bool direcMatch(char);
 
  public:
   RulePawn(string);

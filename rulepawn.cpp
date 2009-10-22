@@ -7,23 +7,10 @@
 using namespace std;
 
 RulePawn::RulePawn(string rule) {
-  this->rule     = rule;
-  this->current  = 0;
-  this->isPassed = false;
+  this->rule    = rule;
+  this->current = 0;
 
-  this->alnumCounter  = 0;
-  this->alphaCounter  = 0;
-  this->numberCounter = 0;
-
-  this->anyAlnum  = defaultAnyAlnum;
-  this->anyAlpha  = defaultAnyAlpha;
-  this->anyNumber = defaultAnyNumber;
-
-  this->currentAnyAlnumPosition  = -1;
-  this->currentAnyAlphaPosition  = -1;
-  this->currentAnyNumberPosition = -1;
-
-  hasRuleAnyCharacter();
+  this->handlerCounter = 0;
 }
 
 RulePawn::~RulePawn() {}
@@ -32,142 +19,75 @@ RulePawn::~RulePawn() {}
  * Private methods
  */
 
-void RulePawn::hasRuleAnyCharacter() {
-  int loopTo = this->rule.length();
-  for (int i = 0; i < loopTo; i++) {
-	  if (this->rule[i] == this->anyAlnum[0]) {
-        this->hasAny = true;
-        this->anyAlnumPositions.push(i);
-	  }
-	  else if (this->rule[i] == this->anyAlpha[0]) {
-        this->hasAny = true;
-        this->anyAlphaPositions.push(i);
-	  }
-	  else if (this->rule[i] == this->anyNumber[0]) {
-        this->hasAny = true;
-        this->anyNumberPositions.push(i);
-	  }
-  }
-  if (!this->anyAlnumPositions.empty())  this->currentAnyAlnumPosition  = this->anyAlnumPositions.front();
-  if (!this->anyAlphaPositions.empty())  this->currentAnyAlphaPosition  = this->anyAlphaPositions.front();
-  if (!this->anyNumberPositions.empty()) this->currentAnyNumberPosition = this->anyNumberPositions.front();
-}
-
-void RulePawn::getNextAlnumPosition() {
-  if (!this->anyAlnumPositions.empty()) {
-    this->anyAlnumPositions.pop();
-    if (!this->anyAlnumPositions.empty())
-      this->currentAnyAlnumPosition = this->anyAlnumPositions.front();
-  }
-}
-
-void RulePawn::getNextAlphaPosition() {
-  if (!this->anyAlphaPositions.empty()) {
-    this->anyAlphaPositions.pop();
-    if (!this->anyAlphaPositions.empty())
-      this->currentAnyAlphaPosition = this->anyAlphaPositions.front();
-  }
-}
-
-void RulePawn::getNextNumberPosition() {
-  if (!this->anyNumberPositions.empty()) {
-    this->anyNumberPositions.pop();
-    if (!this->anyNumberPositions.empty())
-      this->currentAnyNumberPosition = this->anyNumberPositions.front();
-  }
-}
-
-void RulePawn::checkIfPassed() {
-  if (this->buff == this->rule)
-    this->isPassed = true;
-  else
-    this->isPassed = false;
-}
-
 bool RulePawn::isLetter(char value) {
-  char currentCharacter = value;
-  if ('a' <= currentCharacter && currentCharacter <= 'z') return true;
-  if ('A' <= currentCharacter && currentCharacter <= 'Z') return true;
+  if ('a' <= value && value <= 'z') return true;
+  if ('A' <= value && value <= 'Z') return true;
   return false;
 }
 
-bool RulePawn::isNumber(char value) {
+bool RulePawn::isDigit(char value) {
   if (atoi(&value)) return true;
   return false;
 }
 
-bool RulePawn::skipAnyAlnum(char value) {
-  if (!this->buff[this->current]) this->buff += this->anyAlnum;
-  int nextCharacter = this->current + 1;
-  if (this->rule[nextCharacter] == value && this->alnumCounter > 0) {
-    this->alnumCounter = 0;
-    this->buff += value;
-    this->current += 2;
-    getNextAlnumPosition();
-    return true;
-  }
-  if (isLetter(value) || isNumber(value)) {
-    this->alnumCounter += 1;
-    return true;
-  }
-  this->buff += value;
-  this->current += 1;
-  return false;
-}
-bool RulePawn::skipAnyAlpha(char value) {
-  int nextCharacter = this->current + 1;
-  if (this->rule[nextCharacter] == value && this->alphaCounter > 0) {
-    this->alphaCounter = 0;
-    this->buff += value;
-    this->current += 2;
-    getNextAlphaPosition();
+bool RulePawn::letterHandler(char value) {
+  if (!this->buff[this->current]) this->buff += anyLetter;
+  if (this->rule[this->current+1] == value && this->handlerCounter > 0) {
+    this->handlerCounter = 0;
+	this->buff += value;
+	this->current += 2;
     return true;
   }
   if (isLetter(value)) {
-    if (!this->buff[this->current]) this->buff += this->anyAlpha;
-    this->alphaCounter += 1;
+    this->handlerCounter++;
     return true;
   }
-  if (this->alphaCounter > 0) {
-    getNextAlphaPosition();
-    this->alphaCounter = 0;
-    this->current += 1;
-    return isPartOfRuleWithSpec(value);
+  if (isDigit(value)) {
+    this->handlerCounter = 0;
+    this->current++;
+    return pass(value);
   }
+  this->buff += value;
   return false;
 }
 
-bool RulePawn::skipAnyNumber(char value) {
-  int nextCharacter = this->current + 1;
-  if (this->rule[nextCharacter] == value && this->numberCounter > 0) {
-    this->numberCounter = 0;
-    this->buff += value;
-    this->current += 2;
-    getNextNumberPosition();
+bool RulePawn::digitHandler(char value) {
+  if (!this->buff[this->current]) this->buff += anyDigit;
+  if (this->rule[this->current+1] == value && this->handlerCounter > 0) {
+    this->handlerCounter = 0;
+	this->buff += value;
+	this->current += 2;
     return true;
   }
-  if (isNumber(value)) {
-    if (!this->buff[this->current]) this->buff += this->anyNumber;
-    this->numberCounter += 1;
+  if (isDigit(value)) {
+    this->handlerCounter++;
     return true;
   }
-  if (this->numberCounter > 0) {
-    getNextNumberPosition();
-    this->numberCounter = 0;
-    this->current += 1;
-    return isPartOfRuleWithSpec(value);
+  if (isLetter(value)) {
+    this->handlerCounter = 0;
+    this->current++;
+    return pass(value);
   }
+  this->buff += value;
   return false;
 }
 
-bool RulePawn::isPartOfRuleWithSpec(char value) {
-  if (this->current == this->currentAnyAlnumPosition)  return skipAnyAlnum(value);
-  if (this->current == this->currentAnyAlphaPosition)  return skipAnyAlpha(value);
-  if (this->current == this->currentAnyNumberPosition) return skipAnyNumber(value);
-  return isPartOfRuleWithoutSpec(value);
+bool RulePawn::letterDigitHandler(char value) {
+  if (!this->buff[this->current]) this->buff += anyLetterDigit;
+  if (this->rule[this->current+1] == value && this->handlerCounter > 0) {
+    this->handlerCounter = 0;
+	this->buff += value;
+	this->current += 2;
+    return true;
+  }
+  this->handlerCounter++;
+  if (isDigit(value) || isLetter(value)) return true;
+  this->buff += value;
+  return false;
 }
 
-bool RulePawn::isPartOfRuleWithoutSpec(char value) {
+bool RulePawn::direcMatch(char value) {
+  cout << this->buff[this->current] << " | " << value << endl;
   this->buff += value;
   if (this->rule[this->current] == value) {
     this->current += 1;
@@ -176,30 +96,42 @@ bool RulePawn::isPartOfRuleWithoutSpec(char value) {
   return false;
 }
 
-bool RulePawn::isPartOfRule(char value) {
-  if (this->hasAny) return isPartOfRuleWithSpec(value);
-  else return isPartOfRuleWithoutSpec(value);
-}
-
 /*
  * Public methods
  */
 
 void RulePawn::reset() {
-  this->current  = 0;
-  this->isPassed = false;
-  this->buff     = "";
-
-  this->alnumCounter  = 0;
-  this->alphaCounter  = 0;
-  this->numberCounter = 0;
+  this->current = 0;
+  this->buff    = "";
 }
 
 bool RulePawn::passed() {
-  checkIfPassed();
-  return this->isPassed;
+  cout << this->buff << " | " << this->rule << endl;
+  if (this->buff == this->rule) return true;
+  return false;
 }
 
 bool RulePawn::pass(char value) {
-  return isPartOfRule(value);
+  switch (reservedChars.find(this->rule[this->current])) {
+    case 0:
+      return letterHandler(value);
+      break;
+
+    case 1:
+      return digitHandler(value);
+      break;
+
+    case 2:
+      return letterDigitHandler(value);
+      break;
+
+    case 3:
+     // return escapeHandler(value);
+      break;
+
+    default:
+      return direcMatch(value);
+    }
+
+  return false; /* this line must NOT be reached */
 }
