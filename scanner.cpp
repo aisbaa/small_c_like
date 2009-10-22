@@ -64,7 +64,7 @@ string Scanner::getNextLex() {
     {
       haveMatched = this -> rules -> haveComplete();
       lex += (char)this -> file -> get();
-
+      /*
       cout << haveMatched
            << this -> rules -> haveComplete()
            << " "
@@ -72,8 +72,9 @@ string Scanner::getNextLex() {
            << " peek "
            << (char)this -> file -> peek()
            << endl;
+      */
     }
-
+  /*
   cout << "eof matching "
        << haveMatched
        << this -> rules -> haveComplete()
@@ -82,7 +83,7 @@ string Scanner::getNextLex() {
        << " "
        << (char)this -> file -> peek()
        << endl;
-
+  */
   if (haveMatched)
     return lex;
 

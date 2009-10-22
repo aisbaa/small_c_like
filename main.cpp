@@ -10,16 +10,17 @@ using namespace std;
 int main() {
   /* test rulepawn */
 
-  string str = "cordinates5";
-  RulePawn rule("@$");
+  string str = "asf";
+  RulePawn rule("as");
   for (unsigned int i = 0; i < str.length(); i++) {
-    cout << rule.pass(str[i]) << rule.passed() << endl;
+    cout << (rule.pass(str[i]) ? "t" : "f")
+         << (rule.passed() ? "t" : "f")
+         << endl;
   }
   cout << "rule  " << (rule.passed() ? "passed": "didn't") << endl;
 
-  return 0;
 
-  RuleMaster testRules("rules");
+  RuleMaster testRules("rules2");
   for (unsigned int i = 0; i < str.length(); i++) {
     testRules.match(str[i]);
   }
