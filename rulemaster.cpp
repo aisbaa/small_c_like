@@ -29,7 +29,7 @@ RuleMaster::~RuleMaster() {
 
 bool RuleMaster::match(char testChar) {
   vector<RulePawn *>::iterator rule = this -> ruleflock.begin();
-  bool allfailed = true;
+  bool allFailed = true;
 
   while (rule != this -> ruleflock.end()) {
     /*
@@ -37,13 +37,20 @@ bool RuleMaster::match(char testChar) {
      * atleast one rule passes
      */
 
-    if ((*rule) -> pass(testChar) && allfailed)
-      allfailed = false;
+    bool status = (*rule) -> pass(testChar);
+
+    if (status && allFailed)
+      allFailed = false;
+
+    if (status)
+      cout << "pass "
+           << (*rule) -> getRule() 
+           << endl;
 
     rule++;
   }
 
-  return !allfailed;
+  return !allFailed;
 }
 
 bool RuleMaster::haveComplete() {

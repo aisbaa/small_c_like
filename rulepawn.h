@@ -90,6 +90,8 @@ class RulePawn {
 
   /* tells if char matches with current char in rule */
   bool pass(char);
+
+  string getRule();
 };
 
 #endif

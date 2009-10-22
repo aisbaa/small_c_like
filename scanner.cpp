@@ -40,7 +40,7 @@ Token::Token * Scanner::getNextToken() {
 
   return (lex.length() == 0 ?
           (Token *)NULL:
-          (Token *)!NULL
+          (Token *)5
           );
 }
 
@@ -59,12 +59,12 @@ string Scanner::getNextLex() {
 
   while (
          this -> file -> good() &&
-         this -> rules -> match(this -> file -> peek())
+         this -> rules -> match((char)this -> file -> peek())
          )
     {
       haveMatched = this -> rules -> haveComplete();
       lex += (char)this -> file -> get();
-      /*
+
       cout << haveMatched
            << this -> rules -> haveComplete()
            << " "
@@ -72,7 +72,6 @@ string Scanner::getNextLex() {
            << " peek "
            << (char)this -> file -> peek()
            << endl;
-      */
     }
   /*
   cout << "eof matching "

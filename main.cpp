@@ -9,16 +9,13 @@ using namespace std;
 
 int main() {
   /* test rulepawn */
-
-  string str = "asf";
-  RulePawn rule("as");
+  /*
+  string str = "x,";
+  RulePawn rule("@");
   for (unsigned int i = 0; i < str.length(); i++) {
-    cout << (rule.pass(str[i]) ? "t" : "f")
-         << (rule.passed() ? "t" : "f")
-         << endl;
+    rule.pass(str[i]);
   }
   cout << "rule  " << (rule.passed() ? "passed": "didn't") << endl;
-
 
   RuleMaster testRules("rules2");
   for (unsigned int i = 0; i < str.length(); i++) {
@@ -26,8 +23,7 @@ int main() {
   }
 
   cout << "rules " <<(testRules.haveComplete() ? "passed": "didn't") << endl;
-
-
+  */
   RuleMaster rules("rules");
   Scanner scanner("testcompiler/example.c", &rules);
 

@@ -203,3 +203,7 @@ bool RulePawn::passed() {
 bool RulePawn::pass(char value) {
   return isPartOfRule(value);
 }
+
+string RulePawn::getRule() {
+  return this -> rule;
+}
