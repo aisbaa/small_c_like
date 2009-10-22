@@ -115,7 +115,6 @@ bool RulePawn::skipAnyAlnum(char value) {
   return false;
 }
 bool RulePawn::skipAnyAlpha(char value) {
-  if (!this->buff[this->current]) this->buff += this->anyAlpha;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value && this->alphaCounter > 0) {
     this->alphaCounter = 0;
@@ -125,6 +124,7 @@ bool RulePawn::skipAnyAlpha(char value) {
     return true;
   }
   if (isLetter(value)) {
+    if (!this->buff[this->current]) this->buff += this->anyAlpha;
     this->alphaCounter += 1;
     return true;
   }
@@ -138,7 +138,6 @@ bool RulePawn::skipAnyAlpha(char value) {
 }
 
 bool RulePawn::skipAnyNumber(char value) {
-  if (!this->buff[this->current]) this->buff += this->anyNumber;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value && this->numberCounter > 0) {
     this->numberCounter = 0;
@@ -148,6 +147,7 @@ bool RulePawn::skipAnyNumber(char value) {
     return true;
   }
   if (isNumber(value)) {
+    if (!this->buff[this->current]) this->buff += this->anyNumber;
     this->numberCounter += 1;
     return true;
   }
