@@ -42,6 +42,8 @@ class RulePawn {
   bool hasAnyAlpha;
   bool hasAnyNumber;
 
+  bool multipleRule;
+
   string anyAlnum;
   string anyAlpha;
   string anyNumber;
@@ -54,7 +56,9 @@ class RulePawn {
   int currentAnyAlphaPosition;
   int currentAnyNumberPosition;
 
-  int anyCharacterPosition;
+  int alnumCounter;
+  int alphaCounter;
+  int numberCounter;
 
   void getNextAlnumPosition();
   void getNextAlphaPosition();
@@ -64,6 +68,8 @@ class RulePawn {
 
   bool isLetter(char);
   bool isNumber(char);
+
+  bool checkNextRulePosition(char);
 
   bool skipAnyAlnum(char);
   bool skipAnyAlpha(char);
