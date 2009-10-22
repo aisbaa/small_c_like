@@ -87,7 +87,6 @@ bool RulePawn::letterDigitHandler(char value) {
 }
 
 bool RulePawn::direcMatch(char value) {
-  cout << this->buff[this->current] << " | " << value << endl;
   this->buff += value;
   if (this->rule[this->current] == value) {
     this->current += 1;
@@ -103,10 +102,11 @@ bool RulePawn::direcMatch(char value) {
 void RulePawn::reset() {
   this->current = 0;
   this->buff    = "";
+
+  this->handlerCounter = 0;
 }
 
 bool RulePawn::passed() {
-  cout << this->buff << " | " << this->rule << endl;
   if (this->buff == this->rule) return true;
   return false;
 }
