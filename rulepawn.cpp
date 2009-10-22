@@ -137,6 +137,7 @@ bool RulePawn::skipAnyAlpha(char value) {
     return true;
   }
   if (this->alphaCounter > 0) {
+    getNextAlphaPosition();
     this->alphaCounter = 0;
     this->current += 1;
     return isPartOfRuleWithSpec(value);
@@ -159,6 +160,7 @@ bool RulePawn::skipAnyNumber(char value) {
     return true;
   }
   if (this->numberCounter > 0) {
+    getNextNumberPosition();
     this->numberCounter = 0;
     this->current += 1;
     return isPartOfRuleWithSpec(value);
@@ -202,6 +204,7 @@ void RulePawn::reset() {
 }
 
 bool RulePawn::passed() {
+	cout << this->buff << endl;
   checkIfPassed();
   return this->isPassed;
 }
