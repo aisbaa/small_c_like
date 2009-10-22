@@ -11,10 +11,9 @@ RulePawn::RulePawn(string rule) {
   this->current  = 0;
   this->isPassed = false;
 
-  this->hasAny       = false;
-  this->hasAnyAlnum  = false;
-  this->hasAnyAlpha  = false;
-  this->hasAnyNumber = false;
+  this->alnumCounter  = 0;
+  this->alphaCounter  = 0;
+  this->numberCounter = 0;
 
   this->anyAlnum  = defaultAnyAlnum;
   this->anyAlpha  = defaultAnyAlpha;
@@ -23,10 +22,6 @@ RulePawn::RulePawn(string rule) {
   this->currentAnyAlnumPosition  = -1;
   this->currentAnyAlphaPosition  = -1;
   this->currentAnyNumberPosition = -1;
-
-  this->alnumCounter = 0;
-  this->alphaCounter = 0;
-  this->numberCounter = 0;
 
   hasRuleAnyCharacter();
 }
@@ -42,17 +37,14 @@ void RulePawn::hasRuleAnyCharacter() {
   for (int i = 0; i < loopTo; i++) {
 	  if (this->rule[i] == this->anyAlnum[0]) {
         this->hasAny = true;
-        this->hasAnyAlnum = true;
         this->anyAlnumPositions.push(i);
 	  }
 	  else if (this->rule[i] == this->anyAlpha[0]) {
         this->hasAny = true;
-        this->hasAnyAlpha = true;
         this->anyAlphaPositions.push(i);
 	  }
 	  else if (this->rule[i] == this->anyNumber[0]) {
         this->hasAny = true;
-        this->hasAnyNumber = true;
         this->anyNumberPositions.push(i);
 	  }
   }
@@ -123,7 +115,6 @@ bool RulePawn::skipAnyAlnum(char value) {
   return false;
 }
 bool RulePawn::skipAnyAlpha(char value) {
-  if (!this->buff[this->current]) this->buff += this->anyAlpha;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value && this->alphaCounter > 0) {
     this->alphaCounter = 0;
@@ -133,6 +124,7 @@ bool RulePawn::skipAnyAlpha(char value) {
     return true;
   }
   if (isLetter(value)) {
+    if (!this->buff[this->current]) this->buff += this->anyAlpha;
     this->alphaCounter += 1;
     return true;
   }
@@ -146,7 +138,6 @@ bool RulePawn::skipAnyAlpha(char value) {
 }
 
 bool RulePawn::skipAnyNumber(char value) {
-  if (!this->buff[this->current]) this->buff += this->anyNumber;
   int nextCharacter = this->current + 1;
   if (this->rule[nextCharacter] == value && this->numberCounter > 0) {
     this->numberCounter = 0;
@@ -156,6 +147,7 @@ bool RulePawn::skipAnyNumber(char value) {
     return true;
   }
   if (isNumber(value)) {
+    if (!this->buff[this->current]) this->buff += this->anyNumber;
     this->numberCounter += 1;
     return true;
   }
@@ -198,13 +190,12 @@ void RulePawn::reset() {
   this->isPassed = false;
   this->buff     = "";
 
-  this->alnumCounter = 0;
-  this->alphaCounter = 0;
+  this->alnumCounter  = 0;
+  this->alphaCounter  = 0;
   this->numberCounter = 0;
 }
 
 bool RulePawn::passed() {
-	cout << this->buff << endl;
   checkIfPassed();
   return this->isPassed;
 }

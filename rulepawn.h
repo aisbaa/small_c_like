@@ -38,9 +38,6 @@ class RulePawn {
 
   bool isPassed;
   bool hasAny;
-  bool hasAnyAlnum;
-  bool hasAnyAlpha;
-  bool hasAnyNumber;
 
   bool multipleRule;
 
