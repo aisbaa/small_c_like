@@ -24,6 +24,10 @@ RulePawn::RulePawn(string rule) {
   this->currentAnyAlphaPosition  = -1;
   this->currentAnyNumberPosition = -1;
 
+  this->alnumCounter = 0;
+  this->alphaCounter = 0;
+  this->numberCounter = 0;
+
   hasRuleAnyCharacter();
 }
 
@@ -103,14 +107,17 @@ bool RulePawn::isNumber(char value) {
 bool RulePawn::skipAnyAlnum(char value) {
   if (!this->buff[this->current]) this->buff += this->anyAlnum;
   int nextCharacter = this->current + 1;
-  if (this->rule[nextCharacter] == value) {
+  if (this->rule[nextCharacter] == value && this->alnumCounter > 0) {
+    this->alnumCounter = 0;
     this->buff += value;
     this->current += 2;
     getNextAlnumPosition();
     return true;
   }
-  if (isLetter(value)) return true;
-  if (isNumber(value)) return true;
+  if (isLetter(value) || isNumber(value)) {
+    this->alnumCounter += 1;
+    return true;
+  }
   this->buff += value;
   this->current += 1;
   return false;
@@ -118,32 +125,44 @@ bool RulePawn::skipAnyAlnum(char value) {
 bool RulePawn::skipAnyAlpha(char value) {
   if (!this->buff[this->current]) this->buff += this->anyAlpha;
   int nextCharacter = this->current + 1;
-  if (this->rule[nextCharacter] == value) {
+  if (this->rule[nextCharacter] == value && this->alphaCounter > 0) {
+    this->alphaCounter = 0;
     this->buff += value;
     this->current += 2;
     getNextAlphaPosition();
     return true;
   }
-  if (isLetter(value)) return true;
-  this->buff += this->anyAlpha;
-  this->buff += value;
-  this->current += 1;
+  if (isLetter(value)) {
+    this->alphaCounter += 1;
+    return true;
+  }
+  if (this->alphaCounter > 0) {
+    this->alphaCounter = 0;
+    this->current += 1;
+    return isPartOfRuleWithSpec(value);
+  }
   return false;
 }
 
 bool RulePawn::skipAnyNumber(char value) {
   if (!this->buff[this->current]) this->buff += this->anyNumber;
   int nextCharacter = this->current + 1;
-  if (this->rule[nextCharacter] == value) {
+  if (this->rule[nextCharacter] == value && this->numberCounter > 0) {
+    this->numberCounter = 0;
     this->buff += value;
     this->current += 2;
     getNextNumberPosition();
     return true;
   }
-  if (isNumber(value)) return true;
-  this->buff += this->anyNumber;
-  this->buff += value;
-  this->current += 1;
+  if (isNumber(value)) {
+    this->numberCounter += 1;
+    return true;
+  }
+  if (this->numberCounter > 0) {
+    this->numberCounter = 0;
+    this->current += 1;
+    return isPartOfRuleWithSpec(value);
+  }
   return false;
 }
 
@@ -176,6 +195,10 @@ void RulePawn::reset() {
   this->current  = 0;
   this->isPassed = false;
   this->buff     = "";
+
+  this->alnumCounter = 0;
+  this->alphaCounter = 0;
+  this->numberCounter = 0;
 }
 
 bool RulePawn::passed() {
