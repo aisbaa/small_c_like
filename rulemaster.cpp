@@ -41,12 +41,12 @@ bool RuleMaster::match(char testChar) {
 
     if (status && allFailed)
       allFailed = false;
-
+    /*
     if (status)
       cout << "pass "
            << (*rule) -> getRule() 
            << endl;
-
+    */
     rule++;
   }
 

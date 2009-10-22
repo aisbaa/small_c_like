@@ -2,6 +2,7 @@
 #include <queue>
 #include <stdlib.h>
 
+#include "ascii_info.h"
 #include "rulepawn.h"
 
 using namespace std;
@@ -19,17 +20,6 @@ RulePawn::~RulePawn() {}
  * Private methods
  */
 
-bool RulePawn::isLetter(char value) {
-  if ('a' <= value && value <= 'z') return true;
-  if ('A' <= value && value <= 'Z') return true;
-  return false;
-}
-
-bool RulePawn::isDigit(char value) {
-  if (atoi(&value)) return true;
-  return false;
-}
-
 bool RulePawn::letterHandler(char value) {
   if (!this->buff[this->current]) this->buff += anyLetter;
   if (this->rule[this->current+1] == value && this->handlerCounter > 0) {
@@ -42,7 +32,7 @@ bool RulePawn::letterHandler(char value) {
     this->handlerCounter++;
     return true;
   }
-  if (isDigit(value)) {
+  if (isDecimalDigit(value)) {
     this->handlerCounter = 0;
     this->current++;
     return pass(value);
@@ -59,7 +49,7 @@ bool RulePawn::digitHandler(char value) {
 	this->current += 2;
     return true;
   }
-  if (isDigit(value)) {
+  if (isDecimalDigit(value)) {
     this->handlerCounter++;
     return true;
   }
@@ -81,17 +71,24 @@ bool RulePawn::letterDigitHandler(char value) {
     return true;
   }
   this->handlerCounter++;
-  if (isDigit(value) || isLetter(value)) return true;
+  if (isDecimalDigit(value) || isLetter(value)) return true;
   this->buff += value;
   return false;
 }
 
-bool RulePawn::direcMatch(char value) {
-  this->buff += value;
-  if (this->rule[this->current] == value) {
-    this->current += 1;
+bool RulePawn::escapeHandler(char value) {
+  this -> current++; // hope over escape
+  if (this -> rule[this -> current++] == value)
     return true;
-  }
+
+  return false;
+}
+
+bool RulePawn::directMatch(char value) {
+  this->buff += value;
+  if (this->rule[this->current++] == value)
+    return true;
+
   return false;
 }
 
@@ -126,11 +123,11 @@ bool RulePawn::pass(char value) {
       break;
 
     case 3:
-     // return escapeHandler(value);
+      return escapeHandler(value);
       break;
 
     default:
-      return direcMatch(value);
+      return directMatch(value);
     }
 
   return false; /* this line must NOT be reached */

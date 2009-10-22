@@ -40,13 +40,11 @@ class RulePawn {
 
   int handlerCounter;
 
-  bool isLetter(char);
-  bool isDigit(char);
-
   bool letterHandler(char);
   bool digitHandler(char);
   bool letterDigitHandler(char);
-  bool direcMatch(char);
+  bool escapeHandler(char);
+  bool directMatch(char);
 
  public:
   RulePawn(string);
@@ -61,6 +59,7 @@ class RulePawn {
   /* tells if char matches with current char in rule */
   bool pass(char);
 
+  /* this is temp method , will be deleted later */
   string getRule();
 };
 
