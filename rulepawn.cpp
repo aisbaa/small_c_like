@@ -204,7 +204,6 @@ void RulePawn::reset() {
 }
 
 bool RulePawn::passed() {
-	cout << this->buff << endl;
   checkIfPassed();
   return this->isPassed;
 }
