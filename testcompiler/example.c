@@ -1,3 +1,6 @@
+/* comment */
+/*comment*/
+
 struct coordinates {
   int x, y, z;
 };
@@ -14,12 +17,12 @@ int grt(int a, int b) {
 };
 
 int main() {
-  int sveikas = 5;
-  char raide = 'a';
+  int sveikas = -5;
+  char raide = 'a';'' ""
  
   int aibe [5] = {1, 2, 3, 4, 5};
-  char raides[5] = "abcd\0";
-  char zodis[6] = "Labas\0";
+  char raides[5] = "abcd";
+  char zodis[6] = "Labas";
  
   zodis[4+0] = 'a';
  

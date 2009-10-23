@@ -2,18 +2,12 @@
  *
  * this class tells if string matches rule
  *
- * string fed by single character
- *
- * rule should support as single statment
- *   any ascii char
- *   white space character (tab, newline, maybe other)
- *   digit
- *   alphabetic
- *   special char
- *
- * "@" - match any letter
- * "$" - match any number
- * "*" - match any letter and number
+ * rule supports
+ *  "@" - match any letter
+ *  "$" - match any number
+ *  "*" - match any letter and number
+ *  "." - match any ascii character
+ *  "\" - escape any character
  */
 
 #ifndef SMALL_C_LIKE_RULEPAWN
@@ -25,26 +19,38 @@
 
 using namespace std;
 
-const string reservedChars  = "@$*\\";
+const string reservedChars  = "@$*.\\";
+const string allowPassedIfLastIs = "@$*";
 
-const string anyLetterDigit = "*";
-const string anyLetter      = "@";
-const string anyDigit       = "$";
+const int noMoreCharacter = -1;
 
 class RulePawn {
  private:
-  int current;
+  unsigned int current;
 
   string rule;
-  string buff;
 
-  int handlerCounter;
+  bool failed;
 
-  bool letterHandler(char);
-  bool digitHandler(char);
-  bool letterDigitHandler(char);
-  bool escapeHandler(char);
-  bool directMatch(char);
+  /*
+   * Case handlers
+   */
+  bool letterHandler(char, bool =true);
+  bool digitHandler(char, bool =true);
+  bool letterDigitHandler(char, bool =true);
+  bool anyAsciiHandler(char, bool = true);
+  bool escapeHandler(char, bool =true);
+  bool directMatch(char, bool =true);
+
+  bool nextCharacterMatcher(char);
+  bool matchHandler(char, bool =true);
+
+  /* helpers */
+  int getNextRuleCharacter();
+  bool allowPassedIfLast();
+
+  /* changes rule's state to failed */
+  void fail();
 
  public:
   RulePawn(string);
