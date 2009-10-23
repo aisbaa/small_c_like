@@ -1,4 +1,3 @@
-x,
 struct coordinates {
   int x, y, z;
 };
