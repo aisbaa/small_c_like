@@ -7,10 +7,8 @@
 #define SMALL_C_LIKE_TOKEN
 
 #include <iostream>
-//#include <string>
 
 #include "position.h"
-#include "innerLang.h"
 
 using namespace std;
 

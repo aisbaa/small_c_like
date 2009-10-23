@@ -10,21 +10,15 @@ using namespace std;
 int main() {
   /* test rulepawn */
   /*
-  string str = "xab";
-  RulePawn rule("ab");
-  for (unsigned int i = 0; i < str.length(); i++) {
-    rule.pass(str[i]);
-  }
-  cout << "rule  " << (rule.passed() ? "passed": "didn't") << endl;
-
-  RuleMaster testRules("rules2");
+  string str = "\"labas\"";
+  RuleMaster testRules("rules");
   for (unsigned int i = 0; i < str.length(); i++) {
     testRules.match(str[i]);
   }
 
   cout << "rules " <<(testRules.haveComplete() ? "passed": "didn't") << endl;
+  return 0;
   */
-
   RuleMaster rules("rules");
   Scanner scanner("testcompiler/example.c", &rules);
 

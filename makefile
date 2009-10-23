@@ -30,6 +30,6 @@ grammar: humangrammar.c innerLangValues.h
 	gcc -E humangrammar.c -o grammar.i
 
 clean:
-	rm -fr *~ *.o
+	rm -fr *~ *.o *.gch
 	rm -f $(NAME)
 

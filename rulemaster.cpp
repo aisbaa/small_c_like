@@ -43,7 +43,9 @@ bool RuleMaster::match(char testChar) {
       allFailed = false;
     /*
     if (status)
-      cout << "pass "
+      cout << "pass char "
+           << testChar
+           << " rule "
            << (*rule) -> getRule() 
            << endl;
     */
