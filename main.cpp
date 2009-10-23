@@ -11,6 +11,12 @@ int main() {
   /* test rulepawn */
   /*
   string str = "\"labas\"";
+  RulePawn rule("\"@\"");
+  for (unsigned int i = 0; i < str.length(); i++) {
+    rule.pass(str[i]);
+  }
+  cout << "rules " <<(rule.passed() ? "passed": "didn't") << endl;
+
   RuleMaster testRules("rules");
   for (unsigned int i = 0; i < str.length(); i++) {
     testRules.match(str[i]);

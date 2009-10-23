@@ -45,6 +45,7 @@ bool RulePawn::nextCharacterMatcher(char value) {
      * so we point to next character in rule
      */
     this->current++;
+
     if (matchHandler(value, false)) // if succeeds with next character
       return true;                  // return true and don't increment this -> current
                                     // because its already pointing to next rule character
@@ -54,8 +55,10 @@ bool RulePawn::nextCharacterMatcher(char value) {
      * character failed
      *
      * so we get back to this charater in rule
+     * and this means two steps back, because I
+     * forgot why, but it works with two XD
      */
-    this->current--;
+    this->current -= 2;
   }
 
   return false;
