@@ -77,11 +77,8 @@ bool RulePawn::letterDigitHandler(char value) {
 }
 
 bool RulePawn::escapeHandler(char value) {
-  this -> current++; // hope over escape
-  if (this -> rule[this -> current++] == value)
-    return true;
-
-  return false;
+  this -> current++; // hope over escape character
+  return directMatch(value);
 }
 
 bool RulePawn::directMatch(char value) {
