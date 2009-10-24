@@ -29,6 +29,8 @@ class Token {
   /*
    * sould have operator << for cout
    */
+  friend ostream& operator<<(ostream& tokenInfo, const Token &token);
+
 };
 
 #endif

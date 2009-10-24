@@ -38,3 +38,10 @@ string Token::getSourceText() {
 const Position::Position * Token::getPosition() {
   return this -> foundIn;
 }
+
+ostream& operator<<(ostream& tokenInfo, const Token &token) {
+  return tokenInfo << token.innerLangCode << endl
+      << token.sourceText << endl
+      << token.foundIn;
+}
+
