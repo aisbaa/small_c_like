@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "rulepawn.h"
+//#include "rulepawn.h"
 #include "rulemaster.h"
 #include "scanner.h"
 #include "token.h"
@@ -9,22 +9,13 @@
 using namespace std;
 
 int main() {
-  /*
-  RulePawn rule("");
-  string str("");
-
-  for (unsigned int i = 0; i < str.length(); i++)
-    rule.pass(str[i]);
-
-  cout << (rule.passed() ? "true": "false") << endl;
-  */
-  /* to show */
   map<string,string> comments;
   comments.insert(pair<string, string>("/*", "*/"));
   comments.insert(pair<string, string>("//", "\n"));
+//  comments.insert(pair<string, string>("2", "0"));
 
   RuleMaster rules("rules");
-  Scanner scanner("testcompiler/example.c", &rules, true);
+  Scanner scanner("testcompiler/example.c", &rules, true, &comments);
 
   Token * token = NULL;
   while (

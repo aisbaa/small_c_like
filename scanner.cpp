@@ -86,12 +86,34 @@ void Scanner::skipWhiteSpace() {
     this -> file -> ignore(1);
 }
 
+bool Scanner::strContains(string contains, string needle, bool front) {
+  if (contains.length() < needle.length())
+    return false;
+
+  string extract;
+
+  if (front)
+    extract = contains.substr(0, needle.length());
+  else
+    extract = contains.substr(contains.length() -needle.length());
+
+  return (extract == needle);
+}
+
 bool Scanner::isComment(string lex) {
   if (this -> comments == NULL)
     return false;
+
+  for (
+       map<string,string>::iterator commentIterator = this -> comments -> begin();
+       commentIterator != this -> comments -> end();
+       commentIterator++
+       )
+    if (
+        strContains(lex, commentIterator -> first, true) &&
+        strContains(lex, commentIterator -> second, false)
+        )
+      return true;
   
   return false;
-  /*
-   * map<string,string>::iterator iterator = this -> comments -> find (lex);
-   */
 }

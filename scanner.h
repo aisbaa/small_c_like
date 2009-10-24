@@ -28,10 +28,14 @@ class Scanner {
 
  public:
   /* filename , rules, white space skipping, comment map*/
-  Scanner(string, RuleMaster *, bool =true, map<string,string> * =NULL);
+  Scanner(
+          string fileName,
+          RuleMaster *rules,
+          bool skipWhiteSpace = true,
+          map<string,string> * comments = NULL);
   ~Scanner();
   
-  /*
+  /**
    * returns pointer to new Token
    * or NULL if no tokens left
    *
@@ -40,23 +44,32 @@ class Scanner {
   Token::Token * getNextToken();
 
  private:
-  /*
+  /**
    * Gets next string based on rules (RuleMaster)
    */
   string getNextLex();
 
-  /*
+  /**
    * skips white space character until 
    * printable character found
    */
   void skipWhiteSpace();
 
-
-  /*
+  /**
    * tell if current lex (from getNextLex)
    * is found in comments map<string,string>
    */
-  bool isComment(string);
+  bool isComment(string lex);
+
+  /**
+   * checks if needle is at front or back
+   *
+   * needle should be smaller then contains
+   * if not so - false will be returned
+   *
+   * does not check if NULL is passed
+   */
+  bool strContains(string, string, bool = true);
 
 };
 
