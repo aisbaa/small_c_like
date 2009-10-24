@@ -26,12 +26,8 @@ class Token {
   string getSourceText();
 
   const Position * getPosition();
-  /*
-   * sould have operator << for cout
-   */
+
   friend ostream& operator<<(ostream& tokenInfo, const Token &token);
-
-
 };
 
 #endif

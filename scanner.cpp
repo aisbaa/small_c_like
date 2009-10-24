@@ -15,7 +15,13 @@ using namespace std;
  * PUBLIC
  */
 
-Scanner::Scanner(string fileName, RuleMaster * rules, bool skipWhiteSpace, bool skipComments) {
+Scanner::Scanner(
+                 string fileName,
+                 RuleMaster * rules,
+                 bool skipWhiteSpace,
+                 map<string,string> * comments
+                 )
+{
   this -> file = new ifstream(
                               fileName.c_str(),
                               ios_base::in
@@ -23,7 +29,7 @@ Scanner::Scanner(string fileName, RuleMaster * rules, bool skipWhiteSpace, bool 
   this -> rules = rules;
 
   this -> whiteSpaceSkip = skipWhiteSpace;
-  this -> commentSkip    = skipComments;
+  this -> comments = comments;
 }
 
 Scanner::~Scanner() {
@@ -32,16 +38,15 @@ Scanner::~Scanner() {
 }
 
 Token::Token * Scanner::getNextToken() {
-  string lex = getNextLex();
+  string lex;
+  do
+    lex = getNextLex();
+  while (isComment(lex));
 
-  cout << "match: " 
-       << lex
-       << endl;
+  if (lex.length() == 0)
+    return NULL;
 
-  return (lex.length() == 0 ?
-          (Token *)NULL:
-          (Token *)5
-          );
+  return new Token(0, lex, NULL);
 }
 
 /*
@@ -65,16 +70,7 @@ string Scanner::getNextLex() {
       haveMatched = this -> rules -> haveComplete();
       lex += (char)this -> file -> get();
     }
-  /*
-  cout << "eof matching "
-       << haveMatched
-       << this -> rules -> haveComplete()
-       << " "
-       << lex
-       << " "
-       << (char)this -> file -> peek()
-       << endl;
-  */
+
   if (haveMatched)
     return lex;
 
@@ -88,4 +84,14 @@ void Scanner::skipWhiteSpace() {
          isWhiteSpace(this -> file -> peek())
          )
     this -> file -> ignore(1);
+}
+
+bool Scanner::isComment(string lex) {
+  if (this -> comments == NULL)
+    return false;
+  
+  return false;
+  /*
+   * map<string,string>::iterator iterator = this -> comments -> find (lex);
+   */
 }

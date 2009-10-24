@@ -19,8 +19,8 @@
 
 using namespace std;
 
-const string reservedChars  = "@$*.\\";
-const string allowPassedIfLastIs = "@$*";
+const string reservedChars  = "@$*.|\\";
+const string allowPassedIfLastIs = "@$*.";
 
 const int noMoreCharacter = -1;
 
@@ -34,11 +34,18 @@ class RulePawn {
 
   /*
    * Case handlers
+   *
+   * handler value explanation
+   *   char for passing value
+   *   bool for telling if method
+   *    is allowed to change rule state
+   *    (altering failed attribute)
    */
   bool letterHandler(char, bool =true);
   bool digitHandler(char, bool =true);
   bool letterDigitHandler(char, bool =true);
-  bool anyAsciiHandler(char, bool = true);
+  bool anyAsciiHandler(char, bool =true);
+  bool endOfLineHandler(char, bool =true);
   bool escapeHandler(char, bool =true);
   bool directMatch(char, bool =true);
 

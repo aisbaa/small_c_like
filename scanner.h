@@ -1,7 +1,7 @@
 /* SCANNER CLASS
  * 
- * This class deals with scanning programing language code
- * and creating tokens
+ * This class deals with scanning programing
+ * language code and creating tokens
  */
 
 #ifndef SMALL_C_LIKE_SCANNER
@@ -9,9 +9,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <map>
 
 #include "rulemaster.h"
-#include "rulepawn.h"
 #include "token.h"
 
 using namespace std;
@@ -22,10 +22,13 @@ class Scanner {
   RuleMaster * rules;
 
   bool whiteSpaceSkip;
-  bool commentSkip;
+
+  /* comment begin => end */
+  map<string,string> * comments;
 
  public:
-  Scanner(string, RuleMaster *, bool =true, bool =false);
+  /* filename , rules, white space skipping, comment map*/
+  Scanner(string, RuleMaster *, bool =true, map<string,string> * =NULL);
   ~Scanner();
   
   /*
@@ -38,8 +41,7 @@ class Scanner {
 
  private:
   /*
-   * Gets next string based on king (RuleMaster)
-   * rule set
+   * Gets next string based on rules (RuleMaster)
    */
   string getNextLex();
 
@@ -48,6 +50,13 @@ class Scanner {
    * printable character found
    */
   void skipWhiteSpace();
+
+
+  /*
+   * tell if current lex (from getNextLex)
+   * is found in comments map<string,string>
+   */
+  bool isComment(string);
 
 };
 

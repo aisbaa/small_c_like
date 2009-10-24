@@ -1,6 +1,4 @@
-/* comment */
-/*comment*/
-
+/* */
 struct coordinates {
   int x, y, z;
 };
@@ -17,8 +15,9 @@ int grt(int a, int b) {
 };
 
 int main() {
+  // sveikas neigiamas skaicius
   int sveikas = -5;
-  char raide = 'a';'' ""
+  char raide = 'a';
  
   int aibe [5] = {1, 2, 3, 4, 5};
   char raides[5] = "abcd";
@@ -33,6 +32,10 @@ int main() {
  
   printf("\n"+ sveikas);
  
+  /*
+    if else demonstracija
+   */
+
   if (sveikas == 5) {
     printf("puikumelis sveikas == 5\n");
   } else if (sveikas > 3) {

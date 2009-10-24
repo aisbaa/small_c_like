@@ -40,7 +40,8 @@ const Position::Position * Token::getPosition() {
 }
 
 ostream& operator<<(ostream& tokenInfo, const Token &token) {
-  return tokenInfo << token.innerLangCode << endl
-      << token.sourceText << endl
-      << token.foundIn;
+  tokenInfo.width(2);
+  return tokenInfo << token.innerLangCode << " "
+                   << token.sourceText;
+   //              << (token.foundIn != (Position *)NULL ? token.foundIn : "");
 }
