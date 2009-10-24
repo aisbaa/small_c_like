@@ -44,4 +44,3 @@ ostream& operator<<(ostream& tokenInfo, const Token &token) {
       << token.sourceText << endl
       << token.foundIn;
 }
-

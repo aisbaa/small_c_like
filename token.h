@@ -31,6 +31,7 @@ class Token {
    */
   friend ostream& operator<<(ostream& tokenInfo, const Token &token);
 
+
 };
 
 #endif
