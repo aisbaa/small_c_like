@@ -7,19 +7,16 @@
 
 using namespace std;
 
-RulePawn::RulePawn(string rule) {
+RulePawn::RulePawn(string rule, string additionalLetters) {
   this->rule    = rule;
+  this->additionalLetters = additionalLetters;
   reset();
 }
 
 RulePawn::~RulePawn() {}
 
 /*
- * Private methods
- */
-
-/*
- * HELPERS
+ * PRIVATE HELPERS
  */
 
 int RulePawn::getNextRuleCharacter() {
@@ -66,7 +63,7 @@ bool RulePawn::nextCharacterMatcher(char value) {
 }
 
 /*
- * MATCHERS
+ * PRIVATE MATCHERS
  */
 bool RulePawn::letterHandler(char value, bool first) {
   if (first)
@@ -74,10 +71,13 @@ bool RulePawn::letterHandler(char value, bool first) {
       /* If next character matched */
       return true;
 
-  if (!isLetter(value)) {
-    if (first) fail();
-    return false;
-  } 
+  if (
+      !isLetterPlus(value, this -> additionalLetters.c_str())
+      )
+    {
+      if (first) fail();
+      return false;
+    }
 
   return true;
 }
@@ -102,7 +102,7 @@ bool RulePawn::letterDigitHandler(char value, bool first) {
       /* If next character matched */
       return true;
 
-  if (!isDecimalDigit(value) && !isLetter(value)) {
+  if (!isDecimalDigit(value) && !isLetterPlus(value, this -> additionalLetters.c_str())) {
     if (first) fail();
     return false;
   } 
@@ -130,12 +130,15 @@ bool RulePawn::endOfLineHandler(char value, bool first) {
 }
 
 bool RulePawn::escapeHandler(char value, bool first) {
-  this -> current++; // hope over escape character
+  this -> current++;
 
   if (!first) {
-    /* if im not firts */
+    /* if im not first */
     if (!directMatch(value, false)) {
-      /* I have to take care of current on fail */
+      /*
+       * I have to take care of this -> current
+       * value on fail
+       */
       this -> current--;
       return false;
     }

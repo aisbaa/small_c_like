@@ -9,12 +9,10 @@ bool isDecimalDigit(char);
 
 bool isLetter(char);
 
+bool isLetterPlus(char, const char *);
+
 bool isSpecialCharacter(char);
 
-/* returns last char index */
-
-bool isAtBeginnig(const char *, const char *);
-
-bool isAtEnd(const char *, const char *);
+bool containsCharacter(const char *, char);
 
 #endif

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 
+#include "ascii_info.h"
 
 #include "rulemaster.h"
 #include "innerLang.h"
@@ -15,9 +16,10 @@ int main() {
   map<string,string> comments;
   comments.insert(pair<string, string>("/*", "*/"));
   comments.insert(pair<string, string>("//", "\n"));
+  comments.insert(pair<string, string>("#",  "\n"));
 
   RuleMaster rules("rules");
-  Scanner scanner("testcompiler/example.c", &rules, &lang, &comments,true);
+  Scanner scanner("testcompiler/stress.c", &rules, &lang, &comments,true);
 
   Token * token = NULL;
   while (

@@ -22,16 +22,17 @@ using namespace std;
 const string reservedChars  = "@$*.|\\";
 const string allowPassedIfLastIs = "@$*.";
 
+const string defaultadditionalLetters = "_";
+
 const int noMoreCharacter = -1;
 
 class RulePawn {
  private:
   unsigned int current;
-
   string rule;
-
   bool failed;
 
+  string additionalLetters;
   /*
    * Case handlers
    *
@@ -60,7 +61,7 @@ class RulePawn {
   void fail();
 
  public:
-  RulePawn(string);
+  RulePawn(string, string =defaultadditionalLetters);
   ~RulePawn();
 
   /*tells if rule passed */

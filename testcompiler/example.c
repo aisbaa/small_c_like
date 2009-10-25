@@ -1,5 +1,5 @@
 /* eilute zemiau demonstruoja laisvai aprasoma komentara */
-2 laisvai aprašomas komentaras 0
+2 laisvai aprasomas komentaras 0
 /* */
 struct coordinates {
   int x, y, z;

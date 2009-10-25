@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include "ascii_info.h"
@@ -33,27 +34,29 @@ bool isSpecialCharacter(char character) {
   return false;
 } /* Now it seems that ascii designed exponentially XD */
 
+/*
+ * ADITIONAL FUNCTIONALITY
+ */
 
-bool isAtBeginnig(const char * str1, const char *str2) {
-  unsigned int one = 0, two = 0;
-
-  while (str1[one] != '\0' && str2[two] != '\0')
-    if (str1[one] != str2[two]) return false;
-
-  return true;
-}
-
-bool isAtEnd(const char * str1, const char * str2) {
-  unsigned int one = strlen(str1) -1;
-  unsigned int two = strlen(str2) -1;
-
+bool containsCharacter(const char * stack, char needle) {
+  /*
+   * should test if index is decremented before or
+   * after for loop
+   */
   for (
-       unsigned int index = (one > two ? one : two);
-       index >= 0;
-       index--
+       unsigned int index = 0;
+       index < strlen(stack);
+       index++
        )
-    if (str1[one -index] != str1[two -index])
-      return false;
+    if (stack[index] == needle)
+      return true;
 
   return false;
+}
+
+bool isLetterPlus(char character, const char * additional) {
+  if (isLetter(character))
+    return true;
+  else
+    return containsCharacter(additional, character);
 }

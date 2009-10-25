@@ -4,7 +4,7 @@
 
 #include "innerLang.h"
 #include "textstream.h"
-#include "innerLangValues.h"
+//#include "innerLangValues.h"
 
 using namespace std;
 
