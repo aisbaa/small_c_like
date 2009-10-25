@@ -1,24 +1,31 @@
 NAME   = smallclike
 
+CPP    = g++
 CC     = g++
 CFLAGS = -Wall -c
 LFALGS = -g
 
-SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp
+INNER_LANG_NAME   = inner_lang_gen.i
+INNER_LANG_SOURCE = inner_lang_human.c
+INNER_LANG_VALUES = inner_lang_values.h
+
+SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp
 HDRCPP = $(SRCCPP:.cpp=.h)
 
-HDRS  = $(HDRCPP) ascii_info.h
-OBJS  = $(SRCCPP:.cpp=.o) ascii_info.o
-MAIN  = $(OBJS) main.o 
+SRCC = ascii_info.c
+HDRC = $(SRCCPP:.c=.h)
 
-all: compile run
+HDRS = $(HDRCPP) $(HDRC)
+OBJS = $(SRCCPP:.cpp=.o) $(SRCC:.c=.o)
+MAIN = $(OBJS) main.o 
+
+all: compile innerLang run
 
 compile: $(MAIN)
 	$(CC) $(LFLAGS) $(MAIN) -o $(NAME)
 
-
 .cpp.o:
-	$(CC) $(CFLAGS) $<
+	$(CPP) $(CFLAGS) $<
 
 .c.o:
 	$(CC) $(CFLAGS) $<
@@ -26,10 +33,11 @@ compile: $(MAIN)
 run:
 	./$(NAME)
 
-grammar: humangrammar.c innerLangValues.h
-	gcc -E humangrammar.c -o grammar.i
+innerLang: $(INNER_LANG_VALUES)
+	gcc -E $(INNER_LANG_SOURCE) -o $(INNER_LANG_NAME)
 
 clean:
 	rm -fr *~ *.o *.gch
 	rm -f $(NAME)
+	rm -f $(INNER_LANG_NAME)
 

@@ -12,6 +12,7 @@
 #include <map>
 
 #include "rulemaster.h"
+#include "innerLang.h"
 #include "token.h"
 
 using namespace std;
@@ -20,19 +21,22 @@ class Scanner {
  private:
   ifstream   * file;
   RuleMaster * rules;
-
-  bool whiteSpaceSkip;
+  InnerLang  * lang;
 
   /* comment begin => end */
   map<string,string> * comments;
+
+  bool whiteSpaceSkip;
 
  public:
   /* filename , rules, white space skipping, comment map*/
   Scanner(
           string fileName,
-          RuleMaster *rules,
-          bool skipWhiteSpace = true,
-          map<string,string> * comments = NULL);
+          RuleMaster *,
+          InnerLang *,
+          map<string,string> *,
+          bool
+          );
   ~Scanner();
   
   /**

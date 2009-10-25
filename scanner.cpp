@@ -18,8 +18,9 @@ using namespace std;
 Scanner::Scanner(
                  string fileName,
                  RuleMaster * rules,
-                 bool skipWhiteSpace,
-                 map<string,string> * comments
+                 InnerLang * lang,
+                 map<string,string> * comments,
+                 bool skipWhiteSpace
                  )
 {
   this -> file = new ifstream(
@@ -27,9 +28,10 @@ Scanner::Scanner(
                               ios_base::in
                               );
   this -> rules = rules;
+  this -> lang  = lang;
 
-  this -> whiteSpaceSkip = skipWhiteSpace;
   this -> comments = comments;
+  this -> whiteSpaceSkip = skipWhiteSpace;
 }
 
 Scanner::~Scanner() {
@@ -46,7 +48,11 @@ Token::Token * Scanner::getNextToken() {
   if (lex.length() == 0)
     return NULL;
 
-  return new Token(0, lex, NULL);
+  return new Token(
+                   this -> lang -> getInnerLangValue(lex),
+                   lex,
+                   NULL
+                   );
 }
 
 /*
