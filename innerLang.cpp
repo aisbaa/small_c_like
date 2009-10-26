@@ -2,9 +2,9 @@
 #include <map>
 #include <stdlib.h>
 
+#include "ascii_info.h"
 #include "innerLang.h"
 #include "textstream.h"
-//#include "innerLangValues.h"
 
 using namespace std;
 
@@ -15,9 +15,19 @@ InnerLang::InnerLang(string fileName) {
   this -> comment        = &defaultComment;
   this -> commentLineEnd = &defaultCommentLineEnd;
 
+  int maxInnerLangValue = 0;
+
   while (this->file->good()) {
-	fgetNextInnerValue();
+    maxInnerLangValue = max(
+                            fgetNextInnerValue(),
+                            maxInnerLangValue
+                            );
   }
+
+  this -> innerLangInteger   = ++maxInnerLangValue;
+  this -> innerLangCharacter = ++maxInnerLangValue;
+  this -> innerLangString    = ++maxInnerLangValue;
+  this -> innerLangIndex     = ++maxInnerLangValue;
 }
 
 InnerLang::~InnerLang() {
@@ -25,6 +35,9 @@ InnerLang::~InnerLang() {
     this->LangReservedWords.erase(this->it);
 }
 
+/*
+ * PRIVATE
+ */
 bool InnerLang::containsAtBegining(const string * base, const string * needle) {
   string compare =  base -> substr(0, needle -> length());
   return (compare == *needle);
@@ -46,12 +59,13 @@ void InnerLang::skipComment() {
     skippedComment = this -> stream -> skipToCharacterSequence(this -> commentLineEnd);
 }
 
+
 bool InnerLang::isDigit() {
   if (atoi((this->buff).c_str())) return true;
   return false;
 }
 
-void InnerLang::fgetNextInnerValue() {
+int InnerLang::fgetNextInnerValue() {
   do {
     this -> buff = this -> stream -> getNextEntity();
     if (isComment()) skipComment();
@@ -69,11 +83,39 @@ void InnerLang::fgetNextInnerValue() {
 
   this->LangReservedWords.insert(pair<string, int>(outerValue, innerValue));
 
-  //cout << outerValue << " - " << innerValue << endl;
+  return innerValue;
+}
+
+bool InnerLang::isInteger(const string * pretender) {
+  for (unsigned int index = 0; index < pretender -> length(); index++)
+    if (!isDecimalDigit((*pretender)[index]))
+      return false;
+  
+  return true;
+}
+
+bool InnerLang::isCharacter(const string * pretender) {
+  if ((*pretender)[0] != '\'') return false;
+
+  return (
+          (*pretender)[pretender -> length() -1]
+          ==
+          '\''
+          );
+}
+
+bool InnerLang::isString(const string * pretender) {
+  if ((*pretender)[0] != '"') return false;
+
+  return (
+          (*pretender)[pretender -> length() -1]
+          ==
+          '"'
+          );
 }
 
 /*
- * Functionality for user
+ * PUBLIC
  */
 
 int InnerLang::getInnerLangValue(string outerValue) {
@@ -91,5 +133,29 @@ int InnerLang::getInnerLangValue(string outerValue) {
   if (idOfReservedWord <= maximumIdOfWords && idOfReservedWord >= 0)
     return this->it->second;
 
-  return defaultUndefinedValue;
+  if (isInteger(&outerValue))
+    return this -> innerLangInteger;
+
+  if (isCharacter(&outerValue))
+    return this -> innerLangCharacter;
+
+  if (isString(&outerValue))
+    return this -> innerLangString;
+
+  return innerLangIndex;
+}
+
+int InnerLang::getInnerLangIntegerValue() {
+  return this ->  innerLangInteger;
+}
+int InnerLang::getinnerLangCharacterValue() {
+  return this -> innerLangCharacter;
+}
+
+int InnerLang::getinnerLangStringValue() {
+  return this -> innerLangString;
+}
+
+int InnerLang::getinnerLangIndexValue() {
+  return this -> innerLangIndex;
 }

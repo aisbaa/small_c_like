@@ -21,17 +21,20 @@ using namespace std;
 
 const string defaultComment        = "#";
 const string defaultCommentLineEnd = "\n";
-const int    defaultUndefinedValue = 99;
 
 typedef map<string, int> innerValueMap;
 
 class InnerLang {
-
+ private:
   ifstream   * file;
   TextStream * stream;
   string       buff;
 
- private:
+  int innerLangInteger;
+  int innerLangCharacter;
+  int innerLangString;
+  int innerLangIndex;
+
   innerValueMap LangReservedWords;
   map<string,int>::iterator it;
 
@@ -46,15 +49,26 @@ class InnerLang {
   bool   isComment();
   void   skipComment();
 
-  bool   isDigit();
+  bool isDigit();
 
-  void fgetNextInnerValue();
+  /* tell only if its positive integer */
+  bool isInteger(const string *);
+  bool isCharacter(const string *);
+  bool isString(const string *);
+
+  /* return innerLangValue */
+  int fgetNextInnerValue();
 
  public:
   InnerLang(string);
   ~InnerLang();
 
   int getInnerLangValue(string);
+
+  int getInnerLangIntegerValue();
+  int getinnerLangCharacterValue();
+  int getinnerLangStringValue();
+  int getinnerLangIndexValue();
 
 };
 

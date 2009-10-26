@@ -10,7 +10,12 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
+  if (argc < 2) {
+    cout << "scanner takes one parameter, filename" << endl;
+    return 0;
+  }
+
   InnerLang lang("inner_lang_gen.i");
 
   map<string,string> comments;
@@ -19,7 +24,7 @@ int main() {
   comments.insert(pair<string, string>("#",  "\n"));
 
   RuleMaster rules("rules");
-  Scanner scanner("testcompiler/stress.c", &rules, &lang, &comments,true);
+  Scanner scanner(argv[1], &rules, &lang, &comments,true);
 
   Token * token = NULL;
   while (

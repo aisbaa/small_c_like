@@ -31,7 +31,7 @@ compile: $(MAIN)
 	$(CC) $(CFLAGS) $<
 
 run:
-	./$(NAME)
+	./$(NAME) testcompiler/example.c
 
 innerLang: $(INNER_LANG_VALUES)
 	gcc -E $(INNER_LANG_SOURCE) -o $(INNER_LANG_NAME)
