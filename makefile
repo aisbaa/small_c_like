@@ -31,7 +31,8 @@ compile: $(MAIN)
 	$(CC) $(CFLAGS) $<
 
 run:
-	./$(NAME) testcompiler/example.c
+	./$(NAME) testcompiler/example.c	
+	./$(NAME) testcompiler/stress.c
 
 innerLang: $(INNER_LANG_VALUES)
 	gcc -E $(INNER_LANG_SOURCE) -o $(INNER_LANG_NAME)

@@ -1,8 +1,10 @@
-/* RULEPAWN CLASS
+/**
+ * RULEPAWN CLASS
  *
  * this class tells if string matches rule
+ * similar to regexp
  *
- * rule supports
+ * rule meta simbols
  *  "@" - match any letter
  *  "$" - match any number
  *  "*" - match any letter and number
@@ -19,8 +21,8 @@
 
 using namespace std;
 
-const string reservedChars  = "@$*.|\\";
-const string allowPassedIfLastIs = "@$*.";
+const string reservedChars = "@$*.|\\";
+const string zeroToMany = "@$*.";
 
 const string defaultadditionalLetters = "_";
 
@@ -33,7 +35,7 @@ class RulePawn {
   bool failed;
 
   string additionalLetters;
-  /*
+  /**
    * Case handlers
    *
    * handler value explanation
@@ -50,12 +52,20 @@ class RulePawn {
   bool escapeHandler(char, bool =true);
   bool directMatch(char, bool =true);
 
+  /**
+   * tells if rule has earlyer passed meta simbol
+   * and sets this -> current to it
+   */
+ public:
+  bool canComeBack();
+
+ private:
   bool nextCharacterMatcher(char);
   bool matchHandler(char, bool =true);
 
   /* helpers */
-  int getNextRuleCharacter();
-  bool allowPassedIfLast();
+  bool hasNextRuleCharacter();
+  bool isZeroToMany(int = -1);
 
   /* changes rule's state to failed */
   void fail();
@@ -64,16 +74,16 @@ class RulePawn {
   RulePawn(string, string =defaultadditionalLetters);
   ~RulePawn();
 
-  /*tells if rule passed */
+  /** tells if rule passed */
   bool passed();
 
-  /* reset all values */
+  /** reset all values */
   void reset();
 
-  /* tells if char matches with current char in rule */
+  /** tells if char matches with current char in rule */
   bool pass(char);
 
-  /* this is temp method , will be deleted later */
+  /** this is temp method , will be deleted later */
   string getRule();
 };
 

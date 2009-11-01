@@ -37,18 +37,11 @@ bool RuleMaster::match(char testChar) {
      * atleast one rule passes
      */
 
-    bool status = (*rule) -> pass(testChar);
+    //    bool status = ;
 
-    if (status && allFailed)
+    if ((*rule) -> pass(testChar) && allFailed)
       allFailed = false;
-    /*
-    if (status)
-      cout << "pass char "
-           << testChar
-           << " rule "
-           << (*rule) -> getRule() 
-           << endl;
-    */
+
     rule++;
   }
 

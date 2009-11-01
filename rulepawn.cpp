@@ -19,103 +19,34 @@ RulePawn::~RulePawn() {}
  * PRIVATE HELPERS
  */
 
-int RulePawn::getNextRuleCharacter() {
-  if (this->current +1 >= this -> rule.length())
-    return noMoreCharacter;
-
-  return this->rule[this->current +1];
+bool RulePawn::hasNextRuleCharacter() {
+  return (this->current +1 < this -> rule.length());
 }
 
-bool RulePawn::allowPassedIfLast() {
-  return (
-          allowPassedIfLastIs.find(
-                                   this->rule[this->current]
-                                   )
-          != string::npos
-          );
-}
-
-bool RulePawn::nextCharacterMatcher(char value) {
-  if (getNextRuleCharacter() == noMoreCharacter)
-    return false;
-  /*
-   * so we have next character
-   * we need to point to next character in rule
-   * and try to match it
-   */
-  this->current++;
-
-  if (matchHandler(value, false)) // if succeeds with next character
-    return true;                  // return true and don't increment this -> current
-  // because its already pointing to next rule character
-  /*
-   * if execution reaches this place
-   * this means that test with next
-   * character failed
-   *
-   * so we get back to this charater in rule
-   * and this means two steps back, because I
-   * forgot why, but it works with two XD
-   */
-  this->current--;
-
-  return false;
+bool RulePawn::isZeroToMany(int index) {
+  int check = (index == -1 ? this->current: index);
+  return (zeroToMany.find(this->rule[check]) != string::npos);
 }
 
 /*
  * PRIVATE MATCHERS
  */
 bool RulePawn::letterHandler(char value, bool first) {
-  if (first)
-    if (nextCharacterMatcher(value))
-      /* If next character matched */
-      return true;
-
-  if (
-      !isLetterPlus(value, this -> additionalLetters.c_str())
-      )
-    {
-      if (first) fail();
-      return false;
-    }
-
-  return true;
+  return isLetterPlus(value, this -> additionalLetters.c_str());
 }
 
 bool RulePawn::digitHandler(char value, bool first) {
-  if (first)
-    if (nextCharacterMatcher(value))
-      /* If next character matched */
-      return true;
-
-  if (!isDecimalDigit(value)) {
-    if (first) fail();
-    return false;
-  }
-
-  return true;
+  return isDecimalDigit(value);
 }
 
 bool RulePawn::letterDigitHandler(char value, bool first) {
-  if (first)
-    if (nextCharacterMatcher(value))
-      /* If next character matched */
-      return true;
-
-  if (!isDecimalDigit(value) && !isLetterPlus(value, this -> additionalLetters.c_str())) {
-    if (first) fail();
-    return false;
-  } 
-
-  return true;
+  return (
+          isDecimalDigit(value) ||
+          isLetterPlus(value, this -> additionalLetters.c_str())
+          );
 }
 
 bool RulePawn::anyAsciiHandler(char value, bool first) {
-  if (first)
-    if (nextCharacterMatcher(value))
-      /* If next character matched */
-      return true;
-
   return true;
 }
 
@@ -125,7 +56,6 @@ bool RulePawn::endOfLineHandler(char value, bool first) {
     return true;
   }
 
-  if (first) fail();
   return false;
 }
 
@@ -155,11 +85,58 @@ bool RulePawn::directMatch(char value, bool first) {
     return true;
   }
 
-  if (first) fail();
+  return false;
+}
+
+bool RulePawn::canComeBack() {
+  if (passed())
+    return false; // not the best disigion
+
+  for (int index = this -> current -1; index >= 0; index--)
+    if (isZeroToMany(index)) {
+      this -> current = index;
+      return true;
+    }
+  
+  return false;
+}
+
+
+bool RulePawn::nextCharacterMatcher(char value) {
+  if (!hasNextRuleCharacter())
+    return false;
+
+  if (!isZeroToMany())
+    return false;
+
+  /* so we have next character
+   * and its zero to many
+   * we need to point to next character in rule
+   * and try to match it
+   */
+  this->current++;
+  if (matchHandler(value, false)) // if succeeds with next character
+    return true;                  // return true and don't increment this -> current
+  // because its already pointing to next rule character
+  /*
+   * if execution reaches this place
+   * this means that test with next
+   * character failed
+   *
+   * so we get back to this charater in rule
+   * and this means two steps back, because I
+   * forgot why, but it works with two XD
+   */
+  this->current--;
+
   return false;
 }
 
 bool RulePawn::matchHandler(char value, bool first) {
+  if (first && nextCharacterMatcher(value)) {
+    return true;
+  }
+
   switch (reservedChars.find(this->rule[this->current])) {
   case 0:
     return letterHandler(value, first);
@@ -209,11 +186,16 @@ bool RulePawn::passed() {
   if (this->failed)
     return false;
 
-  if (allowPassedIfLast())
-    return (
-            (this->rule.length() -1)
-            == current
-            );
+  if (isZeroToMany()) {
+    /*
+    cout << "curr: "
+         << this -> current
+         << " "
+         << this -> rule
+         << endl;
+    */
+    return ((this->rule.length() -1) == current);
+  }
 
   return (this->rule.length() == current);
 }
@@ -222,7 +204,15 @@ bool RulePawn::pass(char value) {
   if (this->failed)
     return false;
 
-  return matchHandler(value, true);
+  if (matchHandler(value, true))
+    return true;
+
+  if (canComeBack())
+    return pass(value);
+
+  fail();
+
+  return false;
 }
 
 string RulePawn::getRule() {
