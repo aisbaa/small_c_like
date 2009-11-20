@@ -9,10 +9,12 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <map>
 
 #include "rulemaster.h"
 #include "innerLang.h"
+#include "position.h"
 #include "token.h"
 
 using namespace std;
@@ -23,6 +25,9 @@ class Scanner {
   RuleMaster * rules;
   InnerLang  * lang;
 
+  string * filename;
+  int line, col;
+
   /* comment begin => end */
   map<string,string> * comments;
 
@@ -31,7 +36,7 @@ class Scanner {
  public:
   /* filename , rules, white space skipping, comment map*/
   Scanner(
-          string fileName,
+          string *,
           RuleMaster *,
           InnerLang *,
           map<string,string> *,

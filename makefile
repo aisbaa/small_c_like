@@ -9,7 +9,7 @@ INNER_LANG_NAME   = inner_lang_gen.i
 INNER_LANG_SOURCE = inner_lang_human.c
 INNER_LANG_VALUES = inner_lang_values.h
 
-SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp
+SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp
 HDRCPP = $(SRCCPP:.cpp=.h)
 
 SRCC = ascii_info.c
@@ -31,7 +31,8 @@ compile: $(MAIN)
 	$(CC) $(CFLAGS) $<
 
 run:
-	./$(NAME) testcompiler/example.c	
+	./$(NAME) testcompiler/simple.c
+	./$(NAME) testcompiler/example.c
 	./$(NAME) testcompiler/stress.c
 
 innerLang: $(INNER_LANG_VALUES)

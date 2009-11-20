@@ -24,7 +24,8 @@ int main(int argc, char **argv) {
   comments.insert(pair<string, string>("#",  "\n"));
 
   RuleMaster rules("rules");
-  Scanner scanner(argv[1], &rules, &lang, &comments,true);
+  string filename(argv[1]);
+  Scanner scanner(&filename, &rules, &lang, &comments,true);
 
   Token * token = NULL;
   while (

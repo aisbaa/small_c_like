@@ -7,6 +7,7 @@
 #include "rulemaster.h"
 #include "rulepawn.h"
 #include "scanner.h"
+#include "position.h"
 #include "token.h"
 
 using namespace std;
@@ -16,7 +17,7 @@ using namespace std;
  */
 
 Scanner::Scanner(
-                 string fileName,
+                 string * filename,
                  RuleMaster * rules,
                  InnerLang * lang,
                  map<string,string> * comments,
@@ -24,7 +25,7 @@ Scanner::Scanner(
                  )
 {
   this -> file = new ifstream(
-                              fileName.c_str(),
+                              filename -> c_str(),
                               ios_base::in
                               );
   this -> rules = rules;
@@ -32,6 +33,10 @@ Scanner::Scanner(
 
   this -> comments = comments;
   this -> whiteSpaceSkip = skipWhiteSpace;
+
+  this -> filename = filename;
+  this -> line = 1;
+  this -> col  = 1;
 }
 
 Scanner::~Scanner() {
@@ -51,7 +56,7 @@ Token::Token * Scanner::getNextToken() {
   return new Token(
                    this -> lang -> getInnerLangValue(lex),
                    lex,
-                   NULL
+                   new Position(this -> filename, this -> line, this -> col - lex.length())
                    );
 }
 
@@ -73,8 +78,16 @@ string Scanner::getNextLex() {
          this -> rules -> match((char)this -> file -> peek())
          )
     {
+      char curr = (char)this -> file -> get();
       haveMatched = this -> rules -> haveComplete();
-      lex += (char)this -> file -> get();
+      lex += curr;
+
+      if (curr == '\n') {
+        this -> line++;
+        this -> col = 0;
+      }
+      
+      this -> col++;
     }
 
   if (haveMatched)
@@ -89,7 +102,16 @@ void Scanner::skipWhiteSpace() {
          this -> file -> good() &&
          isWhiteSpace(this -> file -> peek())
          )
-    this -> file -> ignore(1);
+    {
+      char curr = (char)this -> file -> get(); 
+
+      if (curr == '\n') {
+        this -> line++;
+        this -> col = 0;
+      }
+      
+      this -> col++;
+    }
 }
 
 bool Scanner::strContains(string contains, string needle, bool front) {
@@ -107,6 +129,9 @@ bool Scanner::strContains(string contains, string needle, bool front) {
 }
 
 bool Scanner::isComment(string lex) {
+  const bool front = true;
+  const bool tail = false;
+
   if (this -> comments == NULL)
     return false;
 
@@ -116,8 +141,8 @@ bool Scanner::isComment(string lex) {
        commentIterator++
        )
     if (
-        strContains(lex, commentIterator -> first, true) &&
-        strContains(lex, commentIterator -> second, false)
+        strContains(lex, commentIterator -> first, front) &&
+        strContains(lex, commentIterator -> second, tail)
         )
       return true;
   

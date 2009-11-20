@@ -1,6 +1,7 @@
-/* CLASS POSITION
+/**
+ * CLASS POSITION
  *
- * This class is used to save information on there
+ * This class used for saveing information on there
  * STRING is found in file excluding STRING IT SELF
  */
 
@@ -8,22 +9,26 @@
 #define SMALL_C_LIKE_POSITION
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 class Position {
  private:
-  string fileName;
+  string * filename;
   int line;
   int col;
 
  public:
-  Position(string, int, int);
+  Position(string *, int, int);
 
-  string getFilename();
+  const string * getFilename();
 
   int getLine();
   int getCol();
+
+  friend ostream& operator<<(ostream& stream, Position &pos);
+
 };
 
 #endif
