@@ -37,11 +37,11 @@ run:
 #	./$(NAME) $(DEMO_DIR)/example.c
 #	./$(NAME) $(DEMO_DIR)/stress.c
 
-innerLang: $(INNER_LANG_VALUES)
-	gcc -E $(INNER_LANG_SOURCE) -o $(INNER_LANG_NAME)
-
 clean:
 	rm -fr *~ *.o *.gch
 	rm -f $(NAME)
 	rm -f $(INNER_LANG_NAME)
 
+REMOVE_PREROCESOR_COMMENTS = 
+innerLang: $(INNER_LANG_VALUES)
+	gcc -E $(INNER_LANG_SOURCE)  | grep "^#.*$"" -v > $(INNER_LANG_NAME)
