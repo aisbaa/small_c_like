@@ -9,6 +9,8 @@ INNER_LANG_NAME   = inner_lang_gen.i
 INNER_LANG_SOURCE = inner_lang_human.c
 INNER_LANG_VALUES = inner_lang_values.h
 
+DEMO_DIR = demo
+
 SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp
 HDRCPP = $(SRCCPP:.cpp=.h)
 
@@ -31,9 +33,9 @@ compile: $(MAIN)
 	$(CC) $(CFLAGS) $<
 
 run:
-	./$(NAME) testcompiler/simple.c
-	./$(NAME) testcompiler/example.c
-	./$(NAME) testcompiler/stress.c
+	./$(NAME) $(DEMO_DIR)/simple.c
+#	./$(NAME) $(DEMO_DIR)/example.c
+#	./$(NAME) $(DEMO_DIR)/stress.c
 
 innerLang: $(INNER_LANG_VALUES)
 	gcc -E $(INNER_LANG_SOURCE) -o $(INNER_LANG_NAME)

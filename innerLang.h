@@ -23,6 +23,7 @@ const string defaultComment        = "#";
 const string defaultCommentLineEnd = "\n";
 
 typedef map<string, int> innerValueMap;
+typedef map<string,int>::iterator innerValueMapInterator;
 
 class InnerLang {
  private:
@@ -36,7 +37,7 @@ class InnerLang {
   int innerLangIndex;
 
   innerValueMap LangReservedWords;
-  map<string,int>::iterator it;
+  innerValueMapInterator it;
 
   int otherInnerValue;
 
