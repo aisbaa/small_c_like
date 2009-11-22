@@ -34,6 +34,7 @@ run:
 #	./$(NAME) $(DEMO_DIR)/stress.c
 
 clean:
+	make -C $(DEMO_DIR)
 	rm -fr *~ *.o *.gch
 	rm -f $(NAME)
 	rm -f $(INNER_LANG_NAME)
