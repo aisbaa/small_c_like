@@ -22,6 +22,7 @@ class RewriterTool {
 
     string buffer;
     string outFile;
+    string syntax[][3];
 
     const string * delimiter;
 

@@ -17,9 +17,9 @@ int main(int argc, char **argv) {
 
     RewriterTool tool("test.i");
     InnerLang lang("inner_lang_gen.i");
-    Syntax syntax("test.i");
+    Syntax syntax("test");
 
-    Matrix matrix(&lang);
+    Matrix matrix(&lang, &syntax);
 
 /*
   if (argc < 2) {

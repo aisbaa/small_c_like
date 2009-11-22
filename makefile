@@ -7,7 +7,7 @@ LFALGS = -g
 
 DEMO_DIR = demo
 
-SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp
+SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp matrix.cpp syntax.cpp rewritertool.cpp
 HDRCPP = $(SRCCPP:.cpp=.h)
 
 SRCC = ascii_info.c

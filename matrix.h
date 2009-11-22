@@ -2,8 +2,10 @@
 #define SMALL_C_LIKE_MATRIX
 
 #include <map>
+#include <vector>
 
 #include "innerLang.h"
+#include "syntax.h"
 
 using namespace std;
 
@@ -17,15 +19,17 @@ class Matrix {
 
     InnerLang * lang;
 
+    Syntax * syntax;
+
     MatrixMap row;
     MatrixMap column;
 
-    int ** matrix;
+    string ** matrix;
 
     map<string, int>::iterator it;
 
     const string * marker;
-
+    
     /*
      * METHODS
      */
@@ -43,9 +47,10 @@ class Matrix {
     void fillMatrixValues();
 
  public:
-    Matrix::Matrix(InnerLang *);
+    Matrix::Matrix(InnerLang *, Syntax *);
 
     void printColumnValues();
+    void printRowValues();
 
     /*
      * GETTERS
@@ -53,6 +58,8 @@ class Matrix {
 
     /* Get matrix value by ROW and COLUMN names */
     int returnActionNumber(string, string);
+
+    string returnActionValue(string, string);
 
 };
 
