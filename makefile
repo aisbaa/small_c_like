@@ -5,10 +5,6 @@ CC     = g++
 CFLAGS = -Wall -c
 LFALGS = -g
 
-INNER_LANG_NAME   = inner_lang_gen.i
-INNER_LANG_SOURCE = inner_lang_human.c
-INNER_LANG_VALUES = inner_lang_values.h
-
 DEMO_DIR = demo
 
 SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp
@@ -42,6 +38,16 @@ clean:
 	rm -f $(NAME)
 	rm -f $(INNER_LANG_NAME)
 
-REMOVE_PREROCESOR_COMMENTS = 
+INNER_LANG_NAME   = inner_lang_gen.i
+INNER_LANG_SOURCE = inner_lang_human.c
+INNER_LANG_VALUES = inner_lang_values.h
+
 innerLang: $(INNER_LANG_VALUES)
-	gcc -E $(INNER_LANG_SOURCE)  | grep "^#.*$"" -v > $(INNER_LANG_NAME)
+	gcc -E $(INNER_LANG_SOURCE)  | grep $"^#.*$" -v  > $(INNER_LANG_NAME)
+
+
+INNER_AUGMENT_GRAMMAR_NAME = inner_augment_grammar_human_test.i
+INNER_AUGMENT_GRAMMAR_SOURCE = inner_augment_grammar_human_test.c
+
+augmentGrammar: $(INNER_AUGMENT_GRAMMAR)
+	gcc -E $(INNER_AUGMENT_GRAMMAR_SOURCE)  | grep $"^#.*$" -v > $(INNER_AUGMENT_GRAMMAR_NAME)

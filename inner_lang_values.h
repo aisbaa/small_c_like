@@ -8,7 +8,6 @@
 #ifndef SMALL_C_LIKE_INNER_LANG_VALUES
 #define SMALL_C_LIKE_INNER_LANG_VALUES
 
-#define NOTHING 0
 #define MAIN 1
 #define STRUCT_DEC 2
 #define INT 3
@@ -53,4 +52,27 @@
 #define DOUBLE_QUOTE 42
 #define QUOTES 43
 #define QUOTE 44
+
+#endif
+
+#ifndef SMALL_C_LIKE_INNER_BNF_VALUES
+#define SMALL_C_LIKE_INNER_BNF_VALUES
+
+#define POP 0
+
+#define ID 1
+#define INT_VAL 2
+#define CHAR_VAL 3
+
+#define main_dec0 -100
+#define main_dec1 -101
+#define main_dec2 -102
+#define main_dec3 -103
+#define main_func -104
+
+#define var_dec0 -200
+#define var_dec1 -201
+#define var_dec2 -202
+#define var_decl -203
+
 #endif
