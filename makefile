@@ -37,6 +37,7 @@ clean:
 	rm -fr *~ *.o *.gch
 	rm -f $(NAME)
 	rm -f $(INNER_LANG_NAME)
+	rm -f $(INNER_AUGMENT_GRAMMAR_NAME)
 
 INNER_LANG_NAME   = inner_lang_gen.i
 INNER_LANG_SOURCE = inner_lang_human.c
