@@ -159,3 +159,24 @@ int InnerLang::getinnerLangStringValue() {
 int InnerLang::getinnerLangIndexValue() {
   return this -> innerLangIndex;
 }
+
+string *InnerLang::getAllValues() {
+    int size = this->LangReservedWords.size();
+    int index = 0;
+    string * values;
+
+    values = new string[size];
+    
+    for (this->it = this->LangReservedWords.begin(); this->it != this->LangReservedWords.end(); this->it++) {
+	if (this->it->first != "bad stream") {
+	    values[index] = this->it->first;
+	    index++;
+	}
+    }
+
+    return values;
+}
+
+int InnerLang::getSize() {
+    return this->LangReservedWords.size();
+}

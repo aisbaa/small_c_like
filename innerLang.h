@@ -71,6 +71,8 @@ class InnerLang {
   int getinnerLangStringValue();
   int getinnerLangIndexValue();
 
+  string *getAllValues();
+  int getSize();
 };
 
 #endif
