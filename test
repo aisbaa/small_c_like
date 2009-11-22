@@ -1,0 +1,42 @@
+<PROGRAM>               ::= { <declaration> } int main() { <code_block> } #
+
+<declaration>           ::= <function_declaration> | <struct_schedule> #
+
+<function_declaration>  ::= <data_type> <function_name> ( <parameter_list_delaration> ) { <function_body> } ; #
+
+<function_call>         ::= <function_name> ( <parameter_list> ) ; #
+
+<function_name>         ::= <word> #
+
+<function_body>         ::= <code_block> #	
+
+<code_block>            ::= { <simple_code_block> | <return> } #
+
+<simple_code_block>     ::= <variable_declaration> | <variable_assignment> | <function_call> | <while> | <for> | <if> | <array_assign> #
+
+<output_declaration>    ::= printf( <output_data> ) ; #
+
+<output_data>           ::= <string> | <variable_name> | <mixed> #
+<out_content>           ::= <string> | <variable_name> #
+<mixed>                 ::= <out_content> + <output_data> #
+
+<for>                   ::= for ( <for_inside_decl> ; <for_inside_test> ; <for_inside_action> ) { <code_block> } #
+<for_inside_decl>       ::= <variable_declaration> | <nothing> #
+<for_inside_test>       ::= <condition> #
+<for_inside_action>     ::= <var_minimal_assignment>  | <nothing> #
+
+<while>                 ::= while ( <condition> ) { <code_block> } #
+
+<struct_schedule>       ::= struct <struct_name> { <struct_body> }; #
+
+<struct_body>           ::= { <variable_declaration> } #
+
+<struct_declaration>    ::= <struct_name> <variable_name> ; #
+
+<struct_usage_get_val>  ::= <variable_name> -> <variable_name> ; #
+
+<struct_usage_set_val>  ::= <variable_name> -> <variable_name> = <struct_assign_value> ; #
+
+<struct_assign_value>   ::= <arithmetic_expression> | <string> | <char> #
+
+<struct_name>           ::= <word> #
