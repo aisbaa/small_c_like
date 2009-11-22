@@ -22,13 +22,10 @@ else        ELSE
 return      RETURN
 true        TRUE
 false       FALSE
-()          BRACE
 (           OPEN_BRACE
 )           CLOSE_BRACE
-{}          EMPTY_BLOCK
 {           BEGIN
 }           END
-[]          SQUARE_BRACKETS
 [           SQUARE_BRACKET_OPEN
 ]           SQUARE_BRACKET_CLOSE
 =           EQUALITY
@@ -48,10 +45,5 @@ false       FALSE
 ;           SEMICOLON
 ,           COMMA
 :           COLON
+// do we have dot ?
 .           DOT
-/*
-""          DOUBLE_QUOTES
-"           DOUBLE_QUOTE
-''          QUOTES
-'           QUOTE
-*/
