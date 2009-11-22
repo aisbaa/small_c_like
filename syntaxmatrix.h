@@ -66,6 +66,7 @@ class SyntaxMatrix {
 
     int ** getMatrix();
 
+    int getMatrixValue(int, int);
 };
 
 #endif

@@ -18,13 +18,22 @@ SyntaxMatrix::SyntaxMatrix(string fileName, InnerLang * lang) {
 
     parseAll();
     buildMatrix();
-    //printMatrix();
+    /*
+    cout << "Stulpeliai: " << endl;
+    printTerminals();
+    
+    cout << endl << "Desiniosios taisykles: " << endl;
+    printRows();
+    
+    cout << endl << "Matrica:" << endl;
 
-    int a = getNumberByRow("<out_content>+");
-    int b = getNumberByColumn("for");
-
-    cout << a << " " << b << endl;
+    printMatrix();
+    */
 }
+
+/*
+ * PRIVATE
+ */
 
 void SyntaxMatrix::buildMatrix() {
     int columnSize = this->TerminalMap.size();
@@ -109,15 +118,6 @@ void SyntaxMatrix::parseAll() {
 	    }
 	}
     }
-    
-    cout << "Stulpeliai: " << endl;
-    printTerminals();
-    
-    cout << "Desiniosios taisykles: " << endl;
-    printRows();
-    
-    cout << endl;
-    
 }
 
 void SyntaxMatrix::printTerminals() {
@@ -141,6 +141,10 @@ void SyntaxMatrix::printMatrix() {
     }    
 }
 
+/*
+ * PUBLIC
+ */
+
 int SyntaxMatrix::getNumberByRow(string value) {
     this->it = this->RowMap.find(value);
 
@@ -161,4 +165,8 @@ int SyntaxMatrix::getNumberByColumn(string value) {
 
 int ** SyntaxMatrix::getMatrix() {
     return this->matrix;
+}
+
+int SyntaxMatrix::getMatrixValue(int row, int column) {
+    return this->matrix[row][column];
 }
