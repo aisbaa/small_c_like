@@ -9,26 +9,21 @@
 
 using namespace std;
 
-const string defaultMarker = "$";
-
-typedef map<string, int> MatrixMap;
+typedef map<int,int> MatrixMap;
+typedef map<int,int>::iterator matrixMapIterator;
 
 class Matrix {
 
  private:
-
     InnerLang * lang;
-
-    Syntax * syntax;
+    Syntax    * syntax;
 
     MatrixMap row;
     MatrixMap column;
 
-    string ** matrix;
+    int ** matrix;
 
-    map<string, int>::iterator it;
-
-    const string * marker;
+    matrixMapIterator it;
     
     /*
      * METHODS
@@ -51,16 +46,13 @@ class Matrix {
 
     void printColumnValues();
     void printRowValues();
+    void printMatrix();
 
     /*
      * GETTERS
      */
 
-    /* Get matrix value by ROW and COLUMN names */
-    int returnActionNumber(string, string);
-
-    string returnActionValue(string, string);
-
+    int returnActionNumber(int, int);
 };
 
 #endif
