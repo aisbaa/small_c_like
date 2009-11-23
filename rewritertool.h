@@ -46,7 +46,7 @@ class RewriterTool {
 
  public:
 
-    RewriterTool::RewriterTool(string);
+    RewriterTool(string);
 
 };
 

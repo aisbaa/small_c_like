@@ -35,7 +35,7 @@ class Syntax {
     int convertToInteger(string);
 
  public:
-    Syntax::Syntax(string);
+    Syntax(string);
 
     void printSyntaxValues();
 

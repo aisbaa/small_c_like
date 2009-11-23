@@ -31,7 +31,7 @@ class Matrix {
     void fillMatrixValues();
 
  public:
-    Matrix::Matrix(Syntax *);
+    Matrix(Syntax *);
 
     void printColumnValues();
     void printRowValues();
