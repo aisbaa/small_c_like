@@ -1,4 +1,5 @@
-/* innerLang header
+/**
+ * innerLang header
  * 
  * Contains inner lang values.
  * File will be included, preprocessed
@@ -47,22 +48,19 @@
 #define SEMICOLON 37
 #define COMMA 38
 #define COLON 39
-#define DOT 40
-#define DOUBLE_QUOTES 41
-#define DOUBLE_QUOTE 42
-#define QUOTES 43
-#define QUOTE 44
 
 #endif
 
 #ifndef SMALL_C_LIKE_INNER_BNF_VALUES
 #define SMALL_C_LIKE_INNER_BNF_VALUES
 
-#define POP 0
+#define INIT_STATE 1000
+
+#define POP 1001
 
 /* this might change */
-#define ID -1
-#define INT_VAL -2
-#define CHAR_VAL -3
+#define ID 1002
+#define INT_VAL 1003
+#define CHAR_VAL 1004
 
 #endif

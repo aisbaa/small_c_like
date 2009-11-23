@@ -45,5 +45,3 @@ false       FALSE
 ;           SEMICOLON
 ,           COMMA
 :           COLON
-// do we have dot ?
-.           DOT
