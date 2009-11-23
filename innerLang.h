@@ -46,9 +46,6 @@ class InnerLang {
 
  private:
   bool   containsAtBegining(const string *, const string *);
-  bool   isCommentOneLine();
-  bool   isComment();
-  void   skipComment();
 
   bool isDigit();
 

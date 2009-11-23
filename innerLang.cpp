@@ -43,40 +43,18 @@ bool InnerLang::containsAtBegining(const string * base, const string * needle) {
   return (compare == *needle);
 }
 
-bool InnerLang::isCommentOneLine() {
-  return containsAtBegining(&(this -> buff), this -> comment);
-}
-
-
-bool InnerLang::isComment() {
-  return isCommentOneLine();
-}
-
-void InnerLang::skipComment() {
-  string skippedComment;
-
-  if (isCommentOneLine())
-    skippedComment = this -> stream -> skipToCharacterSequence(this -> commentLineEnd);
-}
-
-
 bool InnerLang::isDigit() {
   if (atoi((this->buff).c_str())) return true;
   return false;
 }
 
 int InnerLang::fgetNextInnerValue() {
-  do {
-    this -> buff = this -> stream -> getNextEntity();
-    if (isComment()) skipComment();
-  } while (isComment());
-
   string outerValue;
   int    innerValue;
 
   do {
-	outerValue += this->buff;
-    this->buff = this->stream->getNextEntity();
+      outerValue += this -> stream -> getNextEntity();
+      this->buff = this->stream->getNextEntity();
   } while (!isDigit() && this->file->good());
 
   innerValue = atoi((this->buff).c_str());
