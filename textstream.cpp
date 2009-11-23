@@ -176,10 +176,7 @@ string TextStream::getCharSeqcToPatter(const string * pattern) {
 string TextStream::getNextEntity() {
   skipWhiteSpaces();
   
-  if (!this -> stream -> good()) {
-    return "bad stream";
-    /* I gues it should throw exception */
-  }
+  if (!this -> stream -> good()) throw STREAM_IS_NOT_GOOD_FOR_READING;
 
   if (TextStream::isDecimalDigit())
     return getNextNumber();
@@ -190,5 +187,5 @@ string TextStream::getNextEntity() {
   if (TextStream::isLetter())
     return getNextWord();
 
-  return "";
+  throw "I'm teribly sorry got into strange situation. Your's TextStream class, getNextEntity method.";
 }
