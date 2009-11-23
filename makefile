@@ -2,7 +2,7 @@ NAME   = smallclike
 
 CPP    = g++
 CC     = g++
-CFLAGS = -Wall -c
+CFLAGS = -Wall -pedantic -c
 LFALGS = -g
 
 DEMO_DIR = demo
