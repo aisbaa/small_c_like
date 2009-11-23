@@ -14,10 +14,18 @@ Matrix::Matrix(Syntax * syntax) {
     allocateMatrixMemory(); 
     fillMatrixValues();
 
-    //printColumnValues();
-    //printRowValues();
+    cout << "Columns: " << this->column.size() << endl;
+    printColumnValues();
+    cout << endl;
+
+    cout << "Rows: " << this->row.size() << endl;
+    printRowValues();
+    cout << endl;
+
+    cout << "Matrix:" << endl;
     printMatrix();
-    cout << "returnActionNumber(-1, 15) => " << returnActionNumber(-1, 15) << endl;
+    cout << endl;
+    cout << "returnActionNumber(-1, 15) => " << returnActionNumber(-3, 18) << endl;
 }
 
 /*
@@ -26,11 +34,12 @@ Matrix::Matrix(Syntax * syntax) {
 
 void Matrix::buildColumns() {
     for (int i = 0; i < this->syntax->getSize(); i++)
-	this->column.insert(pair<int, int>(this->syntax->getTerminal(i), i));
+	if (this->column.find(this->syntax->getTerminal(i)) == this->column.end())
+	    this->column.insert(pair<int, int>(this->syntax->getTerminal(i), i));
 }
 
 void Matrix::buildRows() {
-    for (int i = 0; i < this->syntax->getSize()-1; i++)
+    for (int i = 0; i < this->syntax->getSize(); i++)
 	if (this->row.find(this->syntax->getAugment(i)) == this->row.end())
 	    this->row.insert(pair<int, int>(this->syntax->getAugment(i), i));    
 }
@@ -48,9 +57,20 @@ void Matrix::fillMatrixValues() {
     int rowSize = this->row.size();
 
     for (int i = 0; i < rowSize; i++) {
-	if (this->column.find(this->syntax->getLeftValue(i)) == this->column.end()) {
-	    this->it = this->column.find(this->syntax->getTerminal(i));
-	    this->matrix[i][(int)this->it->second] = this->syntax->getAugment(i);
+	int first = this->syntax->getAugment(i);
+	int second = this->syntax->getTerminal(i);
+
+	if (second != 0) {
+	    this->it = this->row.find(first);
+	    cout << this->it->first << "  -  " << this->it->second << endl;
+	    
+	    this->it = this->row.find(first);
+	    int rowNum = this->it->second - 1;
+
+	    this->it = this->column.find(second);
+	    int colNum = this->it->second - 1;
+
+	    this->matrix[rowNum][colNum] = this->syntax->getAugment(i);
 	}
     }
 }
@@ -72,22 +92,22 @@ void Matrix::printMatrix() {
 
 void Matrix::printColumnValues() {
     for (this->it = this->column.begin(); this->it != this->column.end(); this->it++)
-	cout << this->it->second << ". " << this->it->first << endl;
+	cout << this->it->first << ". " << this->it->second << endl;
 }
 
 void Matrix::printRowValues() {
     for (this->it = this->row.begin(); this->it != this->row.end(); this->it++)
-	cout << this->it->second << ". " << this->it->first << endl;
+	cout << this->it->first << ". " << this->it->second << endl;
 }
 
 int Matrix::returnActionNumber(int row, int column) {
     int rowNumber, colNumber;
 
     this->it = this->row.find(row);
-    rowNumber = this->it->second + 1;
+    rowNumber = this->it->second-2;
 
     this->it = this->column.find(column);
-    colNumber = this->it->second + 1;
+    colNumber = this->it->second-2;
 
     return this->matrix[rowNumber][colNumber];
 }

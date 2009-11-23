@@ -89,7 +89,9 @@ int Syntax::convertToInteger(string value) {
 
 void Syntax::printSyntaxValues() {
     for (int i = 0; i < this->index; i++)
-	cout << this->syntax[i][0] 
+	cout << i
+	     << ". "
+	     << this->syntax[i][0] 
 	     << " ::= " 
 	     << this->syntax[i][1] 
 	     << " " 
