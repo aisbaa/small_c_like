@@ -18,8 +18,6 @@ Syntax::Syntax(string fileName) {
     this->delimiter = "::=";
 
     makeSyntax();
-    
-    printSyntaxValues();
 }
 
 /*
