@@ -16,10 +16,9 @@ using namespace std;
 int main(int argc, char **argv) {
 
     RewriterTool tool("test.i");
-    InnerLang lang("inner_lang_gen.i");
     Syntax syntax("test");
 
-    Matrix matrix(&lang, &syntax);
+    Matrix matrix(&syntax);
 
 /*
   if (argc < 2) {

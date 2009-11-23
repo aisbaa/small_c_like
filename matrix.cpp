@@ -2,13 +2,11 @@
 #include <map>
 
 #include "matrix.h"
-#include "innerLang.h"
 #include "syntax.h"
 
 using namespace std;
 
-Matrix::Matrix(InnerLang * lang, Syntax * syntax) {
-    this->lang   = lang;
+Matrix::Matrix(Syntax * syntax) {
     this->syntax = syntax;
 
     buildColumns();
