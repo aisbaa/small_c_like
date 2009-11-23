@@ -18,11 +18,8 @@ Syntax::Syntax(string fileName) {
     this->delimiter = "::=";
 
     makeSyntax();
-    /*
-    for (int i = 0; i < this->index; i++) {
-	cout << this->syntax[i][0] << " ::= " << this->syntax[i][1] << " " << this->syntax[i][2] << endl;
-    }
-    */
+    
+    printSyntaxValues();
 }
 
 /*
@@ -30,47 +27,45 @@ Syntax::Syntax(string fileName) {
  */
 
 void Syntax::makeSyntax() {
-    string leftValue, value;
-
     while (this->file->good()) {
+	string leftValue = makeLeftValue();
 
-	while (value != "::="  && this->file->good()) {
-	    value = this->stream->getNextEntity();
-	    if (value != "::=")
-		leftValue += value;
-	}
+	if (convertToInteger(leftValue) > 0)
+	    makeWithOneRightValue(leftValue);
 
-	if (convertToInteger(leftValue) > 0) {
-	    this->syntax[this->index][0] = leftValue;
-	    this->syntax[this->index][1] = this->stream->getNextEntity();
-	    this->syntax[this->index][2] = "NULL";
-	    this->index++;
-	}
-
-	if (convertToInteger(leftValue) < 0) {
-	    string firstValue;
-	    while (this->file->good() && !isNumber(value)) {
-		value = this->stream->getNextEntity();
-		firstValue += value;
-	    }
-	    this->syntax[this->index][0] = leftValue;
-	    this->syntax[this->index][1] = firstValue;
-	    this->syntax[this->index][2] = this->stream->getNextEntity();
-	    this->index++;
-	}
-	leftValue = "";
-	value = "";
+	if (convertToInteger(leftValue) < 0)
+	    makeWithTwoRightValues(leftValue);
     }
 
+}
+
+void Syntax::makeWithOneRightValue(string leftValue) {
+    this->syntax[this->index][0] = convertToInteger(leftValue);
+    this->syntax[this->index][1] = convertToInteger(this->stream->getNextEntity());
+    this->syntax[this->index][2] = NULL;
+    this->index++;
+}
+
+
+void Syntax::makeWithTwoRightValues(string leftValue) {
+    string firstValue, value;
+    while (this->file->good() && !isNumber(value)) {
+	value = this->stream->getNextEntity();
+	firstValue += value;
+    }
+    this->syntax[this->index][0] = convertToInteger(leftValue);
+    this->syntax[this->index][1] = convertToInteger(firstValue);
+    this->syntax[this->index][2] = convertToInteger(this->stream->getNextEntity());
+    this->index++;
 }
 
 string Syntax::makeLeftValue() {
     string value, leftValue;
     
-    value = this->stream->getNextEntity();
-    while (value != this->delimiter && this->file->good()) {
-	leftValue += value;
+    while (value != this->delimiter  && this->file->good()) {
 	value = this->stream->getNextEntity();
+	if (value != this->delimiter)
+	    leftValue += value;
     }
 
     return leftValue;
@@ -92,21 +87,28 @@ int Syntax::convertToInteger(string value) {
  * PUBLIC
  */
 
+void Syntax::printSyntaxValues() {
+    for (int i = 0; i < this->index; i++)
+	cout << this->syntax[i][0] 
+	     << " ::= " 
+	     << this->syntax[i][1] 
+	     << " " 
+	     << this->syntax[i][2] 
+	     << endl;
+}
+
 int Syntax::getSize() {
     return this->index;
 }
 
-string Syntax::getTerminal(int index) {
-    string number = this->syntax[index][2];
-    if (isNumber(number))
-	return this->syntax[index][2];
-    return "NULL";
+int Syntax::getTerminal(int index) {
+    return this->syntax[index][2];
 }
 
-string Syntax::getWord(int index) {
+int Syntax::getAugment(int index) {
     return this->syntax[index][1];
 }
 
-string Syntax::getLeftValue(int index) {
+int Syntax::getLeftValue(int index) {
     return this->syntax[index][0];
 }

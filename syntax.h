@@ -13,12 +13,11 @@ typedef map<string,int>::iterator syntaxValueMapInterator;
 
 class Syntax {
 
- private:
-    
+ private:  
     TextStream * stream;
     ifstream   * file;
 
-    string syntax[100][3];
+    int syntax[100][3];
     
     int index;
 
@@ -26,6 +25,8 @@ class Syntax {
 
 
     void makeSyntax();
+    void makeWithOneRightValue(string);
+    void makeWithTwoRightValues(string);
 
     string makeLeftValue();
 
@@ -34,14 +35,15 @@ class Syntax {
     int convertToInteger(string);
 
  public:
-
     Syntax::Syntax(string);
+
+    void printSyntaxValues();
 
     int getSize();
 
-    string getTerminal(int);
-    string getWord(int);
-    string getLeftValue(int);
+    int getTerminal(int);
+    int getAugment(int);
+    int getLeftValue(int);
 };
 
 #endif
