@@ -50,7 +50,7 @@ void Analizer::check(Token * token) {
     /* give token to semantic */
     ;
   else {
-    cout << token << endl; // gues token brought in iostream
+    cout << *token << endl;
     delete token;
   }
 }
