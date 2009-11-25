@@ -10,7 +10,6 @@
 #include "rulemaster.h"
 
 #include "scanner.h"
-#include "matrix.h"
 #include "syntax.h"
 #include "analizer.h"
 
@@ -25,7 +24,6 @@ int main(int argc, char **argv) {
   Syntax * syntax = NULL;
   try {
     syntax = new Syntax("test");
-    Matrix matrix(syntax);
   } catch (int) {
     cout << "nothing to read or else" << endl;
   } catch (const char *str) {
@@ -33,7 +31,7 @@ int main(int argc, char **argv) {
   } catch (...) {
     cout << "got excpetion" << endl;
   }
-
+  
   if (argc < 2) {
     cout << "scanner takes one parameter, filename" << endl;
     return 0;
@@ -44,11 +42,11 @@ int main(int argc, char **argv) {
   InnerLang lang("inner_lang_gen.i");
   RuleMaster rules("inner_scanner_scannig_rules");
 
-  map<string,string> comments;
+  map<string,string> comments;*/
   comments.insert(pair<string, string>("/*", "*/"));
   comments.insert(pair<string, string>("//", "\n"));
   comments.insert(pair<string, string>("#",  "\n"));
-
+  
   Scanner scanner(&filename, &rules, &lang, &comments,true);
   Analizer analizer(syntax, NULL);
 
@@ -58,7 +56,7 @@ int main(int argc, char **argv) {
          )
     analizer.check(token);
 
-  delete syntax;
+    delete syntax;
   return 0;
 
 }

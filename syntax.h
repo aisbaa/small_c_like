@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <map>
+#include <vector>
 
 #include "textstream.h"
 
@@ -12,8 +13,17 @@ typedef map<string,int> syntaxValueMap;
 typedef map<string,int>::iterator syntaxValueMapInterator;
 
 /* we need only these */
-typedef map<int, int> tokenOverNewState;
-typedef map<int, tokenOverNewState> matrix;
+//typedef map<int, int> tokenOverNewState;
+//typedef map<int, tokenOverNewState> matrix;
+
+typedef struct {
+    int newState;
+    int state;
+    int term;
+} MatrixValues;
+
+typedef vector<MatrixValues> Matrix;
+typedef vector<MatrixValues>::iterator MatrixIterator;
 
 const int action_pop = 0;
 const int action_push = 1;
@@ -25,33 +35,23 @@ class Syntax {
     TextStream * stream;
     ifstream   * file;
 
-    int syntax[100][3];
-    
-    int index;
+    Matrix matrix;
+    MatrixIterator it;
 
-    string delimiter;
+    void parseFile();
+    void fillMatrix();
 
-
-    void makeSyntax();
-    void makeWithOneRightValue(string);
-    void makeWithTwoRightValues(string);
-
-    string makeLeftValue();
+    int makeNumber();
+    int convertToInteger(string);
 
     bool isNumber(string);
-
-    int convertToInteger(string);
 
  public:
     Syntax(string);
 
-    void printSyntaxValues();
+    void printMatrix();
 
-    int getSize();
-
-    int getTerminal(int);
-    int getAugment(int);
-    int getLeftValue(int);
+    int getActionNumber(int, int);
 
     /**
      * returns action

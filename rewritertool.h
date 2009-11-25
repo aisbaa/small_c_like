@@ -22,12 +22,12 @@ class RewriterTool {
 
     string buffer;
     string outFile;
-    string syntax[][3];
+    string syntax[100][3];
 
     const string * delimiter;
 
     syntaxValueMap syntaxMap;
-    string augmentMap[][2];
+    string augmentMap[100][2];
     syntaxValueMapInterator it;
     int index;
 
