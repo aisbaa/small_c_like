@@ -17,13 +17,16 @@ InnerLang::InnerLang(string fileName) {
 
   int maxInnerLangValue = 0;
 
-  while (this->file->good()) {
-    maxInnerLangValue = max(
-                            fgetNextInnerValue(),
-                            maxInnerLangValue
-                            );
+  try {
+    while (true)
+      maxInnerLangValue = max(
+                              fgetNextInnerValue(),
+                              maxInnerLangValue
+                              );
+  } catch(int cought) {
+    if (cought != STREAM_IS_NOT_GOOD_FOR_READING) throw ;
   }
-
+  
   this -> innerLangInteger   = ++maxInnerLangValue;
   this -> innerLangCharacter = ++maxInnerLangValue;
   this -> innerLangString    = ++maxInnerLangValue;
