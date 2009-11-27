@@ -47,7 +47,6 @@ INNER_LANG_VALUES = inner_lang_values.h
 innerLang: $(INNER_LANG_VALUES)
 	gcc -E $(INNER_LANG_SOURCE)  | grep $"^#.*$" -v  > $(INNER_LANG_NAME)
 
-
 INNER_AUGMENT_GRAMMAR_NAME = inner_augment_grammar_human_test.i
 INNER_AUGMENT_GRAMMAR_SOURCE = inner_augment_grammar_human_test.c
 

@@ -20,6 +20,7 @@ typedef struct {
     int newState;
     int state;
     int term;
+    char action;
 } MatrixValues;
 
 typedef vector<MatrixValues> Matrix;
@@ -42,17 +43,21 @@ class Syntax {
     void fillMatrix();
 
     int makeNumber();
+    char makeAction();
     int convertToInteger(string);
 
     bool isNumber(string);
+
+    int getActionNumber(char);
+
+    MatrixValues findMatrix(int, int);
 
  public:
     Syntax(string);
 
     void printMatrix();
 
-    int getActionNumber(int, int);
-
+    int getNewState(int, int);
     /**
      * returns action
      *   reduction

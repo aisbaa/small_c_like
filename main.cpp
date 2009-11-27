@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
   InnerLang lang("inner_lang_gen.i");
   RuleMaster rules("inner_scanner_scannig_rules");
 
-  map<string,string> comments;*/
+  map<string,string> comments;
   comments.insert(pair<string, string>("/*", "*/"));
   comments.insert(pair<string, string>("//", "\n"));
   comments.insert(pair<string, string>("#",  "\n"));

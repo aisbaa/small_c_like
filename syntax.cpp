@@ -25,7 +25,7 @@ Syntax::Syntax(string fileName) {
     }
 
     printMatrix();
-    getActionNumber(0, 1);
+    getNextState(3, 1, NULL);
 }
 
 /*
@@ -49,12 +49,18 @@ int Syntax::makeNumber() {
     return convertToInteger(number);
 }
 
+char Syntax::makeAction() {
+    char action = this->stream->getNextEntity()[0];
+    return action;
+}
+
 void Syntax::fillMatrix() {
     MatrixValues newRecord;
 
     newRecord.newState = makeNumber();
     newRecord.state    = makeNumber();
     newRecord.term     = makeNumber();
+    newRecord.action   = makeAction();
     
     this->matrix.push_back(newRecord);
 }
@@ -71,43 +77,51 @@ int Syntax::convertToInteger(string value) {
     return NULL;
 }
 
+MatrixValues Syntax::findMatrix(int state, int term) {
+    for (this->it = this->matrix.begin(); this->it < this->matrix.end(); this->it++) {
+	MatrixValues matrix = *(this->it);
+	if (matrix.state == state && matrix.term == term)
+	    return matrix;
+    }
+}
+
+int Syntax::getActionNumber(char action) {
+    if (action == '-')
+	return action_pop;
+    if (action == '+')
+	return action_push;
+    if (action == '~')
+	return action_reduction;
+    return NULL;
+}
+
 /*
  * PUBLIC
  */
 
 void Syntax::printMatrix() {
-    for (this->it = matrix.begin(); this->it < matrix.end(); this->it++) {
+    for (this->it = this->matrix.begin(); this->it < this->matrix.end(); this->it++) {
 	MatrixValues a = *(this->it);
-	cout << a.newState
-	     << " ::= "
-	     << a.state
-	     << " "
-	     << a.term
-	     << endl;
+	cout << a.newState << " ::= " 
+	     << a.state    << " "
+	     << a.term     << " "
+	     << a.action   << endl;
     }
 }
 
-int Syntax::getActionNumber(int state, int term) {
-    for (this->it = matrix.begin(); this->it < matrix.end(); this->it++) {
-	MatrixValues a = *(this->it);
-	if (a.state == state && a.term == term) {
-	    cout << "getActionNumber("
-		 << state
-		 << ", "
-		 << term
-		 << ") => "
-		 << a.newState
-		 << endl;
-	    return a.newState;
-	}
-    }
-    return NULL;
+int Syntax::getNewState(int prev_state, int token) {
+    MatrixValues matrix = findMatrix(prev_state, token);
+    return matrix.state;
 }
 
 int Syntax::getNextState(int prev_state, int token, int * new_state) {
-    if (prev_state < 0)
-	return action_reduction;
-    if (prev_state > 0)
-	return action_push;
-    return action_pop;
+    MatrixValues matrix;
+    int action;
+
+    matrix = findMatrix(prev_state, token);
+    action = getActionNumber(matrix.action);
+    
+    new_state = &matrix.state;
+
+    return action;
 }
