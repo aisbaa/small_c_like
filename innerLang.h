@@ -15,15 +15,20 @@
 #include <fstream>
 #include <map>
 
+#include "inner_lang_values.h"
 #include "textstream.h"
+
+const unsigned int NOT_UNSIGNED_INT = 0;
 
 using namespace std;
 
-const string defaultComment        = "#";
-const string defaultCommentLineEnd = "\n";
-
 typedef map<string, int> innerValueMap;
 typedef map<string,int>::iterator innerValueMapInterator;
+
+const int identifier_val = _ID___VAL;
+const int integer_val    = _INT__VAL;
+const int character_val  = _CHAR_VAL;
+const int stringCnst_val = _STR__VAL;
 
 class InnerLang {
  private:
@@ -31,26 +36,12 @@ class InnerLang {
   TextStream * stream;
   string       buff;
 
-  int innerLangInteger;
-  int innerLangCharacter;
-  int innerLangString;
-  int innerLangIndex;
-
   innerValueMap LangReservedWords;
   innerValueMapInterator it;
 
-  int otherInnerValue;
-
-  const string * comment;
-  const string * commentLineEnd;
-
  private:
-  bool   containsAtBegining(const string *, const string *);
 
-  bool isDigit();
-
-  /* tell only if its positive integer */
-  bool isInteger(const string *);
+  /* add to ascii info functionality */
   bool isCharacter(const string *);
   bool isString(const string *);
 
@@ -63,13 +54,6 @@ class InnerLang {
 
   int getInnerLangValue(string);
 
-  int getInnerLangIntegerValue();
-  int getinnerLangCharacterValue();
-  int getinnerLangStringValue();
-  int getinnerLangIndexValue();
-
-  string *getAllValues();
-  int getSize();
 };
 
 #endif
