@@ -5,9 +5,9 @@
 
 bool isWhiteSpace(char character) {
   /*
-   * acourding ascii table, all below space (including)
+   * acourding ascii table, all below SPACE (including)
    * originally intended NOT to represent printable
-   * information, so it might not be space, but it should
+   * information.. so it might not be space, but it should
    * be white
    *
    * and 127 officialy is delete
@@ -34,15 +34,8 @@ bool isSpecialCharacter(char character) {
   return false;
 } /* Now it seems that ascii designed exponentially XD */
 
-/*
- * ADITIONAL FUNCTIONALITY
- */
 
 bool containsCharacter(const char * stack, char needle) {
-  /*
-   * should test if index is decremented before or
-   * after for loop
-   */
   for (
        unsigned int index = 0;
        index < strlen(stack);
@@ -54,9 +47,17 @@ bool containsCharacter(const char * stack, char needle) {
   return false;
 }
 
+
 bool isLetterPlus(char character, const char * additional) {
   if (isLetter(character))
     return true;
   else
     return containsCharacter(additional, character);
+}
+
+bool isDecimalNumber(const char * str) {
+  for (unsigned int index = 0; str[index] != '\0'; index++)
+    if (!isDecimalDigit(str[index]))
+      return false;
+  return true;
 }
