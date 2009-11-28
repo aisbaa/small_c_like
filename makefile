@@ -1,4 +1,5 @@
 NAME   = smallclike
+RWTOOL = rw
 
 CPP    = g++
 CC     = g++
@@ -7,20 +8,25 @@ LFALGS = -g
 
 DEMO_DIR = demo
 
-SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp syntax.cpp rewritertool.cpp analizer.cpp
+SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp syntax.cpp analizer.cpp
 HDRCPP = $(SRCCPP:.cpp=.h)
 
 SRCC = ascii_info.c
 HDRC = $(SRCCPP:.c=.h)
 
+RWOBJ = rewritertool.o ascii_info.o
+
 HDRS = $(HDRCPP) $(HDRC)
 OBJS = $(SRCCPP:.cpp=.o) $(SRCC:.c=.o)
 MAIN = $(OBJS) main.o 
 
-all: compile innerLang run
+all: compile innerLang augmentGrammar run
 
 compile: $(MAIN)
-	$(CC) $(LFLAGS) $(MAIN) -o $(NAME)
+	$(CPP) $(LFLAGS) $(MAIN) -o $(NAME)
+
+rwtool: $(RWOBJ)
+	$(CPP) $(LFLAGS) $(RWOBJ) -o $(RWTOOL)
 
 .cpp.o:
 	$(CPP) $(CFLAGS) $<
@@ -47,8 +53,11 @@ INNER_LANG_VALUES = inner_lang_values.h
 innerLang: $(INNER_LANG_VALUES)
 	gcc -E $(INNER_LANG_SOURCE)  | grep $"^#.*$" -v  > $(INNER_LANG_NAME)
 
-INNER_AUGMENT_GRAMMAR_NAME = inner_augment_grammar_human_test.i
-INNER_AUGMENT_GRAMMAR_SOURCE = inner_augment_grammar_human_test.c
+INNER_AUGMENT_GRAMMAR_NAME = inner_augment_grammar_human.i
+INNER_AUGMENT_GRAMMAR_SOURCE = inner_augment_grammar_human.c
 
 augmentGrammar: $(INNER_AUGMENT_GRAMMAR)
-	gcc -E $(INNER_AUGMENT_GRAMMAR_SOURCE)  | grep $"^#.*$" -v > $(INNER_AUGMENT_GRAMMAR_NAME)
+	- gcc -E $(INNER_AUGMENT_GRAMMAR_SOURCE) \
+	| grep '^#.*$$' -v \
+	| grep '^ *$$' -v \
+	| awk '{ print $$1 " " $$3 " " $$4 " " $$5 }' > $(INNER_AUGMENT_GRAMMAR_NAME)
