@@ -1,127 +1,66 @@
 #include <iostream>
-#include <map>
-#include <string>
-#include <sstream>
+#include <fstream>
+
 #include <stdlib.h>
 
-#include "rewritertool.h"
-#include "textstream.h"
+#include "ascii_info.h"
+
+#include <string.h>
+#include <map>
 
 using namespace std;
 
-RewriterTool::RewriterTool(string fileName) {
-    this->file   = new ifstream(fileName.c_str(), ios_base::in);
-    this->stream = new TextStream(file);
-    
-    this->delimiter = &defaultDelimiter;
+const string dontTouch = "-+~";
 
-    this->outFile = "test";
+typedef map<string, int> reservedValueMap;
 
-    this->index = -1;
+int numericValue(reservedValueMap * , string);
 
-    parseAll();
+int main(int argc, char ** argv) {
+  string word;
+  reservedValueMap reservedValues;
 
-    writeToFile();
-}
+  while (cin.good()) {
+    int c = cin.get();
 
-/*
- * PRIVATE
- */
-
-void RewriterTool::parseAll() {
-    string value;
-
-    while (this->file->good()) {
-	char c = this->file->get();
-	
-	if (isCharNumber(c)) {
-	    while (!isWhitespace(c) && this->file->good() && c != '\n') {
-		this->buffer += c;
-		c = this->file->get();		
-	    }
-	    this->buffer += ' ';
-	    if (c == '\n')
-		this->buffer += '\n';
-	}
-
-	else if (c == '\n')
-	    this->buffer += '\n';
-
-	else {
-	    if (!isWhitespace(c)) {
-		while (!isWhitespace(c) && this->file->good() && c != '\n') {
-		    value += c;
-		    c = this->file->get();		
-		}
-
-		if (!isDelimiter(value))
-		    valueIsWord(value);		
-		else
-		    this->buffer += *(this->delimiter);
-		
-		this->buffer += " ";
-
-		value = "";
-		
-		if (c == '\n')
-		    this->buffer += '\n';
-	    }
-	}
-    }
-}
-
-void RewriterTool::valueIsWord(string value) {
-    stringstream number;
-
-    if (this->syntaxMap.find(value) == this->syntaxMap.end()) {
-	this->syntaxMap.insert(pair<string, int>(value, this->index));	
-	number << this->index;
-	this->buffer += number.str();
-	this->index--;
-    }
+    if (!isWhiteSpace((char)c))
+      word += (char)c;
     else {
-	this->it = this->syntaxMap.find(value);
-	number << this->it->second;
-	this->buffer += number.str();
+      /* have word */
+
+      /* checking if symbol is one of symbols in dontTouch const */
+      if (word.length() == 1 && dontTouch.find(word) != string::npos)
+          cout << word
+               << ' ';
+      else /* its not reserved symbol */
+        cout << numericValue(&reservedValues, word)
+             << ' ';
+
+      word.erase();
+
+      if (c == '\n')
+        cout << endl;
     }
+
+  }
+
+  return 0;
 }
 
-bool RewriterTool::isDelimiter(string value) {
-    if (value == *(this->delimiter))
-	return true;
-    return false;
-}
+int numericValue(reservedValueMap * reservedValues, string word) {
+  /*
+   * firstly if we read decimal number,
+   * it must be positive
+   */
+  if (isDecimalNumber(word.c_str()))
+      return atoi(word.c_str());
+  
+  /* else its not a number */
+  reservedValueMap::iterator pos = reservedValues -> find(word);
+  if (pos != reservedValues -> end())
+    return pos -> second;
 
-bool RewriterTool::isWhitespace(char value) {
-    if (value == ' ')
-	return true;
-    return false;
-}
+  (*reservedValues)[word] = -1 -(reservedValues -> size());
 
-bool RewriterTool::isCharNumber(char value) {
-    if (value >= '0' && value <= '9')
-	return true;
-    return false;
-}
-
-bool RewriterTool::isNumber(string value) {
-    if (atoi(value.c_str()))
-	return true;
-    return false;
-}
-
-void RewriterTool::writeToFile() {
-    ofstream outFile;
-
-    outFile.open(this->outFile.c_str(), fstream::out);
-
-    outFile << this->buffer;
-
-    outFile.close();
-}
-
-int RewriterTool::convertToInteger(string value) {
-    if (atoi(value.c_str()))
-	return atoi(value.c_str());
-    return NULL;
+  return (*reservedValues)[word];
 }

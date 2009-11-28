@@ -56,8 +56,9 @@ innerLang: $(INNER_LANG_VALUES)
 INNER_AUGMENT_GRAMMAR_NAME = inner_augment_grammar_human.i
 INNER_AUGMENT_GRAMMAR_SOURCE = inner_augment_grammar_human.c
 
-augmentGrammar: $(INNER_AUGMENT_GRAMMAR)
+augmentGrammar: rwtool $(INNER_AUGMENT_GRAMMAR)
 	- gcc -E $(INNER_AUGMENT_GRAMMAR_SOURCE) \
 	| grep '^#.*$$' -v \
 	| grep '^ *$$' -v \
-	| awk '{ print $$1 " " $$3 " " $$4 " " $$5 }' > $(INNER_AUGMENT_GRAMMAR_NAME)
+	| awk '{ print $$1 " " $$3 " " $$4 " " $$5 }' \
+	| ./rw > $(INNER_AUGMENT_GRAMMAR_NAME)
