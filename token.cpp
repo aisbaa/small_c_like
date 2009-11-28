@@ -39,7 +39,7 @@ const Position::Position * Token::getPosition() {
 }
 
 ostream& operator<<(ostream& tokenInfo, const Token &token) {
-  tokenInfo.width(2);
+  tokenInfo.width(4);
 
   tokenInfo << token.innerLangCode
             << " "
