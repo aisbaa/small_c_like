@@ -15,4 +15,6 @@ bool isSpecialCharacter(char);
 
 bool containsCharacter(const char *, char);
 
+bool isDecimalNumber(const char *);
+
 #endif
