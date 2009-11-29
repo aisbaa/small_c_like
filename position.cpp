@@ -22,10 +22,15 @@ int Position::getCol() {
 }
 
 ostream& operator<<(ostream& stream, Position &pos) {
-  return stream << pos.getLine()
-                << ":"
-                << pos.getCol()
-                << " "
-    //                << *(pos.getFilename())
-    ;
+  stream.width(3);
+  stream << pos.getLine()
+         << ":";
+
+  stream.width(3);
+  stream << pos.getCol();
+         
+  //stream << *(pos.getFilename())
+
+  return stream;
+
 }

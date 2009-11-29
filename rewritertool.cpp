@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const string dontTouch = "-+~";
+const string dontTouch = "-+~|";
 
 typedef map<string, int> reservedValueMap;
 

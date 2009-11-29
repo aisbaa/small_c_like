@@ -19,42 +19,57 @@ Analizer::Analizer(Syntax * syntax, void * semantic) {
 void Analizer::check(Token * token) {
   int new_state;
   int action;
+  bool repeat;
+  do {
+    repeat = false;
 
-  cout << ">> ";
+    cout << ">> ";
 
-  try {
-    action = this -> syntax -> getNextState(
-                                            this -> stateStack.top(),
-                                            token -> getInnerLang(),
-                                            &new_state
-                                            );
-  } catch (int err) {
-    this -> gotError = true;
-    cout << "got error" << endl;
-    // TODO
-    // this means that state was not found
-  }
+    try {
+      action = this -> syntax -> getNextState(
+                                              this -> stateStack.top(),
+                                              token -> getInnerLang(),
+                                              &new_state
+                                              );
+    } catch (int err) {
+      this -> gotError = true;
+      cout << "got error" << endl;
+      // TODO
+      // this means that state was not found
+    }
 
-  cout << *token << " action num: " << action << " ";
+    cout << *token << " action " << action << " ";
 
-  switch (action) {
-  case action_pop:
-    cout << "pop";
-    this -> stateStack.pop();
-    break;
+    switch (action) {
+    case action_pop:
+      cout << "pop  " << this -> stateStack.top();
+      this -> stateStack.pop();
+      break;
 
-  case action_push:
-    cout << "push " << new_state;
-    this -> stateStack.push(new_state);
-    break;
+    case action_push:
+      cout << "push " << new_state;
+      this -> stateStack.push(new_state);
+      break;
 
-  case action_reduction:
-    cout << "reduct";
-    this -> stateStack.top() = new_state;
-    break;
-  }
+    case action_reduction:
+      cout << "rdct " << new_state;
+      this -> stateStack.top() = new_state;
+      break;
 
-  cout << endl;
+    case action_reduction_check:
+      cout << "chck " << new_state;
+      this -> stateStack.top() = new_state;
+      repeat = true;
+      break;
+
+    default:
+      cout << "didnt found";
+      this -> gotError = true;
+    }
+
+    cout << endl;
+
+  } while(repeat);
 
   if (this -> semantic != NULL)
     /* give token to semantic */
@@ -68,5 +83,9 @@ bool Analizer::complete() {
   if (this -> gotError)
     return false;
 
-  return (this -> stateStack.size() == 1 && this -> stateStack.top() == INIT_STATE);
+  return (
+          this -> stateStack.size() == 1 &&
+          this -> stateStack.top() == INIT_STATE &&
+          !this -> gotError
+          );
 }

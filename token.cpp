@@ -42,8 +42,10 @@ ostream& operator<<(ostream& tokenInfo, const Token &token) {
   tokenInfo.width(4);
 
   tokenInfo << token.innerLangCode
-            << " "
-            << token.sourceText;
+            << " ";
+
+  tokenInfo.width(8);
+  tokenInfo << token.sourceText;
 
   if (token.foundIn != (Position *)NULL)
     tokenInfo << " "

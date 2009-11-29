@@ -43,6 +43,7 @@ int Syntax::makeAction() {
   if (action == action_pop_str) return action_pop;
   if (action == action_push_str) return action_push;
   if (action == action_reduction_str) return action_reduction;
+  if (action == action_reduction_check_str) return action_reduction_check;
 
   throw err_invalid_action_inaugmented_grammar;
 
