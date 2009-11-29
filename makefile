@@ -34,7 +34,7 @@ rwtool: $(RWOBJ)
 .c.o:
 	$(CC) $(CFLAGS) $<
 
-run:
+run: innerLang augmentGrammar
 	./$(NAME) $(DEMO_DIR)/simple.c
 #	./$(NAME) $(DEMO_DIR)/example.c
 #	./$(NAME) $(DEMO_DIR)/stress.c
