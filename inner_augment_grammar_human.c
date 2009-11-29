@@ -1,44 +1,41 @@
-# no structure at the moment
+/* no structures at the moment */
 #include "inner_lang_values.h"
 
-$           ::= $
-            ::= $ INT
-INT         ::= MAIN
+/* Stack operation
+ * + is push
+ * - is pop
+ * ~ is reduction (top becomes)
+ */
 
-main_i      ::= INT MAIN
-main_(      ::= main_i OPEN_BRACE
-main_)      ::= main_( CLOSE_BRACE
-main_{      ::= main_) BEGIN
-main        ::= main_{ END
+/*
+new_state       stack_top  token      action
+*/
+INIT_STATE  ::= INIT_STATE INIT_STATE ~
+INT         ::= INIT_STATE INT        +
 
-POP         ::= main
+main_i      ::= INT MAIN ~
+main_(      ::= main_i OPEN_BRACE ~
+main_)      ::= main_( CLOSE_BRACE ~
+code_blk    ::= main_) BEGIN ~
+POP         ::= code_blk END -
 
-#
-# return after main() {
-#
+/* return after main() { */
+main_ret    ::= code_blk RETURN +
+return_int  ::= main_ret _INT__VAL ~
+POP         ::= return_int SEMICOLON -
 
-return      ::= main_{ RETURN
-return_int  ::= return INT
-return_end  ::= return_int SEMICOLON
+/* variable declaration after main() { */
+var_dec0    ::= code_blk INT +
+var_dec0    ::= code_blk CHAR +
 
-POP         :: return_end
+var_id      ::= var_dec0 _ID___VAL ~
 
-#
-# variable declaration after main() {
-#
-var_dec0    ::= main_{ INT
-var_dec0    ::= main_{ CHAR
+var_id=     ::= var_id EQUALITY ~
 
-var_id      ::= var_dec0 ID
-var_id      ::= var_dec0 ID
+var_id=val  ::= var_id= _INT__VAL ~
+var_id=val  ::= var_id= _CHAR_VAL ~
 
-var_id=     ::= var_id EQUALITY
+/* remember to check after changing var_decN value */
+POP         ::= var_id SEMICOLON -
+POP         ::= var_id=val SEMICOLON -
 
-var_id=val  ::= var_id INT_VAL
-var_id=val  ::= var_id CHAR_VAL
-
-# remember to check after changing var_decN value
-var_decl    ::= var_id SEMICOLON
-var_decl    ::= var_id=val SEMICOLON
-
-POP         ::= var_decl

@@ -20,44 +20,53 @@ void Analizer::check(Token * token) {
   int new_state;
   int action;
 
+  cout << ">> ";
+
   try {
     action = this -> syntax -> getNextState(
                                             this -> stateStack.top(),
                                             token -> getInnerLang(),
                                             &new_state
                                             );
-  } catch (...) {
+  } catch (int err) {
     this -> gotError = true;
-    // this means that state was not found
+    cout << "got error" << endl;
     // TODO
+    // this means that state was not found
   }
+
+  cout << *token << " action num: " << action << " ";
 
   switch (action) {
   case action_pop:
+    cout << "pop";
     this -> stateStack.pop();
     break;
 
   case action_push:
+    cout << "push " << new_state;
     this -> stateStack.push(new_state);
     break;
 
   case action_reduction:
+    cout << "reduct";
     this -> stateStack.top() = new_state;
     break;
   }
 
+  cout << endl;
+
   if (this -> semantic != NULL)
     /* give token to semantic */
     ;
-  else {
-    cout << *token << endl;
+  else
     delete token;
-  }
+
 }
 
 bool Analizer::complete() {
   if (this -> gotError)
     return false;
 
-  return this -> stateStack.size() == 1;
+  return (this -> stateStack.size() == 1 && this -> stateStack.top() == INIT_STATE);
 }

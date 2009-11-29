@@ -48,6 +48,7 @@
 #define SEMICOLON 37
 #define COMMA 38
 #define COLON 39
+#define DOT 40
 
 #endif
 
@@ -58,9 +59,9 @@
 
 #define POP 1001
 
-/* this might change */
-#define ID 1002
-#define INT_VAL 1003
-#define CHAR_VAL 1004
+#define _ID___VAL 1002
+#define _INT__VAL 1003
+#define _CHAR_VAL 1004
+#define _STR__VAL 1005
 
 #endif

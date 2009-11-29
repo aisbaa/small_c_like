@@ -45,3 +45,4 @@ false       FALSE
 ;           SEMICOLON
 ,           COMMA
 :           COLON
+.           DOT
