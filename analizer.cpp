@@ -56,8 +56,20 @@ void Analizer::check(Token * token) {
       this -> stateStack.top() = new_state;
       break;
 
+    case action_pop_check:
+      cout << "popc" << this -> stateStack.top();
+      this -> stateStack.pop();
+      repeat = true;
+      break;
+
+    case action_push_check:
+      cout << "pshc " << new_state;
+      this -> stateStack.push(new_state);
+      repeat = true;
+      break;
+
     case action_reduction_check:
-      cout << "chck " << new_state;
+      cout << "rdtc " << new_state;
       this -> stateStack.top() = new_state;
       repeat = true;
       break;

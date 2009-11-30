@@ -41,7 +41,11 @@ int Syntax::makeAction() {
   string action = this->stream->getNextEntity();
 
   if (action == action_pop_str) return action_pop;
+  if (action == action_pop_check_str) return action_pop_check;
+
   if (action == action_push_str) return action_push;
+  if (action == action_push_check_str) return action_push_check;
+
   if (action == action_reduction_str) return action_reduction;
   if (action == action_reduction_check_str) return action_reduction_check;
 
@@ -114,12 +118,12 @@ void Syntax::printMatrix() {
          << endl;
   }
 }
-
+/*
 int Syntax::getNewState(int prev_state, int token) {
   MatrixValues matrix = findMatrix(prev_state, token);
   return matrix.state;
 }
-
+*/
 int Syntax::getNextState(int prev_state, int token, int * new_state) {
   MatrixValues matrix;
 

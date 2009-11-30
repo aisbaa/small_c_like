@@ -19,15 +19,25 @@ typedef struct {
 typedef vector<MatrixValues> Matrix;
 typedef vector<MatrixValues>::iterator MatrixIterator;
 
+/**
+ * action assigners
+ */
 const string action_pop_str = "-";
+const string action_pop_check_str = "/";
 const string action_push_str = "+";
+const string action_push_check_str = "*";
 const string action_reduction_str = "~";
 const string action_reduction_check_str = "|";
 
+/**
+ * action values
+ */
 const int action_pop = 0;
-const int action_push = 1;
-const int action_reduction = 2;
-const int action_reduction_check = 3;
+const int action_pop_check = 1;
+const int action_push = 2;
+const int action_push_check = 3;
+const int action_reduction = 4;
+const int action_reduction_check = 5;
 
 class Syntax {
 
