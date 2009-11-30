@@ -67,14 +67,14 @@ int InnerLang::getInnerLangValue(string outerValue) {
   }
 
   if (isDecimalNumber(outerValue.c_str()))
-    return _INT__VAL;
+    return _INT_VAL_;
 
   if (isCharacter(&outerValue))
-    return _CHAR_VAL;
+    return _CHAR_VAL_;
 
   if (isString(&outerValue))
-    return _STR__VAL;
+    return _STR_VAL_;
 
-  return _ID___VAL;
+  return _ID_VAL_;
 }
 

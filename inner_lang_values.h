@@ -59,9 +59,9 @@
 
 #define POP 1001
 
-#define _ID___VAL 1002
-#define _INT__VAL 1003
-#define _CHAR_VAL 1004
-#define _STR__VAL 1005
+#define _ID_VAL_ 1002
+#define _INT_VAL_ 1003
+#define _CHAR_VAL_ 1004
+#define _STR_VAL_ 1005
 
 #endif

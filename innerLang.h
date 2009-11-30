@@ -25,11 +25,6 @@ using namespace std;
 typedef map<string, int> innerValueMap;
 typedef map<string,int>::iterator innerValueMapInterator;
 
-const int identifier_val = _ID___VAL;
-const int integer_val    = _INT__VAL;
-const int character_val  = _CHAR_VAL;
-const int stringCnst_val = _STR__VAL;
-
 class InnerLang {
  private:
   ifstream   * file;
