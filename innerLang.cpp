@@ -35,6 +35,9 @@ int InnerLang::fgetNextInnerValue() {
 
   this->LangReservedWords.insert(pair<string, int>(outerValue, innerValue));
 
+  cout.width(2);
+  cout << innerValue << ":" << outerValue.length() << " " << outerValue << endl;
+
   return innerValue;
 }
 
@@ -54,17 +57,13 @@ bool InnerLang::isString(const string * pretender) {
  * PUBLIC
  */
 int InnerLang::getInnerLangValue(string outerValue) {
-  if (!this ->LangReservedWords.empty()) {
-    /* search for value */
+  this->it = this->LangReservedWords.find(outerValue);
 
-    this->it = this->LangReservedWords.find(outerValue);
+  // int idOfReservedWord = this->it->second;
+  // int maximumIdOfWords = this->LangReservedWords.size();
 
-    int idOfReservedWord = this->it->second;
-    int maximumIdOfWords = this->LangReservedWords.size();
-
-    if (idOfReservedWord <= maximumIdOfWords && idOfReservedWord >= 0)
-      return this->it->second;
-  }
+  if (this -> it != this -> LangReservedWords.end())
+    return this->it->second;
 
   if (isDecimalNumber(outerValue.c_str()))
     return _INT_VAL_;
