@@ -35,9 +35,6 @@ int InnerLang::fgetNextInnerValue() {
 
   this->LangReservedWords.insert(pair<string, int>(outerValue, innerValue));
 
-  cout.width(2);
-  cout << innerValue << ":" << outerValue.length() << " " << outerValue << endl;
-
   return innerValue;
 }
 
