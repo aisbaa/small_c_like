@@ -23,6 +23,9 @@ int main(int argc, char **argv) {
   }
 
   InnerLang lang("inner_lang_gen.i");
+  
+  cout << "test: ',' is " << lang.getInnerLangValue(",") << endl;
+  
   RuleMaster rules("inner_scanner_scannig_rules");
 
   map<string,string> comments;
@@ -37,8 +40,9 @@ int main(int argc, char **argv) {
   Syntax * syntax = NULL;
   try {
     syntax = new Syntax("inner_augment_grammar_human.i");
-  } catch (int err) {
+  } catch (InvalidActionInaugmentedGrammar unexp) {
     cerr << "ERROR::Your augmented grammar must be faulty." << endl;
+    cerr << unexp.what() << endl;
     delete syntax;
     return 1;
   }

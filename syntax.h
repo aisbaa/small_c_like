@@ -76,6 +76,16 @@ class Syntax {
   int getNextState(int prev_state, int token, int * new_state);
 };
 
-const int err_invalid_action_inaugmented_grammar = 0;
+#include <stdexcept>
+
+class UnexpectedTokenException : public logic_error {
+public:
+   explicit UnexpectedTokenException(const string err) : logic_error(err) {}
+};
+
+class InvalidActionInaugmentedGrammar : public logic_error {
+public:
+   explicit InvalidActionInaugmentedGrammar(const string err) : logic_error(err) {}
+};
 
 #endif

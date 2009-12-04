@@ -31,9 +31,9 @@ void Analizer::check(Token * token) {
                                               token -> getInnerLang(),
                                               &new_state
                                               );
-    } catch (int err) {
+    } catch (UnexpectedTokenException unexp) {
       this -> gotError = true;
-      cout << "got error" << endl;
+      //cout << unexp.what() << endl;
       // TODO
       // this means that state was not found
     }

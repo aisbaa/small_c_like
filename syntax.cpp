@@ -22,7 +22,7 @@ Syntax::Syntax(string fileName) {
     if (err != STREAM_IS_NOT_GOOD_FOR_READING) throw ;
   }
 
-  printMatrix();
+  //  printMatrix();
   //  getNextState(3, 1, NULL);
 }
 
@@ -49,7 +49,7 @@ int Syntax::makeAction() {
   if (action == action_reduction_str) return action_reduction;
   if (action == action_reduction_check_str) return action_reduction_check;
 
-  throw err_invalid_action_inaugmented_grammar;
+  throw InvalidActionInaugmentedGrammar("Got invalid inner augmented grammar stack operation.");
 
   return 0; // gets ride of warnning
 }
@@ -84,8 +84,9 @@ MatrixValues Syntax::findMatrix(int state, int term) {
       return matrix;
   }
 
-  // cout << " -- nothing found -- " << endl;
-  // should throw exception
+  throw UnexpectedTokenException("Matching state and token failed. This situation is undiscribed in augmented grammar.");
+
+  return *(this->it);
 }
 
 int Syntax::getActionNumber(char action) {
@@ -118,12 +119,7 @@ void Syntax::printMatrix() {
          << endl;
   }
 }
-/*
-int Syntax::getNewState(int prev_state, int token) {
-  MatrixValues matrix = findMatrix(prev_state, token);
-  return matrix.state;
-}
-*/
+
 int Syntax::getNextState(int prev_state, int token, int * new_state) {
   MatrixValues matrix;
 
