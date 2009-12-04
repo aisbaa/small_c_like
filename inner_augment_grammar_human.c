@@ -12,6 +12,27 @@
  *
  */
 
+/* padaryta
+   
+   main
+   variable declaration
+   if [ else [if] ] jau beveik
+   struct (deklaracija, panaudojimas greit bus)
+   return
+
+*/
+
+/* reikia padaryti
+
+   bool statement (reiškiniai kurių atsakymas true arba false)
+   masyvai (deklaracija ir panaudojimas)
+   f-jos (deklaracija ir panaudojimas)
+   scanf printf
+   aritmetika
+
+ */
+
+
 /*
 new_state       stack_top  token      action
 */
