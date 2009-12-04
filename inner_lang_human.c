@@ -1,8 +1,9 @@
 #include "inner_lang_values.h"
 
 /*
- * This file used for describeing grammar for 
- * InnerLang class
+ * This file used for describing grammar for
+ * InnerLang class and inner augmented grammar
+ * generation
  */
 
 /*
