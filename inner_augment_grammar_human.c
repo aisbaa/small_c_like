@@ -59,6 +59,27 @@ VAR_DEC_BLK  ::= code_blk CHAR *
 POP          ::= code_blk END /
 
 /*
+ * BOOL ARITMETHIC
+ */
+bbooli       ::= bool _ID_VAL_ ~
+bbool        ::= bool TRUE ~
+bbool        ::= bool FALSE ~
+
+bbool|&      ::= bbooli OR ~
+bbool|&      ::= bbooli AND ~
+
+bbool|&      ::= bbool OR ~
+bbool|&      ::= bbool AND ~
+
+bbooli       ::= bbool|& _ID_VAL_ ~
+bbool        ::= bbool|& TRUE ~
+bbool        ::= bbool|& FALSE ~
+
+/* what goes after variable declaration */
+POP          ::= bbool CLOSE_BRACE /
+POP          ::= bbooli CLOSE_BRACE /
+
+/*
  * ARITMETHIC
  */
 /* has no function and array useage */
@@ -183,7 +204,6 @@ POP          ::= aritm+*id COMMA /
  * EOF ARITHMETIC
  */
 
-
 /*
  * VARIABLE DECLARATION
  */
@@ -264,11 +284,11 @@ POP          ::= return_int SEMICOLON -
 
 /* if () */
 if           ::= code_blk IF_DEC +
-if_(         ::= if OPEN_BRACE ~
-if_(bool     ::= if_( TRUE ~
-if_(bool     ::= if_( FALSE ~
-if_(bool)    ::= if_(bool CLOSE_BRACE ~
-if(){        ::= if_(bool) BEGIN |
+if_(         ::= if OPEN_BRACE |
+bool         ::= if_( OPEN_BRACE +
+
+if_()        ::= if_( CLOSE_BRACE ~
+if(){        ::= if_() BEGIN |
 code_blk     ::= if(){ BEGIN +
 if(){}       ::= if(){ END ~
 
@@ -292,6 +312,18 @@ POP          ::= if(){} PRINTF_DEC /
 POP          ::= if(){} SCANF_DEC /
 POP          ::= if(){} IF_DEC /
 POP          ::= if(){} RETURN /
+POP          ::= if(){} END /
+
+/* while () {} */
+
+while        ::= code_blk WHILE_DEC +
+while(       ::= while OPEN_BRACE ~
+while(true   ::= while( TRUE ~
+while(true)  ::= while(true CLOSE_BRACE ~
+
+while(){     ::= while(true) BEGIN |
+code_blk     ::= while(){ BEGIN +
+POP          ::= while(){ END -
 
 /* printf */
 printf_      ::= code_blk PRINTF_DEC +
@@ -306,3 +338,10 @@ printf_(var  ::= printf_( _ID_VAL_ ~
 printf_()    ::= printf_(var CLOSE_BRACE ~
 
 POP          ::= printf_() SEMICOLON -
+
+/* scanf */
+scanf_       ::= code_blk SCANF +
+scanf_(      ::= scanf_ OPEN_BRACE ~
+scanf_(var   ::= scanf_( _ID_VAL_ ~
+scanf_(var)  ::= scanf_(var CLOSE_BRACE ~
+POP          ::= scanf_(var) SEMICOLON -
