@@ -43,6 +43,7 @@ new_state       stack_top  token      action
 INIT_STATE   ::= INIT_STATE INIT_STATE ~
 INT          ::= INIT_STATE INT        +
 INT          ::= INIT_STATE CHAR       +
+INT          ::= INIT_STATE VOID       +
 
 /*
  * GENERIC
@@ -236,6 +237,17 @@ struct_attr= ::= struct_attr  EQUALITY |
 aritm        ::= struct_attr= EQUALITY +
 
 POP          ::= struct_attr= SEMICOLON -
+
+/* function */
+function_name     ::= INT _ID_VAL_ ~
+function_name     ::= CHAR _ID_VAL_ ~
+function_name     ::= VOID _ID_VAL_ ~
+function_name_(   ::= function_name OPEN_BRACE ~
+function_()       ::= function_name_( CLOSE_BRACE ~
+function_()_{     ::= function_() BEGIN |
+code_blk          ::= function_()_{ BEGIN +
+POP               ::= function_()_{ END -
+
 
 /* main */
 main_i       ::= INT MAIN ~
