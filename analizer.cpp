@@ -57,7 +57,7 @@ void Analizer::check(Token * token) {
       break;
 
     case action_pop_check:
-      cout << "popc" << this -> stateStack.top();
+      cout << "popc " << this -> stateStack.top();
       this -> stateStack.pop();
       repeat = true;
       break;

@@ -37,153 +37,230 @@
 /*
 new_state       stack_top  token      action
 */
-INIT_STATE  ::= INIT_STATE INIT_STATE ~
-INT         ::= INIT_STATE INT        +
-INT         ::= INIT_STATE CHAR       +
+INIT_STATE   ::= INIT_STATE INIT_STATE ~
+INT          ::= INIT_STATE INT        +
+INT          ::= INIT_STATE CHAR       +
 
 /* aritmethic */
-aritm_id    ::= aritm _INT_VAL_ ~
-aritm_id    ::= aritm _ID_VAL_ ~
+/* has no function and array useage */
 
-aritm+-     ::= aritm_id ADD ~
-aritm+-     ::= aritm_id SUB ~
+/*
+ * LAYERED ARITMETHIC
+ */
 
-aritm+-id   ::= aritm+- _ID_VAL_ ~
-aritm+-id   ::= aritm+- _INT_VAL_ ~
+/* ADDING ARITM LAYER */
 
-aritm+-     ::= aritm+-id ADD ~
-aritm+-     ::= aritm+-id SUB ~
+/* first is open brace ( */
+aritm(       ::= aritm  OPEN_BRACE |
+aritm        ::= aritm( OPEN_BRACE +
 
-/* first comes multiplication */
-aritm1*     ::= aritm_id MULTIPLICATION ~
-aritm1*     ::= aritm_id DIVISION ~
-aritm1*     ::= aritm_id MODULUS ~
+/* after first id sign */
+aritm_id+-(  ::= aritm_id+-  OPEN_BRACE |
+aritm        ::= aritm_id+-( OPEN_BRACE +
 
-aritm1**    ::= aritm1* _INT_VAL_ |
-aritm1**    ::= aritm1* _ID_VAL_ |
+aritm_id*(   ::= aritm_id*  OPEN_BRACE |
+aritm        ::= aritm_id*( OPEN_BRACE +
 
-aritm**     ::= aritm1** _INT_VAL_ +
-aritm**     ::= aritm1** _ID_VAL_ +
+/* REMOVING ARITM LAYER */
+POP          ::= aritm_id+-id CLOSE_BRACE /
+POP          ::= aritm_id CLOSE_BRACE /
 
-aritm+-     ::= aritm1** ADD ~
-aritm+-     ::= aritm1** SUB ~
+/* REDUCTION AFTER LAYER REMUVAL */
 
-/* multiplication after addition */
-aritm*      ::= aritm+-id MULTIPLICATION +
-aritm*      ::= aritm+-id DIVISION +
-aritm*      ::= aritm+-id MODULUS +
+/* closing brace ) */
+aritm_id     ::= aritm( CLOSE_BRACE ~
+aritm_id+-id ::= aritm_id+-( CLOSE_BRACE ~
+aritm_id     ::= aritm_id*( CLOSE_BRACE ~
 
-aritm**     ::= aritm* _INT_VAL_ ~
-aritm**     ::= aritm* _ID_VAL_ ~
+/* NON LAYER ARITM */
 
-aritm*      ::= aritm** MULTIPLICATION ~
-aritm*      ::= aritm** DIVISION ~
-aritm*      ::= aritm** MODULUS ~
+/* first is minus sign */
+aritm-       ::= aritm SUB ~
 
-/* pops if after mul div mod goes add sub */
-POP         ::= aritm** ADD /
-POP         ::= aritm** SUB /
+aritm_id     ::= aritm- _INT_VAL_ ~
+aritm_id     ::= aritm- _ID_VAL_ ~
 
-/* pops aritm state */
-POP         ::= aritm** SEMICOLON /
-POP         ::= aritm1** SEMICOLON /
-POP         ::= aritm_id SEMICOLON /
-POP         ::= aritm+-id SEMICOLON /
+/* first is value or id */
+aritm_id     ::= aritm _INT_VAL_ ~
+aritm_id     ::= aritm _ID_VAL_ ~
+
+/* + - after id or value */
+aritm_id+-   ::= aritm_id ADD ~
+aritm_id+-   ::= aritm_id SUB ~
+
+/* id or value after + - sign */
+aritm_id+-id ::= aritm_id+- _ID_VAL_ ~
+aritm_id+-id ::= aritm_id+- _INT_VAL_ ~
+
+/* + - after previous adition subtraction */
+/* err condition */
+aritm_id+-   ::= aritm_id+-id ADD ~
+aritm_id+-   ::= aritm_id+-id SUB ~
+
+/* mul div mod after id */
+aritm_id*    ::= aritm_id MULTIPLICATION ~
+aritm_id*    ::= aritm_id DIVISION ~
+aritm_id*    ::= aritm_id MODULUS ~
+
+/* id or value after mul div mod */
+aritm_id     ::= aritm_id* _INT_VAL_ ~
+aritm_id     ::= aritm_id* _ID_VAL_ ~
+
+/* mul div mod after id add sub id */
+aritm+*      ::= aritm_id+-id MULTIPLICATION ~
+aritm+*      ::= aritm_id+-id DIVISION ~
+aritm+*      ::= aritm_id+-id MODULUS ~
+
+/* id after [read one up] */
+aritm+*id    ::= aritm+* _INT_VAL_ ~
+aritm+*id    ::= aritm+* _ID_VAL_ ~
+
+/* mul div mod after id [read one up] */
+aritm+*      ::= aritm+*id MULTIPLICATION ~
+aritm+*      ::= aritm+*id DIVISION ~
+aritm+*      ::= aritm+*id MODULUS ~
+
+/* comes back after sequence of mul div mod */
+aritm_id     ::= aritm+*id ADD |
+aritm_id     ::= aritm+*id SUB |
+
+/* REMOVING NON LAYERED ARITM */
+
+/*
+ * semicolon, comma - is not part of aritmethic
+ * so we pop aritmethic of the stack and let other
+ * rules handle next steps
+ */
+
+/* exmp.: 1 */
+POP          ::= aritm_id SEMICOLON /
+POP          ::= aritm_id COMMA /
+
+/* exmp.: 1 + 1 */
+POP          ::= aritm_id+-id SEMICOLON /
+POP          ::= aritm_id+-id COMMA /
+
+/* exmp.: 1 + 1 * 1 */
+POP          ::= aritm+*id SEMICOLON /
+POP          ::= aritm+*id COMMA /
+
+
+/* pops if after mul div mod goes add sub 
+POP          ::= aritm** ADD /
+POP          ::= aritm** SUB /
+*/
+/* pops aritm state after semicolon
+POP          ::= aritm** SEMICOLON /
+POP          ::= aritm1** SEMICOLON /
+POP          ::= aritm+-id SEMICOLON /
+*/
+
+/* pops aritm state after comma
+POP          ::= aritm** COMMA /
+POP          ::= aritm1** COMMA /
+POP          ::= aritm_id COMMA /
+POP          ::= aritm+-id COMMA /
+*/
+
+/*
+ * EOF ARITHMETIC
+ */
+
 
 /* variable declaration dont use after INIT_STATE */
-var_dec     ::= VAR_DEC_BLK INT +
-var_dec     ::= VAR_DEC_BLK CHAR +
-var_dec     ::= VAR_DEC_BLK _ID_VAL_ +
+var_dec      ::= VAR_DEC_BLK INT +
+var_dec      ::= VAR_DEC_BLK CHAR +
+var_dec      ::= VAR_DEC_BLK _ID_VAL_ +
 
-var_id      ::= var_dec _ID_VAL_ ~
+var_id       ::= var_dec _ID_VAL_ ~
 
-var_id=     ::= var_id EQUALITY ~
+aritm        ::= var_id EQUALITY +
 
-var_id=-    ::= var_id= SUB ~
+/*
+var_id=val   ::= var_id=- _INT_VAL_ ~
+var_id=val   ::= var_id=  _INT_VAL_ ~
+var_id=val   ::= var_id=  _CHAR_VAL_ ~
+*/
 
-var_id=val  ::= var_id=- _INT_VAL_ ~
-var_id=val  ::= var_id=  _INT_VAL_ ~
-var_id=val  ::= var_id=  _CHAR_VAL_ ~
+var_dec      ::= var_id COMMA ~
+var_dec      ::= var_id=val COMMA ~
 
-var_dec     ::= var_id COMMA ~
-var_dec     ::= var_id=val COMMA ~
-
-POP         ::= var_id SEMICOLON -
-POP         ::= var_id=val SEMICOLON -
+POP          ::= var_id SEMICOLON -
+//POP          ::= var_id=val SEMICOLON -
 
 /* variable useage */
-id_useage   ::= code_blk _ID_VAL_ +
-var_use=    ::= id_useage EQUALITY |
-aritm       ::= var_use= EQUALITY +
-POP         ::= var_use= SEMICOLON -
+id_useage    ::= code_blk _ID_VAL_ +
+var_use=     ::= id_useage EQUALITY |
+aritm        ::= var_use= EQUALITY +
+POP          ::= var_use= SEMICOLON -
 
 /* what goes after variable declaration */
-POP         ::= VAR_DEC_BLK MAIN /
-POP         ::= VAR_DEC_BLK STRUCT_DEC /
-POP         ::= VAR_DEC_BLK FOR_DEC /
-POP         ::= VAR_DEC_BLK WHILE_DEC /
-POP         ::= VAR_DEC_BLK PRINTF_DEC /
-POP         ::= VAR_DEC_BLK SCANF_DEC /
-POP         ::= VAR_DEC_BLK IF_DEC /
-POP         ::= VAR_DEC_BLK RETURN /
-POP         ::= VAR_DEC_BLK _ID_VAL_ /
-POP         ::= VAR_DEC_BLK END /
+POP          ::= VAR_DEC_BLK MAIN /
+POP          ::= VAR_DEC_BLK STRUCT_DEC /
+POP          ::= VAR_DEC_BLK FOR_DEC /
+POP          ::= VAR_DEC_BLK WHILE_DEC /
+POP          ::= VAR_DEC_BLK PRINTF_DEC /
+POP          ::= VAR_DEC_BLK SCANF_DEC /
+POP          ::= VAR_DEC_BLK IF_DEC /
+POP          ::= VAR_DEC_BLK RETURN /
+POP          ::= VAR_DEC_BLK _ID_VAL_ /
+POP          ::= VAR_DEC_BLK END /
 
 /* code block */
-VAR_DEC_BLK ::= code_blk INT *
-VAR_DEC_BLK ::= code_blk CHAR *
+VAR_DEC_BLK  ::= code_blk INT *
+VAR_DEC_BLK  ::= code_blk CHAR *
 
 /* after code block */
-POP         ::= code_blk END /
+POP          ::= code_blk END /
 
 /* struct */
-struct      ::= INIT_STATE STRUCT_DEC +
-strct_name  ::= struct _ID_VAL_ ~
-strct_name{ ::= strct_name BEGIN |
-VAR_DEC_BLK ::= strct_name{ BEGIN +
-struct{}    ::= strct_name{ END ~
-POP         ::= struct{} SEMICOLON -
+struct       ::= INIT_STATE STRUCT_DEC +
+strct_name   ::= struct _ID_VAL_ ~
+strct_name{  ::= strct_name BEGIN |
+VAR_DEC_BLK  ::= strct_name{ BEGIN +
+struct{}     ::= strct_name{ END ~
+POP          ::= struct{} SEMICOLON -
 
 /* main */
-main_i      ::= INT MAIN ~
-main_(      ::= main_i OPEN_BRACE ~
-main_()     ::= main_( CLOSE_BRACE ~
-main_(){    ::= main_() BEGIN |
-code_blk    ::= main_(){ BEGIN +
-POP         ::= main_(){ END -
+main_i       ::= INT MAIN ~
+main_(       ::= main_i OPEN_BRACE ~
+main_()      ::= main_( CLOSE_BRACE ~
+main_(){     ::= main_() BEGIN |
+code_blk     ::= main_(){ BEGIN +
+POP          ::= main_(){ END -
 
 /* return */
-return      ::= code_blk RETURN +
-return_int  ::= return _INT_VAL_ ~
-POP         ::= return_int SEMICOLON -
+return       ::= code_blk RETURN +
+return_int   ::= return _INT_VAL_ ~
+POP          ::= return_int SEMICOLON -
 
 /* if () */
-if          ::= code_blk IF_DEC +
-if_(        ::= if OPEN_BRACE ~
-if_(bool    ::= if_( TRUE ~
-if_(bool    ::= if_( FALSE ~
-if_(bool)   ::= if_(bool CLOSE_BRACE ~
-if(){       ::= if_(bool) BEGIN |
-code_blk    ::= if(){ BEGIN +
-if(){}      ::= if(){ END ~
+if           ::= code_blk IF_DEC +
+if_(         ::= if OPEN_BRACE ~
+if_(bool     ::= if_( TRUE ~
+if_(bool     ::= if_( FALSE ~
+if_(bool)    ::= if_(bool CLOSE_BRACE ~
+if(){        ::= if_(bool) BEGIN |
+code_blk     ::= if(){ BEGIN +
+if(){}       ::= if(){ END ~
 
 
 /* if () {} else */
-if_else     ::= if(){} ELSE ~
-if_else{    ::= if_else BEGIN |
-code_blk    ::= if_else{ BEGIN +
-POP         ::= if_else{ END -
+if_else      ::= if(){} ELSE ~
+if_else{     ::= if_else BEGIN |
+code_blk     ::= if_else{ BEGIN +
+POP          ::= if_else{ END -
 
 /* if () {} else if */
-if          ::= if_else IF_DEC ~
+if           ::= if_else IF_DEC ~
 
 /* if () {} and not else */
-POP         ::= if(){} STRUCT_DEC /
-POP         ::= if(){} INT /
-POP         ::= if(){} CHAR /
-POP         ::= if(){} FOR_DEC /
-POP         ::= if(){} WHILE_DEC /
-POP         ::= if(){} PRINTF_DEC /
-POP         ::= if(){} SCANF_DEC /
-POP         ::= if(){} IF_DEC /
-POP         ::= if(){} RETURN /
+POP          ::= if(){} STRUCT_DEC /
+POP          ::= if(){} INT /
+POP          ::= if(){} CHAR /
+POP          ::= if(){} FOR_DEC /
+POP          ::= if(){} WHILE_DEC /
+POP          ::= if(){} PRINTF_DEC /
+POP          ::= if(){} SCANF_DEC /
+POP          ::= if(){} IF_DEC /
+POP          ::= if(){} RETURN /
