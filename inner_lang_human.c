@@ -15,6 +15,7 @@ struct      STRUCT_DEC
 int         INT
 char        CHAR
 for         FOR_DEC
+function    FUNCTION_DEC
 while       WHILE_DEC
 printf      PRINTF
 scanf       SCANF
