@@ -15,7 +15,7 @@
 #define CHAR 4
 #define FOR_DEC 5
 #define WHILE_DEC 6
-#define PRINTF 7
+#define PRINTF_DEC 7
 #define SCANF 8
 #define IF_DEC 9
 #define ELSE 10

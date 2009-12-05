@@ -17,7 +17,7 @@ char        CHAR
 for         FOR_DEC
 void        VOID
 while       WHILE_DEC
-printf      PRINTF
+printf      PRINTF_DEC
 scanf       SCANF
 if          IF_DEC
 else        ELSE
