@@ -29,7 +29,7 @@
 
 /* reikia padaryti
 
-   bool statement (reiškiniai kurių atsakymas true arba false)
+   bool statement (reiÅ¡kiniai kuriÅ³ atsakymas true arba false)
    masyvai (deklaracija ir panaudojimas)
    f-jos (deklaracija ir panaudojimas)
    scanf printf
@@ -292,3 +292,17 @@ POP          ::= if(){} PRINTF_DEC /
 POP          ::= if(){} SCANF_DEC /
 POP          ::= if(){} IF_DEC /
 POP          ::= if(){} RETURN /
+
+/* printf */
+printf_      ::= code_blk PRINTF_DEC +
+printf_(     ::= printf_ OPEN_BRACE ~
+
+/* printf("string") */
+printf_(str  ::= printf_( _STR_VAL_ ~
+printf_()    ::= printf_(str CLOSE_BRACE ~
+
+/* printf(variable) */
+printf_(var  ::= printf_( _ID_VAL_ ~
+printf_()    ::= printf_(var CLOSE_BRACE ~
+
+POP          ::= printf_() SEMICOLON -
