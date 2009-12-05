@@ -14,9 +14,15 @@
 
 /* padaryta
    
-   main
+   aritmetika
    variable declaration
+
+   struct
+
+   main
+
    if [ else [if] ]
+
    return
 
 */
@@ -28,9 +34,6 @@
    f-jos (deklaracija ir panaudojimas)
    scanf printf
 
-   struct (panaudojimas)
-   aritmetika
-
  */
 
 
@@ -41,7 +44,22 @@ INIT_STATE   ::= INIT_STATE INIT_STATE ~
 INT          ::= INIT_STATE INT        +
 INT          ::= INIT_STATE CHAR       +
 
-/* aritmethic */
+/*
+ * GENERIC
+ */
+
+id_useage    ::= code_blk _ID_VAL_ +
+
+/* code block */
+VAR_DEC_BLK  ::= code_blk INT *
+VAR_DEC_BLK  ::= code_blk CHAR *
+
+/* after code block */
+POP          ::= code_blk END /
+
+/*
+ * ARITMETHIC
+ */
 /* has no function and array useage */
 
 /*
@@ -72,7 +90,7 @@ aritm_id     ::= aritm( CLOSE_BRACE ~
 aritm_id+-id ::= aritm_id+-( CLOSE_BRACE ~
 aritm_id     ::= aritm_id*( CLOSE_BRACE ~
 
-/* NON LAYER ARITM */
+/* NON LAYERED ARITM */
 
 /* first is minus sign */
 aritm-       ::= aritm SUB ~
@@ -83,6 +101,22 @@ aritm_id     ::= aritm- _ID_VAL_ ~
 /* first is value or id */
 aritm_id     ::= aritm _INT_VAL_ ~
 aritm_id     ::= aritm _ID_VAL_ ~
+
+/* use of structures */
+aritm_strct  ::= aritm_id DOT +
+aritm_str_id ::= aritm_strct _ID_VAL_ ~
+aritm_strct  ::= aritm_str_id DOT ~
+
+/* pop out struct use */
+POP          ::= aritm_str_id ADD /
+POP          ::= aritm_str_id SUB /
+POP          ::= aritm_str_id MULTIPLICATION /
+POP          ::= aritm_str_id DIVISION /
+POP          ::= aritm_str_id MODULUS /
+
+POP          ::= aritm_str_id SEMICOLON /
+POP          ::= aritm_str_id COMMA /
+
 
 /* + - after id or value */
 aritm_id+-   ::= aritm_id ADD ~
@@ -144,52 +178,28 @@ POP          ::= aritm_id+-id COMMA /
 POP          ::= aritm+*id SEMICOLON /
 POP          ::= aritm+*id COMMA /
 
-
-/* pops if after mul div mod goes add sub 
-POP          ::= aritm** ADD /
-POP          ::= aritm** SUB /
-*/
-/* pops aritm state after semicolon
-POP          ::= aritm** SEMICOLON /
-POP          ::= aritm1** SEMICOLON /
-POP          ::= aritm+-id SEMICOLON /
-*/
-
-/* pops aritm state after comma
-POP          ::= aritm** COMMA /
-POP          ::= aritm1** COMMA /
-POP          ::= aritm_id COMMA /
-POP          ::= aritm+-id COMMA /
-*/
-
 /*
  * EOF ARITHMETIC
  */
 
 
-/* variable declaration dont use after INIT_STATE */
+/*
+ * VARIABLE DECLARATION
+ */
+
+/* dont use after INIT_STATE */
 var_dec      ::= VAR_DEC_BLK INT +
 var_dec      ::= VAR_DEC_BLK CHAR +
 var_dec      ::= VAR_DEC_BLK _ID_VAL_ +
 
 var_id       ::= var_dec _ID_VAL_ ~
+var_dec      ::= var_id COMMA ~
 
 aritm        ::= var_id EQUALITY +
 
-/*
-var_id=val   ::= var_id=- _INT_VAL_ ~
-var_id=val   ::= var_id=  _INT_VAL_ ~
-var_id=val   ::= var_id=  _CHAR_VAL_ ~
-*/
-
-var_dec      ::= var_id COMMA ~
-var_dec      ::= var_id=val COMMA ~
-
 POP          ::= var_id SEMICOLON -
-//POP          ::= var_id=val SEMICOLON -
 
 /* variable useage */
-id_useage    ::= code_blk _ID_VAL_ +
 var_use=     ::= id_useage EQUALITY |
 aritm        ::= var_use= EQUALITY +
 POP          ::= var_use= SEMICOLON -
@@ -206,20 +216,26 @@ POP          ::= VAR_DEC_BLK RETURN /
 POP          ::= VAR_DEC_BLK _ID_VAL_ /
 POP          ::= VAR_DEC_BLK END /
 
-/* code block */
-VAR_DEC_BLK  ::= code_blk INT *
-VAR_DEC_BLK  ::= code_blk CHAR *
-
-/* after code block */
-POP          ::= code_blk END /
-
 /* struct */
+
+/* declaration */
 struct       ::= INIT_STATE STRUCT_DEC +
 strct_name   ::= struct _ID_VAL_ ~
 strct_name{  ::= strct_name BEGIN |
 VAR_DEC_BLK  ::= strct_name{ BEGIN +
 struct{}     ::= strct_name{ END ~
 POP          ::= struct{} SEMICOLON -
+
+/* useage */
+struct_dot   ::= id_useage DOT ~
+struct_attr  ::= struct_dot _ID_VAL_ ~
+
+struct_dot   ::= struct_attr DOT ~
+
+struct_attr= ::= struct_attr  EQUALITY |
+aritm        ::= struct_attr= EQUALITY +
+
+POP          ::= struct_attr= SEMICOLON -
 
 /* main */
 main_i       ::= INT MAIN ~
