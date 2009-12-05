@@ -49,7 +49,7 @@
 #define COMMA 38
 #define COLON 39
 #define DOT 40
-#define FUNCTION_DEC 41
+#define VOID 41
 
 #endif
 
