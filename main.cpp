@@ -24,8 +24,6 @@ int main(int argc, char **argv) {
 
   InnerLang lang("inner_lang_gen.i");
   
-  cout << "test: ',' is " << lang.getInnerLangValue(",") << endl;
-  
   RuleMaster rules("inner_scanner_scannig_rules");
 
   map<string,string> comments;
