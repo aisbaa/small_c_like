@@ -43,6 +43,7 @@ clean:
 	make -C $(DEMO_DIR)
 	rm -fr *~ *.o *.gch
 	rm -f $(NAME)
+	rm -f $(RWTOOL)
 	rm -f $(INNER_LANG_NAME)
 	rm -f $(INNER_AUGMENT_GRAMMAR_NAME)
 
