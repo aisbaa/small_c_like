@@ -61,12 +61,10 @@ POP          ::= code_blk END /
 /*
  * BOOL ARITMETHIC
  */
-bbooli       ::= bool _ID_VAL_ ~
+
+/* direct */
 bbool        ::= bool TRUE ~
 bbool        ::= bool FALSE ~
-
-bbool|&      ::= bbooli OR ~
-bbool|&      ::= bbooli AND ~
 
 bbool|&      ::= bbool OR ~
 bbool|&      ::= bbool AND ~
@@ -74,6 +72,14 @@ bbool|&      ::= bbool AND ~
 bbooli       ::= bbool|& _ID_VAL_ ~
 bbool        ::= bbool|& TRUE ~
 bbool        ::= bbool|& FALSE ~
+
+/* indirect */
+bbooli       ::= bool _ID_VAL_ ~
+bbool|&      ::= bbooli OR ~
+bbool|&      ::= bbooli AND ~
+
+bboolic      ::= bbooli ADD |
+aritm_id+    ::= bboolic ADD +
 
 /* what goes after variable declaration */
 POP          ::= bbool CLOSE_BRACE /
