@@ -231,6 +231,13 @@ var_use=     ::= id_useage EQUALITY |
 aritm        ::= var_use= EQUALITY +
 POP          ::= var_use= SEMICOLON -
 
+/* array */
+arr_dec           ::= var_id SQUARE_BRACKET_OPEN +
+arr_dec_[empty]   ::= arr_dec SQUARE_BRACKET_CLOSE -
+arr_dec_[val      ::= arr_dec _INT_VAL_ ~
+arr_dec_[val]     :: arr_dec_[val SQUARE_BRACKET_CLOSE -
+
+
 /* what goes after variable declaration */
 POP          ::= VAR_DEC_BLK MAIN /
 POP          ::= VAR_DEC_BLK STRUCT_DEC /
@@ -274,6 +281,23 @@ function_()_{     ::= function_() BEGIN |
 code_blk          ::= function_()_{ BEGIN +
 POP               ::= function_()_{ END -
 
+/* function call */
+func_call    ::= id_useage OPEN_BRACE ~
+func_attr    ::= func_call _ID_VAL_ ~
+func_attr    ::= func_attr COMMA ~
+func_attr    ::= func_attr _ID_VAL_ ~
+
+func_call()  ::= func_attr CLOSE_BRACE ~
+func_call()  ::= func_call CLOSE_BRACE ~
+
+POP          ::= func_call() SEMICOLON -
+
+
+/* Damn, not working in any way
+func_call         ::= id_useage OPEN_BRACE ~
+func_call_()      ::= func_call_( CLOSE_BRACE ~
+POP               ::= func_call_() SEMICOLON ~
+*/
 
 /* main */
 main_i       ::= INT MAIN ~
@@ -331,6 +355,7 @@ while(){     ::= while(true) BEGIN |
 code_blk     ::= while(){ BEGIN +
 POP          ::= while(){ END -
 
+
 /* printf */
 printf_      ::= code_blk PRINTF_DEC +
 printf_(     ::= printf_ OPEN_BRACE ~
@@ -345,9 +370,11 @@ printf_()    ::= printf_(var CLOSE_BRACE ~
 
 POP          ::= printf_() SEMICOLON -
 
+
 /* scanf */
 scanf_       ::= code_blk SCANF +
 scanf_(      ::= scanf_ OPEN_BRACE ~
 scanf_(var   ::= scanf_( _ID_VAL_ ~
 scanf_(var)  ::= scanf_(var CLOSE_BRACE ~
 POP          ::= scanf_(var) SEMICOLON -
+
