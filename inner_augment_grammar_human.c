@@ -296,13 +296,35 @@ POP          ::= struct_attr= SEMICOLON -
 function_name     ::= INT _ID_VAL_ ~
 function_name     ::= CHAR _ID_VAL_ ~
 function_name     ::= VOID _ID_VAL_ ~
+
 function_name_(   ::= function_name OPEN_BRACE ~
+function_name_(var ::= function_name_( INT |
+function_name_(var ::= function_name_( CHAR |
+func_param        ::= function_name_(var INT +
+func_param        ::= function_name_(var CHAR +
 
-function()             ::= function_name_( CLOSE_BRACE ~
+function_name_() ::= function_name_( CLOSE_BRACE ~
 
-function_()_{     ::= function() BEGIN |
-code_blk          ::= function_()_{ BEGIN +
-POP               ::= function_()_{ END -
+function_name_(){ ::= function_name_(var BEGIN |
+function_name_(){ ::= function_name_() BEGIN |
+code_blk          ::= function_name_(){ BEGIN +
+POP               ::= function_name_(){ END -
+/* function parameters */
+func_param ::= func_param INT ~
+func_param ::= func_param CHAR ~
+func_id     ::= func_param _ID_VAL_ ~
+
+func_id,    ::= func_id COMMA ~
+
+func_id,id  ::= func_id, INT ~
+func_id,id  ::= func_id, CHAR ~
+func_id,id  ::= func_id,id _ID_VAL_ ~
+
+func_id,    ::= func_id,id COMMA ~
+
+POP          ::= func_id CLOSE_BRACE -
+POP          ::= func_id,id CLOSE_BRACE -
+/* end */
 
 /* function call */
 func_call    ::= id_useage OPEN_BRACE ~
@@ -374,21 +396,21 @@ POP          ::= while(){ END -
 
 
 /* printf(a + "a" + b + "b") */
-printf_     ::= code_blk PRINTF_DEC +
-printf_(    ::= printf_ OPEN_BRACE |
-multi_pr       ::= printf_( OPEN_BRACE +
-printf_()   ::= printf_( CLOSE_BRACE ~
-POP         ::= printf_() SEMICOLON -
+printf_      ::= code_blk PRINTF_DEC +
+printf_(     ::= printf_ OPEN_BRACE |
+multi_pr     ::= printf_( OPEN_BRACE +
+printf_()    ::= printf_( CLOSE_BRACE ~
+POP          ::= printf_() SEMICOLON -
 
 multi_id     ::= multi_pr _STR_VAL_ ~
 multi_id     ::= multi_pr _ID_VAL_ ~
 
-multi_id+   ::= multi_id ADD ~
+multi_id+    ::= multi_id ADD ~
 
-multi_id+id ::= multi_id+ _ID_VAL_ ~
-multi_id+id ::= multi_id+ _STR_VAL_ ~
+multi_id+id  ::= multi_id+ _ID_VAL_ ~
+multi_id+id  ::= multi_id+ _STR_VAL_ ~
 
-multi_id+   ::= multi_id+id ADD ~
+multi_id+    ::= multi_id+id ADD ~
 
 POP          ::= multi_id CLOSE_BRACE /
 POP          ::= multi_id+id CLOSE_BRACE /
