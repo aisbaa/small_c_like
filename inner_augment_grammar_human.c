@@ -1,6 +1,7 @@
 #include "inner_lang_values.h"
 
-/* Stack operation
+/**
+ * Stack operation
  * + is push
  * * is push and check again
  *
@@ -34,9 +35,12 @@
 
 /* reikia padaryti
 
-   bool statement (reiÅ¡kiniai kuriÅ³ atsakymas true arba false)
    masyvai (deklaracija ir panaudojimas)
-   
+   f-jos (deklaracija ir panaudojimas)
+   scanf printf
+
+   bool statement (reiÅ¡kiniai kuriÅ³ atsakymas true arba false)
+
  */
 
 
@@ -45,8 +49,8 @@ new_state       stack_top  token      action
 */
 INIT_STATE   ::= INIT_STATE INIT_STATE ~
 INT          ::= INIT_STATE INT        +
-INT          ::= INIT_STATE CHAR       +
-INT          ::= INIT_STATE VOID       +
+CHAR         ::= INIT_STATE CHAR       +
+VOID         ::= INIT_STATE VOID       +
 
 /*
  * GENERIC
@@ -65,28 +69,122 @@ POP          ::= code_blk END /
  * BOOL ARITMETHIC
  */
 
-/* direct */
-bbool        ::= bool TRUE ~
-bbool        ::= bool FALSE ~
+/* LAYERED BOOL ARITMETHIC */
+boollayer    ::= bool OPEN_BRACE |
+boollayer    ::= bool_val_op OPEN_BRACE |
 
-bbool|&      ::= bbool OR ~
-bbool|&      ::= bbool AND ~
+bool         ::= boollayer OPEN_BRACE +
+/* reduction after bool layer */
+bool_val     ::= boollayer CLOSE_BRACE ~
 
-bbooli       ::= bbool|& _ID_VAL_ ~
-bbool        ::= bbool|& TRUE ~
-bbool        ::= bbool|& FALSE ~
+/* NON LAYERED BOOL ARITMETHIC */
+/* direct (constants) */
+bool_val     ::= bool TRUE ~
+bool_val     ::= bool FALSE ~
 
-/* indirect */
-bbooli       ::= bool _ID_VAL_ ~
-bbool|&      ::= bbooli OR ~
-bbool|&      ::= bbooli AND ~
+bool_val_op  ::= bool_val OR ~
+bool_val_op  ::= bool_val AND ~
 
-bboolic      ::= bbooli ADD |
-aritm_id+    ::= bboolic ADD +
+bool_val     ::= bool_val_op TRUE ~
+bool_val     ::= bool_val_op FALSE ~
 
-/* what goes after variable declaration */
-POP          ::= bbool CLOSE_BRACE /
-POP          ::= bbooli CLOSE_BRACE /
+/* indirect (variables) */
+bool_id      ::= bool _ID_VAL_ ~  // this might be not bool id, so this has three ways to go
+bool_val     ::= bool_val_op _ID_VAL_ ~ // this must be bool id
+
+/* indirect - id turns out to be bool type */
+bool_val_op  ::= bool_id AND ~
+bool_val_op  ::= bool_id OR ~
+
+/* what goes after liniar bool arithmetic */
+POP          ::= bool_val CLOSE_BRACE /
+POP          ::= bool_id  CLOSE_BRACE / // must be boolean variable
+
+/* TRADITIONAL ARITHMETIC INSIDE BOOL ARITHMETIC */
+
+/* first comes int */
+bool_int     ::= bool _INT_VAL_ |
+aritm        ::= bool_int _INT_VAL_ *
+
+/* turns out that id is numerical */
+/* indirect - id turns out to be numerical type */
+bool_int+    ::= bool_id ADD |
+bool_int+    ::= bool_id SUB |
+
+bool_int+    ::= bool_id MULTIPLICATION |
+bool_int+    ::= bool_id DIVISION |
+bool_int+    ::= bool_id MODULUS |
+
+aritm_id     ::= bool_int+ ADD *
+bool_int+    ::= bool_int+ SUB *
+
+bool_int+    ::= bool_int+ MULTIPLICATION *
+bool_int+    ::= bool_int+ DIVISION *
+bool_int+    ::= bool_int+ MODULUS *
+
+/* after aritm which started with id + sign goes */
+bool_int==   ::= bool_int+ IS_EQUAL_TO |
+bool_int==   ::= bool_int+ NOT_EQUAL_TO |
+
+bool_int==   ::= bool_int+ GREATER_OR_EQUAL |
+bool_int==   ::= bool_int+ LESS_OR_EQUAL |
+
+bool_int==   ::= bool_int+ GREATER |
+bool_int==   ::= bool_int+ LESS |
+
+/* after aritm that started with numerical goes */
+bool_int==   ::= bool_int IS_EQUAL_TO |
+bool_int==   ::= bool_int NOT_EQUAL_TO |
+
+bool_int==   ::= bool_int GREATER_OR_EQUAL |
+bool_int==   ::= bool_int LESS_OR_EQUAL |
+
+bool_int==   ::= bool_int GREATER |
+bool_int==   ::= bool_int LESS |
+
+/* after */
+aritm        ::= bool_int== IS_EQUAL_TO +
+aritm        ::= bool_int== NOT_EQUAL_TO +
+
+aritm        ::= bool_int== GREATER_OR_EQUAL +
+aritm        ::= bool_int== LESS_OR_EQUAL +
+
+aritm        ::= bool_int== GREATER +
+aritm        ::= bool_int== LESS +
+
+bool_val     ::= bool_int== CLOSE_BRACE |
+
+/* string == string */
+bool_str     ::= bool _STR_VAL_ ~
+
+bool_str==   ::= bool_str IS_EQUAL_TO ~
+bool_str==   ::= bool_str NOT_EQUAL_TO ~
+
+bool_str==   ::= bool_str GREATER_OR_EQUAL ~
+bool_str==   ::= bool_str LESS_OR_EQUAL ~
+
+bool_str==   ::= bool_str GREATER ~
+bool_str==   ::= bool_str LESS ~
+
+bool_s==s    ::= bool_str== _STR_VAL_ ~
+
+POP          ::= bool_s==s CLOSE_BRACE /
+
+/* char == char */
+bool_chr     ::= bool _CHAR_VAL_ ~
+
+bool_chr==   ::= bool_chr IS_EQUAL_TO ~
+bool_chr==   ::= bool_chr NOT_EQUAL_TO ~
+
+bool_chr==   ::= bool_chr GREATER_OR_EQUAL ~
+bool_chr==   ::= bool_chr LESS_OR_EQUAL ~
+
+bool_chr==   ::= bool_chr GREATER ~
+bool_chr==   ::= bool_chr LESS ~
+
+bool_c==c    ::= bool_chr== _CHAR_VAL_ ~
+
+POP          ::= bool_c==c CLOSE_BRACE /
 
 /*
  * ARITMETHIC
@@ -201,13 +299,37 @@ aritm_id     ::= aritm+*id SUB |
 POP          ::= aritm_id SEMICOLON /
 POP          ::= aritm_id COMMA /
 
+POP          ::= aritm_id IS_EQUAL_TO /
+POP          ::= aritm_id NOT_EQUAL_TO /
+POP          ::= aritm_id GREATER_OR_EQUAL /
+POP          ::= aritm_id LESS_OR_EQUAL /
+
+POP          ::= aritm_id GREATER /
+POP          ::= aritm_id LESS /
+
 /* exmp.: 1 + 1 */
 POP          ::= aritm_id+-id SEMICOLON /
 POP          ::= aritm_id+-id COMMA /
 
+POP          ::= aritm_id+-id IS_EQUAL_TO /
+POP          ::= aritm_id+-id NOT_EQUAL_TO /
+POP          ::= aritm_id+-id GREATER_OR_EQUAL /
+POP          ::= aritm_id+-id LESS_OR_EQUAL /
+
+POP          ::= aritm_id+-id GREATER /
+POP          ::= aritm_id+-id LESS /
+
 /* exmp.: 1 + 1 * 1 */
 POP          ::= aritm+*id SEMICOLON /
 POP          ::= aritm+*id COMMA /
+
+POP          ::= aritm+*id IS_EQUAL_TO /
+POP          ::= aritm+*id NOT_EQUAL_TO /
+POP          ::= aritm+*id GREATER_OR_EQUAL /
+POP          ::= aritm+*id LESS_OR_EQUAL /
+
+POP          ::= aritm+*id GREATER /
+POP          ::= aritm+*id LESS /
 
 /*
  * EOF ARITHMETIC
@@ -423,4 +545,3 @@ scanf_(      ::= scanf_ OPEN_BRACE ~
 scanf_(var   ::= scanf_( _ID_VAL_ ~
 scanf_(var)  ::= scanf_(var CLOSE_BRACE ~
 POP          ::= scanf_(var) SEMICOLON -
-
