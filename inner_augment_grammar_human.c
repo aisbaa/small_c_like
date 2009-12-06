@@ -25,15 +25,19 @@
 
    return
 
+   scanf
+
+   printf
+
+   f-jos (panaudojimas)
 */
 
 /* reikia padaryti
 
    bool statement (reiÅ¡kiniai kuriÅ³ atsakymas true arba false)
    masyvai (deklaracija ir panaudojimas)
-   f-jos (deklaracija ir panaudojimas)
-   scanf printf
-
+   f-jos (deklaracija su parametrais)
+   
  */
 
 
@@ -218,24 +222,41 @@ POP          ::= aritm+*id COMMA /
 var_dec      ::= VAR_DEC_BLK INT +
 var_dec      ::= VAR_DEC_BLK CHAR +
 var_dec      ::= VAR_DEC_BLK _ID_VAL_ +
-
+ 
 var_id       ::= var_dec _ID_VAL_ ~
 var_dec      ::= var_id COMMA ~
 
 aritm        ::= var_id EQUALITY +
-
+ 
 POP          ::= var_id SEMICOLON -
-
+ 
 /* variable useage */
 var_use=     ::= id_useage EQUALITY |
 aritm        ::= var_use= EQUALITY +
 POP          ::= var_use= SEMICOLON -
 
 /* array */
-arr_dec           ::= var_id SQUARE_BRACKET_OPEN +
-arr_dec_[empty]   ::= arr_dec SQUARE_BRACKET_CLOSE -
-arr_dec_[val      ::= arr_dec _INT_VAL_ ~
-arr_dec_[val]     :: arr_dec_[val SQUARE_BRACKET_CLOSE -
+/* su char ir int vienodai */
+arr_int_dec  ::= var_id SQUARE_BRACKET_OPEN ~
+arr_int_dec  ::= arr_int_dec _INT_VAL_ ~
+arr_int_dec  ::= arr_int_dec SQUARE_BRACKET_CLOSE ~
+POP          ::= arr_int_dec SEMICOLON -
+
+array        ::= arr_int_dec EQUALITY +
+
+array_int    ::= array EQUALITY +
+array_int    ::= array BEGIN ~
+array_val    ::= array_int _INT_VAL_ ~
+array_val    ::= array_val COMMA ~
+array_val    ::= array_val _INT_VAL_ ~
+array_val    ::= array_val END -
+
+/*
+arr_chr_dec  ::= var_id EQUALITY ~
+arr_chr_dec  ::= arr_chr_dec _STR_VAL_ ~
+POP          ::= arr_chr_dec SEMICOLON -
+*/
+/* pobaiga */
 
 
 /* what goes after variable declaration */
@@ -276,8 +297,10 @@ function_name     ::= INT _ID_VAL_ ~
 function_name     ::= CHAR _ID_VAL_ ~
 function_name     ::= VOID _ID_VAL_ ~
 function_name_(   ::= function_name OPEN_BRACE ~
-function_()       ::= function_name_( CLOSE_BRACE ~
-function_()_{     ::= function_() BEGIN |
+
+function()             ::= function_name_( CLOSE_BRACE ~
+
+function_()_{     ::= function() BEGIN |
 code_blk          ::= function_()_{ BEGIN +
 POP               ::= function_()_{ END -
 
@@ -292,12 +315,6 @@ func_call()  ::= func_call CLOSE_BRACE ~
 
 POP          ::= func_call() SEMICOLON -
 
-
-/* Damn, not working in any way
-func_call         ::= id_useage OPEN_BRACE ~
-func_call_()      ::= func_call_( CLOSE_BRACE ~
-POP               ::= func_call_() SEMICOLON ~
-*/
 
 /* main */
 main_i       ::= INT MAIN ~
@@ -356,28 +373,28 @@ code_blk     ::= while(){ BEGIN +
 POP          ::= while(){ END -
 
 
-/* printf */
-printf_      ::= code_blk PRINTF_DEC +
-printf_(     ::= printf_ OPEN_BRACE ~
+/* printf(a + "a" + b + "b") */
+printf_     ::= code_blk PRINTF_DEC +
+printf_(    ::= printf_ OPEN_BRACE |
+multi_pr       ::= printf_( OPEN_BRACE +
+printf_()   ::= printf_( CLOSE_BRACE ~
+POP         ::= printf_() SEMICOLON -
 
-/* printf("string") */
-printf_(str  ::= printf_( _STR_VAL_ ~
-printf_(str  ::= printf_(str ADD ~
-printf_(str  ::= printf_(str _STR_VAL_ ~
-printf_(str  ::= printf_(str _ID_VAL_ ~
-printf_()    ::= printf_(str CLOSE_BRACE ~
+multi_id     ::= multi_pr _STR_VAL_ ~
+multi_id     ::= multi_pr _ID_VAL_ ~
 
-/* printf(variable) */
-printf_(var  ::= printf_( _ID_VAL_ ~
-printf_(var  ::= printf_(var ADD ~
-printf_(var  ::= printf_(var _STR_VAL_ ~
-printf_(var  ::= printf_(var _ID_VAL_ ~
-printf_()    ::= printf_(var CLOSE_BRACE ~
+multi_id+   ::= multi_id ADD ~
 
-POP          ::= printf_() SEMICOLON -
+multi_id+id ::= multi_id+ _ID_VAL_ ~
+multi_id+id ::= multi_id+ _STR_VAL_ ~
+
+multi_id+   ::= multi_id+id ADD ~
+
+POP          ::= multi_id CLOSE_BRACE /
+POP          ::= multi_id+id CLOSE_BRACE /
 
 
-/* scanf */
+/* scanf(var) */
 scanf_       ::= code_blk SCANF +
 scanf_(      ::= scanf_ OPEN_BRACE ~
 scanf_(var   ::= scanf_( _ID_VAL_ ~
