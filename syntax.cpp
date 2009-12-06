@@ -49,7 +49,11 @@ int Syntax::makeAction() {
   if (action == action_reduction_str) return action_reduction;
   if (action == action_reduction_check_str) return action_reduction_check;
 
-  throw InvalidActionInaugmentedGrammar("Got invalid inner augmented grammar stack operation.");
+  throw InvalidActionInaugmentedGrammar(
+                                        "Got invalid inner augmented grammar stack operation: " + 
+                                        action +
+                                        "."
+                                        );
 
   return 0; // gets ride of warnning
 }

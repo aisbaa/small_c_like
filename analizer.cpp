@@ -79,7 +79,9 @@ void Analizer::check(Token * token) {
       this -> gotError = true;
     }
 
-    cout << endl;
+    cout << " curr state: "
+         << this -> stateStack.top()
+         << endl;
 
   } while(repeat);
 
