@@ -29,14 +29,13 @@
 
    printf
 
-   f-jos (panaudojimas)
+   f-jos (deklaracija su parametrais, panaudojimas)
 */
 
 /* reikia padaryti
 
    bool statement (reiÅ¡kiniai kuriÅ³ atsakymas true arba false)
    masyvai (deklaracija ir panaudojimas)
-   f-jos (deklaracija su parametrais)
    
  */
 
@@ -404,11 +403,13 @@ POP          ::= printf_() SEMICOLON -
 
 multi_id     ::= multi_pr _STR_VAL_ ~
 multi_id     ::= multi_pr _ID_VAL_ ~
+multi_id     ::= multi_pr _CHAR_VAL_ ~
 
 multi_id+    ::= multi_id ADD ~
 
 multi_id+id  ::= multi_id+ _ID_VAL_ ~
 multi_id+id  ::= multi_id+ _STR_VAL_ ~
+multi_id+id  ::= multi_id+ _CHAR_VAL_ ~
 
 multi_id+    ::= multi_id+id ADD ~
 
