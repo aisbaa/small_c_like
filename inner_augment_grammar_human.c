@@ -99,6 +99,8 @@ bool_val_op  ::= bool_id OR ~
 /* what goes after liniar bool arithmetic */
 POP          ::= bool_val CLOSE_BRACE /
 POP          ::= bool_id  CLOSE_BRACE / // must be boolean variable
+POP          ::= bool_id==id CLOSE_BRACE /
+POP          ::= bool_id==exp CLOSE_BRACE /
 
 /* TRADITIONAL ARITHMETIC INSIDE BOOL ARITHMETIC */
 
@@ -121,6 +123,34 @@ bool_int+    ::= bool_int+ SUB *
 bool_int+    ::= bool_int+ MULTIPLICATION *
 bool_int+    ::= bool_int+ DIVISION *
 bool_int+    ::= bool_int+ MODULUS *
+
+/* stand alone id turns out to be comperable */
+bool_id==    ::= bool_id IS_EQUAL_TO ~
+bool_id==    ::= bool_id NOT_EQUAL_TO ~
+
+bool_id==    ::= bool_id GREATER_OR_EQUAL ~
+bool_id==    ::= bool_id LESS_OR_EQUAL ~
+
+bool_id==    ::= bool_id GREATER ~
+bool_id==    ::= bool_id LESS ~
+
+bool_id==id  ::= bool_id== _ID_VAL_ ~
+
+  /* and what if we are geting some operation after bool_id==id */
+
+bool_id==exp ::= bool_id==id ADD |
+bool_id==exp ::= bool_id==id SUB |
+
+bool_id==exp ::= bool_id==id MULTIPLICATION |
+bool_id==exp ::= bool_id==id DIVISION |
+bool_id==exp ::= bool_id==id MODULUS |
+
+aritm_id     ::= bool_id==exp ADD *
+aritm_id     ::= bool_id==exp SUB *
+
+aritm_id     ::= bool_id==exp MULTIPLICATION *
+aritm_id     ::= bool_id==exp DIVISION *
+aritm_id     ::= bool_id==exp MODULUS *
 
 /* after aritm which started with id + sign goes */
 bool_int==   ::= bool_int+ IS_EQUAL_TO |
@@ -505,11 +535,11 @@ POP          ::= if(){} END /
 /* while () {} */
 
 while        ::= code_blk WHILE_DEC +
-while(       ::= while OPEN_BRACE ~
-while(true   ::= while( TRUE ~
-while(true)  ::= while(true CLOSE_BRACE ~
+while(       ::= while OPEN_BRACE |
+bool         ::= while( OPEN_BRACE +
+while()      ::= while( CLOSE_BRACE ~
 
-while(){     ::= while(true) BEGIN |
+while(){     ::= while() BEGIN |
 code_blk     ::= while(){ BEGIN +
 POP          ::= while(){ END -
 
