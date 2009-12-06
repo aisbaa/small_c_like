@@ -358,25 +358,23 @@ POP          ::= var_use= SEMICOLON -
 
 /* array */
 /* su char ir int vienodai */
-arr_int_dec  ::= var_id SQUARE_BRACKET_OPEN ~
-arr_int_dec  ::= arr_int_dec _INT_VAL_ ~
-arr_int_dec  ::= arr_int_dec SQUARE_BRACKET_CLOSE ~
-POP          ::= arr_int_dec SEMICOLON -
+arr_dec      ::= var_id SQUARE_BRACKET_OPEN ~
+arr_dec      ::= arr_dec _INT_VAL_ ~
+arr_dec      ::= arr_dec SQUARE_BRACKET_CLOSE ~
+POP          ::= arr_dec SEMICOLON -
 
-array        ::= arr_int_dec EQUALITY +
-
+array        ::= arr_dec EQUALITY +
 array_int    ::= array EQUALITY +
-array_int    ::= array BEGIN ~
-array_val    ::= array_int _INT_VAL_ ~
-array_val    ::= array_val COMMA ~
-array_val    ::= array_val _INT_VAL_ ~
-array_val    ::= array_val END -
 
-/*
-arr_chr_dec  ::= var_id EQUALITY ~
-arr_chr_dec  ::= arr_chr_dec _STR_VAL_ ~
-POP          ::= arr_chr_dec SEMICOLON -
-*/
+POP      ::= array _CHAR_VAL_ -
+POP      ::= array _STR_VAL_ -
+POP      ::= array _INT_VAL_ -
+
+array_int      ::= array BEGIN ~
+array_int_val  ::= array_int _INT_VAL_ ~
+array_int_val  ::= array_int_val COMMA ~
+array_int_val  ::= array_int_val _INT_VAL_ ~
+POP  ::= array_int_val END -
 /* pobaiga */
 
 
