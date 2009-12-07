@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  Analizer analizer(syntax, NULL);
+  Analizer analizer(syntax, NULL, &lang);
 
   Token * token = NULL;
   while (

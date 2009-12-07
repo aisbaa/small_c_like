@@ -10,6 +10,7 @@
 
 #include <stack>
 
+#include "innerLang.h"
 #include "syntax.h"
 #include "token.h"
 
@@ -17,6 +18,7 @@ using namespace std;
 
 class Analizer {
  private:
+  InnerLang * lang;
   Syntax * syntax;
   void * semantic;
 
@@ -25,7 +27,7 @@ class Analizer {
   stack<int> stateStack;
 
  public:
-  Analizer(Syntax *, void * =NULL);
+  Analizer(Syntax *, void * =NULL, InnerLang * =NULL);
 
   void check(Token *);
 

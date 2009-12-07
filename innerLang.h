@@ -48,7 +48,7 @@ class InnerLang {
   ~InnerLang();
 
   int getInnerLangValue(string);
-
+  string getOuterLangValue(int);
 };
 
 #endif

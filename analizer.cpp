@@ -1,4 +1,5 @@
 #include <stack>
+#include <vector>
 
 #include "inner_lang_values.h"
 #include "syntax.h"
@@ -6,11 +7,12 @@
 
 #include "analizer.h"
 
-Analizer::Analizer(Syntax * syntax, void * semantic) {
+Analizer::Analizer(Syntax * syntax, void * semantic, InnerLang * lang) {
   if (syntax == NULL) throw "Analizer can't check without Syntax object.";
   this -> syntax = syntax;
 
   this -> semantic = semantic;
+  this -> lang = lang;
 
   this -> gotError = false;
   this -> stateStack.push(INIT_STATE);
@@ -19,11 +21,13 @@ Analizer::Analizer(Syntax * syntax, void * semantic) {
 void Analizer::check(Token * token) {
   int new_state;
   int action;
-  bool repeat;
-  do {
-    repeat = false;
 
-    cout << ">> ";
+  bool repeat;
+  bool skipErr = false;;
+
+  do {
+    action = -1;
+    repeat = false;
 
     try {
       action = this -> syntax -> getNextState(
@@ -33,13 +37,30 @@ void Analizer::check(Token * token) {
                                               );
     } catch (UnexpectedTokenException unexp) {
       this -> gotError = true;
-      //cout << unexp.what() << endl;
-      // TODO
-      // this means that state was not found
+
+      if (!skipErr) {
+        skipErr = true; 
+        cerr << "syntax error with : "
+             << token -> getSourceText() << endl;
+
+        if (this -> lang != NULL) {
+          vector<int> expects = this -> syntax -> getTokensWithState(this -> stateStack.top());
+          cerr << "expected one of: ";
+
+          for (
+               vector<int>::iterator it = expects.begin();
+               it != expects.end();
+               it++
+               )
+            cerr << this -> lang -> getOuterLangValue(*it) << ", ";
+          cerr << endl;
+        }
+      }
     }
 
-    cout << *token << " action " << action << " ";
-
+    if (!skipErr)
+      cout << ">>" << *token << " action " << action;
+    
     switch (action) {
     case action_pop:
       cout << "pop  " << this -> stateStack.top();
@@ -73,15 +94,14 @@ void Analizer::check(Token * token) {
       this -> stateStack.top() = new_state;
       repeat = true;
       break;
-
-    default:
-      cout << "didnt found";
-      this -> gotError = true;
     }
 
-    cout << " curr state: "
-         << this -> stateStack.top()
-         << endl;
+    if (!skipErr)
+      cout << " curr state: "
+           << this -> stateStack.top()
+           << endl;
+    else
+      skipErr = false;
 
   } while(repeat);
 

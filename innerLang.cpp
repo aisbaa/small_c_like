@@ -74,3 +74,34 @@ int InnerLang::getInnerLangValue(string outerValue) {
   return _ID_VAL_;
 }
 
+string InnerLang::getOuterLangValue(int innerLangValue) {
+  switch (innerLangValue) {
+  case _INT_VAL_:
+    return "intger";
+    break;
+
+  case _CHAR_VAL_:
+    return "character";
+    break;
+
+  case _STR_VAL_:
+    return "string";
+    break;
+
+  case _ID_VAL_:
+    return "_id_";
+    break;
+
+  default:
+    for (
+         innerValueMapInterator it = this -> LangReservedWords.begin();
+         it != this -> LangReservedWords.end();
+         it++
+         )
+      if (it -> second == innerLangValue)
+        return it -> first;
+    break;
+  }
+
+  return "";
+}
