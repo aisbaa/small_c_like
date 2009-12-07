@@ -65,6 +65,32 @@ VAR_DEC_BLK  ::= code_blk CHAR *
 POP          ::= code_blk END /
 
 /*
+ * CALLABLE PARAMETERS 
+ */
+param_list_i   ::= params _ID_VAL_ |
+param_list_i   ::= params _INT_VAL_ |
+aritm          ::= param_list_i _ID_VAL_ *
+aritm          ::= param_list_i _INT_VAL_ *
+
+param_list,    ::= param_list_i COMMA ~
+
+param_list     ::= params _CHAR_VAL_ ~
+param_list     ::= params _STR_VAL_ ~
+
+param_list,    ::= param_list COMMA ~
+
+params         ::= param_list, _ID_VAL_ |
+params         ::= param_list, _INT_VAL_ |
+
+param_list     ::= param_list, _CHAR_VAL_ ~
+param_list     ::= param_list, _STR_VAL_ ~
+
+POP            ::= param_list_i CLOSE_BRACE /
+POP            ::= param_list CLOSE_BRACE /
+POP            ::= params CLOSE_BRACE /
+
+
+/*
  * BOOL ARITMETHIC
  */
 
@@ -274,6 +300,24 @@ POP          ::= aritm_str_id MODULUS /
 
 POP          ::= aritm_str_id SEMICOLON /
 POP          ::= aritm_str_id COMMA /
+
+/* Functuin calls */
+aritm_func(    ::= aritm_id OPEN_BRACE |
+
+params         ::= aritm_func( OPEN_BRACE +
+
+aritm_id       ::= aritm_func( CLOSE_BRACE ~
+
+aritm_func(i   ::= aritm_id+- OPEN_BRACE |
+
+params         ::= aritm_func(i OPEN_BRACE +
+
+aritm_id+-id   ::= aritm_func(i CLOSE_BRACE ~
+
+aritm_func_i+i ::= aritm_id+-id OPEN_BRACE |
+params         ::= aritm_func_i+i OPEN_BRACE +
+
+aritm_id+-id   ::= aritm_func_i+i CLOSE_BRACE ~
 
 /* + - after id or value */
 aritm_id+-   ::= aritm_id ADD ~
