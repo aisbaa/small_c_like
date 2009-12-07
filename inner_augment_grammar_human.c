@@ -321,6 +321,7 @@ aritm_id     ::= aritm+*id SUB |
 /* exmp.: 1 */
 POP          ::= aritm_id SEMICOLON /
 POP          ::= aritm_id COMMA /
+POP          ::= aritm_id SQUARE_BRACKET_CLOSE /
 
 POP          ::= aritm_id IS_EQUAL_TO /
 POP          ::= aritm_id NOT_EQUAL_TO /
@@ -333,6 +334,7 @@ POP          ::= aritm_id LESS /
 /* exmp.: 1 + 1 */
 POP          ::= aritm_id+-id SEMICOLON /
 POP          ::= aritm_id+-id COMMA /
+POP          ::= aritm_id+-id SQUARE_BRACKET_CLOSE /
 
 POP          ::= aritm_id+-id IS_EQUAL_TO /
 POP          ::= aritm_id+-id NOT_EQUAL_TO /
@@ -345,6 +347,8 @@ POP          ::= aritm_id+-id LESS /
 /* exmp.: 1 + 1 * 1 */
 POP          ::= aritm+*id SEMICOLON /
 POP          ::= aritm+*id COMMA /
+POP          ::= aritm+*id SQUARE_BRACKET_CLOSE /
+
 
 POP          ::= aritm+*id IS_EQUAL_TO /
 POP          ::= aritm+*id NOT_EQUAL_TO /
@@ -379,26 +383,41 @@ var_use=     ::= id_useage EQUALITY |
 aritm        ::= var_use= EQUALITY +
 POP          ::= var_use= SEMICOLON -
 
-/* array */
+/* ARRAY */
 /* su char ir int vienodai */
-arr_dec      ::= var_id SQUARE_BRACKET_OPEN ~
-arr_dec      ::= arr_dec _INT_VAL_ ~
-arr_dec      ::= arr_dec SQUARE_BRACKET_CLOSE ~
-POP          ::= arr_dec SEMICOLON -
+arr_dec[      ::= var_id SQUARE_BRACKET_OPEN |
+aritm         ::= arr_dec[ SQUARE_BRACKET_OPEN +
+arr_dec[]     ::= arr_dec[ SQUARE_BRACKET_CLOSE ~
+arr_dec[]=    ::= arr_dec[] EQUALITY ~
 
-array        ::= arr_dec EQUALITY +
-array_int    ::= array EQUALITY +
+arr_dec[]=+   ::= arr_dec[]= _ID_VAL_ |
+aritm         ::= arr_dec[]=+ _ID_VAL_ *
 
-POP      ::= array _CHAR_VAL_ -
-POP      ::= array _STR_VAL_ -
-POP      ::= array _INT_VAL_ -
+arr_dec[]=+   ::= arr_dec[]= _INT_VAL_ |
+aritm         ::= arr_dec[]=+ _INT_VAL_ *
 
-array_int      ::= array BEGIN ~
-array_int_val  ::= array_int _INT_VAL_ ~
-array_int_val  ::= array_int_val COMMA ~
-array_int_val  ::= array_int_val _INT_VAL_ ~
-POP  ::= array_int_val END -
+arr_dec[]=str ::= arr_dec[]= _STR_VAL_ ~
+arr_dec[]=chr ::= arr_dec[]= _CHAR_VAL_ ~
+
+POP           ::= arr_dec[]=+ SEMICOLON -
+POP           ::= arr_dec[]=str SEMICOLON -
+POP           ::= arr_dec[]=chr SEMICOLON -
 /* pobaiga */
+
+/* var[1+2] */
+var_arr_id     ::= var_arr _INT_VAL_ ~
+var_arr_id     ::= var_arr _ID_VAL_ ~
+
+var_arr_id+    ::= var_arr_id ADD ~
+
+var_arr_id+id  ::= var_arr_id+ _ID_VAL_ ~
+var_arr_id+id  ::= var_arr_id+ _INT_VAL_ ~
+
+var_arr_id+    ::= var_arr_id+id ADD ~
+
+POP          ::= var_arr_id SQUARE_BRACKET_CLOSE -
+POP          ::= var_arr_id+id SQUARE_BRACKET_CLOSE -
+/* end */
 
 
 /* what goes after variable declaration */
@@ -434,7 +453,7 @@ aritm        ::= struct_attr= EQUALITY +
 
 POP          ::= struct_attr= SEMICOLON -
 
-/* function */
+/* FUNCTION */
 function_name     ::= INT _ID_VAL_ ~
 function_name     ::= CHAR _ID_VAL_ ~
 function_name     ::= VOID _ID_VAL_ ~
@@ -451,7 +470,7 @@ function_name_(){ ::= function_name_(var BEGIN |
 function_name_(){ ::= function_name_() BEGIN |
 code_blk          ::= function_name_(){ BEGIN +
 POP               ::= function_name_(){ END -
-/* function parameters */
+/* FUNCTION PARAMETERS */
 func_param ::= func_param INT ~
 func_param ::= func_param CHAR ~
 func_id     ::= func_param _ID_VAL_ ~
@@ -466,7 +485,7 @@ func_id,    ::= func_id,id COMMA ~
 
 POP          ::= func_id CLOSE_BRACE -
 POP          ::= func_id,id CLOSE_BRACE -
-/* end */
+/* EOF FUNCTION PARAMETERS */
 
 /* FUNCTION CALL */
 func_call    ::= id_useage OPEN_BRACE ~
