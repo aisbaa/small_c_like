@@ -537,16 +537,9 @@ POP          ::= func_id,id CLOSE_BRACE -
 /* EOF FUNCTION PARAMETERS */
 
 /* FUNCTION CALL */
-func_call    ::= id_useage OPEN_BRACE ~
-func_attr    ::= func_call _ID_VAL_ ~
-func_attr    ::= func_call _INT_VAL_ ~
-func_attr    ::= func_call _CHAR_VAL_ ~
-func_attr    ::= func_call _STR_VAL_ ~
-func_call    ::= func_attr COMMA ~
-
-func_call()  ::= func_attr CLOSE_BRACE ~
+func_call    ::= id_useage OPEN_BRACE |
+params       ::= func_call OPEN_BRACE +
 func_call()  ::= func_call CLOSE_BRACE ~
-
 POP          ::= func_call() SEMICOLON -
 
 /* MAIN */
