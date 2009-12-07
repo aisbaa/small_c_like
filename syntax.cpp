@@ -136,6 +136,7 @@ int Syntax::getNextState(int prev_state, int token, int * new_state) {
 
 vector<int> Syntax::getTokensWithState(int old_state) {
   vector<int> terms;
+
   for (this->it = this->matrix.begin(); this->it < this->matrix.end(); this->it++) {
     MatrixValues a = *(this->it);
     if (old_state == a.state)
