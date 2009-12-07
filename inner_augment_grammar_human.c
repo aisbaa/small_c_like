@@ -15,19 +15,15 @@
 
 /* padaryta
    
-   aritmetika
+   arithmetic
+   boolean arithmetic
    variable declaration
 
    struct
-
    main
-
    if [ else [if] ]
-
    return
-
    scanf
-
    printf
 
    f-jos (deklaracija su parametrais, panaudojimas)
@@ -38,8 +34,6 @@
    masyvai (deklaracija ir panaudojimas)
    f-jos (deklaracija ir panaudojimas)
    scanf printf
-
-   bool statement (reiÅ¡kiniai kuriÅ³ atsakymas true arba false)
 
  */
 
