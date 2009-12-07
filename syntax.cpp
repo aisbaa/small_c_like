@@ -22,8 +22,8 @@ Syntax::Syntax(string fileName) {
     if (err != STREAM_IS_NOT_GOOD_FOR_READING) throw ;
   }
 
-  //  printMatrix();
-  //  getNextState(3, 1, NULL);
+  //printMatrix();
+  //getNextState(3, 1, NULL);
 }
 
 int Syntax::makeNumber() {
@@ -132,4 +132,15 @@ int Syntax::getNextState(int prev_state, int token, int * new_state) {
   *new_state = matrix.newState;
 
   return matrix.action;
+}
+
+vector<int> Syntax::getTokensWithState(int old_state) {
+  vector<int> terms;
+  for (this->it = this->matrix.begin(); this->it < this->matrix.end(); this->it++) {
+    MatrixValues a = *(this->it);
+    if (old_state == a.state)
+	terms.push_back(a.term);
+  }
+
+  return terms;
 }

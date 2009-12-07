@@ -74,6 +74,7 @@ class Syntax {
    *   pop
    */
   int getNextState(int prev_state, int token, int * new_state);
+  vector<int> getTokensWithState(int);
 };
 
 #include <stdexcept>
