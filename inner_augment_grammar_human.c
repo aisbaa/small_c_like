@@ -1,5 +1,10 @@
 #include "inner_lang_values.h"
 
+/*
+ * @author: Aistis Jokubauskas
+ * @author: Paulius Pilkauskas
+ */
+
 /**
  * Stack operation
  * + is push

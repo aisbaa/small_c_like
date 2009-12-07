@@ -1,3 +1,8 @@
+/*
+ * @author: Aistis Jokubauskas
+ * @author: Paulius Pilkauskas
+ */
+
 #include <iostream>
 #include <map>
 
