@@ -270,7 +270,6 @@ POP          ::= aritm_str_id MODULUS /
 POP          ::= aritm_str_id SEMICOLON /
 POP          ::= aritm_str_id COMMA /
 
-
 /* + - after id or value */
 aritm_id+-   ::= aritm_id ADD ~
 aritm_id+-   ::= aritm_id SUB ~
@@ -469,19 +468,20 @@ POP          ::= func_id CLOSE_BRACE -
 POP          ::= func_id,id CLOSE_BRACE -
 /* end */
 
-/* function call */
+/* FUNCTION CALL */
 func_call    ::= id_useage OPEN_BRACE ~
 func_attr    ::= func_call _ID_VAL_ ~
-func_attr    ::= func_attr COMMA ~
-func_attr    ::= func_attr _ID_VAL_ ~
+func_attr    ::= func_call _INT_VAL_ ~
+func_attr    ::= func_call _CHAR_VAL_ ~
+func_attr    ::= func_call _STR_VAL_ ~
+func_call    ::= func_attr COMMA ~
 
 func_call()  ::= func_attr CLOSE_BRACE ~
 func_call()  ::= func_call CLOSE_BRACE ~
 
 POP          ::= func_call() SEMICOLON -
 
-
-/* main */
+/* MAIN */
 main_i       ::= INT MAIN ~
 main_(       ::= main_i OPEN_BRACE ~
 main_()      ::= main_( CLOSE_BRACE ~
@@ -489,10 +489,10 @@ main_(){     ::= main_() BEGIN |
 code_blk     ::= main_(){ BEGIN +
 POP          ::= main_(){ END -
 
-/* return */
-return       ::= code_blk RETURN +
-return_int   ::= return _INT_VAL_ ~
-POP          ::= return_int SEMICOLON -
+/* RETURN */
+return       ::= code_blk RETURN *
+aritm        ::= return RETURN +
+POP          ::= return SEMICOLON -
 
 /* if () */
 if           ::= code_blk IF_DEC +
