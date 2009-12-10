@@ -1,10 +1,6 @@
 #include "token.h"
 #include "position.h"
 
-/*
- * better to use internal values or call getters to get those ?
- */
-
 using namespace std;
 
 /*
@@ -25,6 +21,14 @@ Token::~Token() {
 /*
  * GETTERS
  */
+
+void Token::setSemanticValue(int value) {
+  this -> semanticValue = value;
+}
+
+int Token::getSemanticValue() {
+  return this -> semanticValue;
+}
 
 int Token::getInnerLang() {
   return this -> innerLangCode;
