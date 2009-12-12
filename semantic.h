@@ -1,35 +1,75 @@
 #ifndef _SMALL_C_LIKE_SEMANTIC_
 #define _SMALL_C_LIKE_SEMANTIC_
 
+#include <iostream>
+#include <fstream>
+#include <vector>
+
 #include "token.h"
+#include "textstream.h"
 
-typedef OUTP {
-  string * stuff;
-  int fromStack; // negative == dont use stack value
-  OUTP * next;
-}
+using namespace std;
 
-typedef semanticRule {
-  unsigned int stackSize;
-  int * typeCheckValues; // very c'ish, maybe sould use vector or smth-else
+typedef struct OUTP {
+    string * stuff;
+    int fromStack; // negative == dont use stack value
+    OUTP * next;
+} OUTP;
 
-  OUTP * output; // here goes outp from file
+typedef struct SemanticRule {
+    unsigned int stackSize;
+    int * typeCheckValues; // very c'ish, maybe sould use vector or smth-else
+    
+    OUTP * output; // here goes outp from file
+    
+    string tokenName;
+    
+    int innerLangValue;
+    int semanticValue;
+} SemanticRule;
 
-  string tokenName;
+typedef struct {
+    vector<string> firstLine;
+    vector<string> secondLine;
+    vector<string> thirdLine;
+} Block;  
 
-  int innerLangValue;
-  int semanticValue;
-} semanticRule;
-
-clas Semantic {
+class Semantic {
  private:
-  map<int, semanticRule *> semanticRuleMap;
+  map<int, SemanticRule *> semanticRuleMap;
+
+  TextStream * stream;
+  ifstream   * file;
+
+  /*
+   * Methods
+   */
+
+  void fillMap();
+
+  void parse();
+
+  string makeValue();
+
+  SemanticRule *makeSemanticRule(Block);
+
+  vector<string> getLineColumns(int);
+
+  vector<OUTP> makeOutp(vector<string>);
+
+  Block getBlock();
+
+  int stringToInt(string);
 
  public:
   Semantic(string);
 
+  void printBlock(Block);
+  void printSemanticRule(SemanticRule *);
+
   /* NULL means no semantic rule was found */
-  const semanticRule * getSemanticRule(int);
+  SemanticRule * getSemanticRule(int);
+
 };
 
 #endif
