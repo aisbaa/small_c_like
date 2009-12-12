@@ -18,9 +18,6 @@ Semantic::Semantic(string fileName) {
 
     /* Testing */
     SemanticRule *semantic = getSemanticRule(-15);
-    if (semantic) {
-	printSemanticRule(semantic);
-    }
 }
 
 void Semantic::parse() {
