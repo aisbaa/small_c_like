@@ -119,21 +119,6 @@ int Semantic::stringToInt(string value) {
  * Public
  */
 
-void Semantic::printBlock(Block block) {
-    cout << block.firstLine[0] << " " << block.firstLine[1] << " " 
-	 << block.firstLine[2] << " " << block.firstLine[3] << " "
-	 << block.firstLine[4] << endl;
-
-    cout << block.secondLine[0] << " " << block.secondLine[1] << " " << block.secondLine[2] << " " << block.secondLine[3] << " "
-	 << block.secondLine[4] << " " << block.secondLine[5] << " " << block.secondLine[6] << " " << block.secondLine[7] << endl;
-
-    cout << block.thirdLine[0] << " " << block.thirdLine[1] << " " << block.thirdLine[2] << endl;
-}
-
-void Semantic::printSemanticRule(SemanticRule *semanticRule) {
-    cout << semanticRule->tokenName << " " << semanticRule->innerLangValue << " " << semanticRule->semanticValue << endl;
-}
-
 SemanticRule * Semantic::getSemanticRule(int number) {
     map<int, SemanticRule *>::iterator it;
 

@@ -54,7 +54,6 @@ class Semantic {
   SemanticRule *makeSemanticRule(Block);
 
   vector<string> getLineColumns(int);
-
   vector<OUTP> makeOutp(vector<string>);
 
   Block getBlock();
@@ -63,9 +62,6 @@ class Semantic {
 
  public:
   Semantic(string);
-
-  void printBlock(Block);
-  void printSemanticRule(SemanticRule *);
 
   /* NULL means no semantic rule was found */
   SemanticRule * getSemanticRule(int);
