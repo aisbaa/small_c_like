@@ -62,4 +62,4 @@ augmentGrammar: rwtool $(INNER_AUGMENT_GRAMMAR)
 	| grep '^#.*$$' -v \
 	| grep '^ *$$' -v \
 	| awk '{ print $$1 " " $$3 " " $$4 " " $$5 }' \
-	| ./rw > $(INNER_AUGMENT_GRAMMAR_NAME)
+	| ./rw inner_augmented_grammar_states.h > $(INNER_AUGMENT_GRAMMAR_NAME)

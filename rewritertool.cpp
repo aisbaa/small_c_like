@@ -44,6 +44,27 @@ int main(int argc, char ** argv) {
 
   }
 
+  if (argc >= 2) {
+    ofstream saveHeaderFile(argv[1], ios_base::out);
+
+    saveHeaderFile << "#ifndef " << argv[1] << endl;
+    saveHeaderFile << "#define " << argv[1] << endl;
+
+    for (
+         reservedValueMap::iterator it = reservedValues.begin();
+         it != reservedValues.end();
+         it++
+         )
+      saveHeaderFile << "#define "
+                     << it -> first
+                     << " "
+                     << it -> second
+                     << endl;
+
+    saveHeaderFile << "#endif" << endl;
+    saveHeaderFile.close();
+  }
+
   return 0;
 }
 

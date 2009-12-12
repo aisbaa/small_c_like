@@ -112,4 +112,9 @@ class TextStream {
 
 };
 
+#include <sstream>
+#include <string>
+
+std::string i2string(int i);
+
 #endif

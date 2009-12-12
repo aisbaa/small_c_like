@@ -29,6 +29,7 @@ class Token {
 
   int getInnerLang();
   string getSourceText();
+  string tokenInfo();
 
   const Position * getPosition();
 
