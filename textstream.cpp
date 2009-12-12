@@ -187,5 +187,14 @@ string TextStream::getNextEntity() {
   if (TextStream::isLetter())
     return getNextWord();
 
-  throw "I'm teribly sorry got into strange situation. Your's TextStream class, getNextEntity method.";
+  throw "I'm teribly sorry, we got into strange situation. Your's - TextStream class, getNextEntity method.";
 }
+
+/* non class functions */
+
+std::string i2string(int i) {
+ std::ostringstream buffer;
+ buffer << i;
+ return buffer.str();
+}
+
