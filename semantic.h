@@ -17,6 +17,7 @@ typedef struct OUTP {
 } OUTP;
 
 typedef struct SemanticRule {
+    unsigned int action;
     unsigned int stackSize;
     int * typeCheckValues; // very c'ish, maybe sould use vector or smth-else
     
