@@ -1,6 +1,8 @@
 #include "token.h"
 #include "position.h"
 
+#include "textstream.h"
+
 using namespace std;
 
 /*
@@ -40,6 +42,17 @@ string Token::getSourceText() {
 
 const Position::Position * Token::getPosition() {
   return this -> foundIn;
+}
+
+string Token::tokenInfo() {
+  string info = this -> sourceText;
+  if (this -> foundIn != NULL) {
+    info += " ";
+    info += i2string(this -> foundIn -> getLine());
+    info += ":";
+    info += i2string(this -> foundIn -> getCol());
+  }
+  return info;
 }
 
 ostream& operator<<(ostream& tokenInfo, const Token &token) {
