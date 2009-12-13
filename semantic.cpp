@@ -47,48 +47,9 @@ SemanticRule *Semantic::makeSemanticRule(Block block) {
     semanticRule->innerLangValue  = stringToInt(block.thirdLine[1]);
     semanticRule->semanticValue   = stringToInt(block.thirdLine[2]);
 
-    outputs = makeOutp(block.secondLine);
-    //semanticRule->output = &outputs[0];
-    semanticRule->outputs = outputs;
+    semanticRule->outputs = block.secondLine;
 
     return semanticRule;
-}
-
-/* 
- * Parser
- */
-
-vector<OUTP> Semantic::makeOutp(vector<string> line) {
-    vector<OUTP> outputs;
-    OUTP outp;
-    vector<string>::iterator it;
-    int outputsSize;
-
-    for (it = line.begin(); it < line.end(); it++) {
-
-	if (*it != "$") {
-	    outp.stuff = &(*it);
-	    outp.fromStack = -1;
-	    outputs.push_back(outp);
-	}
-	else {
-	    outp.stuff = NULL;
-	    it++;
-	    outp.fromStack = stringToInt(*it);
-	    outputs.push_back(outp);
-	}
-    }
-
-    outputsSize = outputs.size();
- 
-    for (int i = 0; i < outputsSize; i++) {
-	if ((i+1) < outputsSize)
-	    outputs[i].next = &(outputs[i+1]);
-	else
-	    outputs[i].next = NULL;
-    }
-
-    return outputs;
 }
 
 Block Semantic::getBlock() {
@@ -100,6 +61,10 @@ Block Semantic::getBlock() {
    
     return block;
 }
+
+/* 
+ * Parser
+ */
 
 vector<string> Semantic::getLineColumns() {
     string line = this->stream->getWholeLine();
