@@ -90,10 +90,10 @@ const SemanticRule * Semantic::getSemanticRule(int number) {
 
     if (it != this->semanticRuleMap.end())
 	return (*it).second;
-    
+    /*
     for ( it=this->semanticRuleMap.begin() ; it != this->semanticRuleMap.end(); it++ )
 	cout << (*it).first << endl;
-    
+    */
     return NULL;
 }
 

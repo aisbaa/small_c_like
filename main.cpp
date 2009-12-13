@@ -53,8 +53,6 @@ int main(int argc, char **argv) {
   }
 
   Semantic semantic("inner_semantic_rules.i");
-  const SemanticRule * rule = semantic.getSemanticRule(-78);
-  cout << *(rule -> output -> stuff) << endl;
   
   Analizer analizer(syntax, &semantic, &lang);
 

@@ -21,15 +21,10 @@ typedef struct OUTP {
 typedef struct SemanticRule {
     unsigned int action;
     unsigned int stackSize;
-    int * typeCheckValues; // very c'ish, maybe sould use vector or smth-else
+    vector<int> typeCheckValues;
     
     vector<string> outputs;
-    //OUTP * output; // here goes outp from file
-  /*
-    jei tau lengviau su vector - naudok vector vietoj OUTP
-    vector<string>
-    pagalvojau kad lengvai galiu patikrint ar stringas yra $N formato
-   */
+
     string tokenName;
     
     int innerLangValue;
