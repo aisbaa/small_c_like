@@ -49,6 +49,10 @@ class TextStream {
    * tells if current character (pointed by filepointer) is non pritable character */
   bool isWhiteSpace();
 
+  /**
+   * tells if current character is new line */
+  bool isNewLine();
+
   /*
    * SKIPPING CHARACTER SEQUENCES
    */
@@ -97,6 +101,10 @@ class TextStream {
   /*
    * SUMMARY
    */
+  /**
+   * gets whole line
+   */
+  string getWholeLine();
 
   /**
    * gets string, which could be any of

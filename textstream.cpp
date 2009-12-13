@@ -1,6 +1,7 @@
 #include "textstream.h"
 
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -45,6 +46,12 @@ bool TextStream::isLetter() {
   char currentCharacter = (char) this -> stream -> peek();
   if ('a' <= currentCharacter && currentCharacter <= 'z') return true;
   if ('A' <= currentCharacter && currentCharacter <= 'Z') return true;
+  return false;
+}
+
+bool TextStream::isNewLine() {
+  char currentCharacter = (char) this -> stream -> peek();
+  if (currentCharacter == '\n') return true;
   return false;
 }
 
@@ -172,6 +179,24 @@ string TextStream::getCharSeqcToPatter(const string * pattern) {
 /*
  * USER STUFF
  */
+
+
+string TextStream::getWholeLine() {
+    string buffer;
+    skipWhiteSpaces();
+  
+    if (!this -> stream -> good()) throw STREAM_IS_NOT_GOOD_FOR_READING;
+
+    while (this->stream->good() && !isNewLine())
+	buffer += this->stream->get();
+
+    int len = buffer.length() + 1;
+    buffer[len] = '\0';
+
+    return buffer;
+
+    throw "I'm teribly sorry, we got into strange situation. Your's - TextStream class, getNextEntity method.";
+}
 
 string TextStream::getNextEntity() {
   skipWhiteSpaces();
