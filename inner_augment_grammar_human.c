@@ -418,11 +418,19 @@ POP              ::= aritm+*id LESS /
  * VARIABLE DECLARATION
  */
 
-/* dont use after INIT_STATE */
-var_dec          ::= VAR_DEC_BLK INT +
-var_dec          ::= VAR_DEC_BLK CHAR +
-var_dec          ::= VAR_DEC_BLK _ID_VAL_ +
- 
+/* dont use VAR_DEC_BLK after INIT_STATE  or do use if it works */
+
+/* added few states to eas up semantic rules */
+var_dec_i        ::= VAR_DEC_BLK INT *
+var_dec          ::= var_dec_i INT ~
+
+var_dec_c        ::= VAR_DEC_BLK CHAR *
+var_dec          ::= var_dec_c CHAR ~
+
+var_dec_cust     ::= VAR_DEC_BLK _ID_VAL_ *
+var_dec          ::= var_dec_cust _ID_VAL_ ~
+
+/* works for any type of variable */
 var_id           ::= var_dec _ID_VAL_ ~
 var_dec          ::= var_id COMMA ~
 
@@ -552,7 +560,9 @@ main_op          ::= main_i OPEN_BRACE ~
 main_op_cl       ::= main_op CLOSE_BRACE ~
 main_op_cl_be    ::= main_op_cl BEGIN |
 code_blk         ::= main_op_cl_be BEGIN +
-POP              ::= main_op_cl_be END -
+/* yes you can merge these two lines into one */
+main_op_cl_be_en ::= main_op_cl_be END |
+POP              ::= main_op_cl_be_en END -
 
 /* RETURN */
 return           ::= code_blk RETURN *
