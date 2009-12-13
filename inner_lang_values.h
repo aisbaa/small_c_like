@@ -66,3 +66,14 @@
 #define _STR_VAL_ 1005
 
 #endif
+
+#ifndef SMALL_C_LIKE_SEMANTIC_ACTION_VALUES
+#define SMALL_C_LIKE_SEMANTIC_ACTION_VALUES
+
+#define OUTPUT_SIGNLE 1
+
+/* these are cheaty values*/
+#define DONT_CHECK 0 // dont check the type of poped item
+#define DONT_PUSH  0 // dont push new token to stack
+
+#endif

@@ -325,7 +325,6 @@ aritm_id+-id     ::= aritm_id+- _ID_VAL_ ~
 aritm_id+-id     ::= aritm_id+- _INT_VAL_ ~
 
 /* + - after previous adition subtraction */
-/* err condition */
 aritm_id+-id+-     ::= aritm_id+-id ADD |
 aritm_id+-         ::= aritm_id+-id+- ADD ~
 
@@ -381,14 +380,14 @@ POP              ::= aritm_id GREATER /
 POP              ::= aritm_id LESS /
 
 /* exmp.: 1 + 1 */
-aritm_id+-id_eof ::= aritm_id+-id SEMICOLON |
-POP              ::= aritm_id+-id_eof SEMICOLON /
+aritm_id_pm_id_eof ::= aritm_id+-id SEMICOLON |
+POP                ::= aritm_id_pm_id_eof SEMICOLON /
 
-aritm_id+-id_eof    ::= aritm_id+-id COMMA |
-POP              ::= aritm_id+-id COMMA /
+aritm_id_pm_id_eof  ::= aritm_id+-id COMMA |
+POP                 ::= aritm_id+-id COMMA /
 
-aritm_id+-id_eof    ::= aritm_id+-id SQUARE_BRACKET_CLOSE |
-POP              ::= aritm_id+-id SQUARE_BRACKET_CLOSE /
+aritm_id_pm_id_eof  ::= aritm_id+-id SQUARE_BRACKET_CLOSE |
+POP                 ::= aritm_id+-id SQUARE_BRACKET_CLOSE /
 
 POP              ::= aritm_id+-id IS_EQUAL_TO /
 POP              ::= aritm_id+-id NOT_EQUAL_TO /
@@ -402,7 +401,6 @@ POP              ::= aritm_id+-id LESS /
 POP              ::= aritm+*id SEMICOLON /
 POP              ::= aritm+*id COMMA /
 POP              ::= aritm+*id SQUARE_BRACKET_CLOSE /
-
 
 POP              ::= aritm+*id IS_EQUAL_TO /
 POP              ::= aritm+*id NOT_EQUAL_TO /
@@ -524,6 +522,7 @@ function_name_(){     ::= function_name_(var BEGIN |
 function_name_(){     ::= function_name_() BEGIN |
 code_blk              ::= function_name_(){ BEGIN +
 POP                   ::= function_name_(){ END -
+
 /* FUNCTION PARAMETERS */
 func_param      ::= func_param INT ~
 func_param      ::= func_param CHAR ~
@@ -549,11 +548,11 @@ POP              ::= func_call() SEMICOLON -
 
 /* MAIN */
 main_i           ::= INT MAIN ~
-main_(           ::= main_i OPEN_BRACE ~
-main_()          ::= main_( CLOSE_BRACE ~
-main_(){         ::= main_() BEGIN |
-code_blk         ::= main_(){ BEGIN +
-POP              ::= main_(){ END -
+main_op          ::= main_i OPEN_BRACE ~
+main_op_cl       ::= main_op CLOSE_BRACE ~
+main_op_cl_be    ::= main_op_cl BEGIN |
+code_blk         ::= main_op_cl_be BEGIN +
+POP              ::= main_op_cl_be END -
 
 /* RETURN */
 return           ::= code_blk RETURN *
