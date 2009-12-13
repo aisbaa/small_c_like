@@ -55,6 +55,7 @@ class Semantic {
   SemanticRule *makeSemanticRule(Block);
 
   vector<string> getLineColumns();
+  vector<int> makeTypeCheckValues(vector<string>);
 
   Block getBlock();
 

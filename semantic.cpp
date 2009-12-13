@@ -35,6 +35,7 @@ SemanticRule *Semantic::makeSemanticRule(Block block) {
 
     semanticRule->action          = stringToInt(block.firstLine[1]);
     semanticRule->stackSize       = stringToInt(block.firstLine[2]);
+    semanticRule->typeCheckValues = makeTypeCheckValues(block.firstLine);
     semanticRule->tokenName       = block.thirdLine[0];
     semanticRule->innerLangValue  = stringToInt(block.thirdLine[1]);
     semanticRule->semanticValue   = stringToInt(block.thirdLine[2]);
@@ -42,6 +43,17 @@ SemanticRule *Semantic::makeSemanticRule(Block block) {
     semanticRule->outputs = block.secondLine;
 
     return semanticRule;
+}
+
+vector<int> Semantic::makeTypeCheckValues(vector<string> line) {
+    vector<string>::iterator it;
+    vector<int> typeCheckValues;
+
+    for (it = line.begin()+2; it < line.end(); it++) {
+	typeCheckValues.push_back(stringToInt(*it));
+    }
+
+    return typeCheckValues;
 }
 
 Block Semantic::getBlock() {
@@ -90,10 +102,7 @@ const SemanticRule * Semantic::getSemanticRule(int number) {
 
     if (it != this->semanticRuleMap.end())
 	return (*it).second;
-    /*
-    for ( it=this->semanticRuleMap.begin() ; it != this->semanticRuleMap.end(); it++ )
-	cout << (*it).first << endl;
-    */
+
     return NULL;
 }
 
