@@ -15,14 +15,6 @@ Semantic::Semantic(string fileName) {
     this->stream = new TextStream(file);
 
     parse();
-
-    /* Testing */
-    const SemanticRule *semantic = getSemanticRule(-10);
-    if (semantic) {
-	//cout << semantic->action << endl;
-	//OUTP * ou = semantic->output;
-	//cout << ou->fromStack << endl;
-    }
 }
 
 void Semantic::parse() {
@@ -62,10 +54,6 @@ Block Semantic::getBlock() {
     return block;
 }
 
-/* 
- * Parser
- */
-
 vector<string> Semantic::getLineColumns() {
     string line = this->stream->getWholeLine();
     string value;
@@ -85,12 +73,12 @@ vector<string> Semantic::getLineColumns() {
     }
 
     return columns;
-
 }
 
 int Semantic::stringToInt(string value) {
     return atoi(value.c_str());
 }
+
 /*
  * Public
  */
