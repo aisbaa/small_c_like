@@ -118,7 +118,7 @@ int Semantic::stringToInt(string value) {
  * Public
  */
 
-SemanticRule * Semantic::getSemanticRule(int number) {
+const SemanticRule * Semantic::getSemanticRule(int number) {
     map<int, SemanticRule *>::iterator it;
 
     it = this->semanticRuleMap.find(number);

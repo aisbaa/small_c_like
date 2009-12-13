@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <fstream>
+
 #include <vector>
+#include <map>
 
 #include "token.h"
 #include "textstream.h"
@@ -22,7 +24,11 @@ typedef struct SemanticRule {
     int * typeCheckValues; // very c'ish, maybe sould use vector or smth-else
     
     OUTP * output; // here goes outp from file
-    
+  /*
+    jei tau lengviau su vector - naudok vector vietoj OUTP
+    vector<string>
+    pagalvojau kad lengvai galiu patikrint ar stringas yra $N formato
+   */
     string tokenName;
     
     int innerLangValue;
@@ -65,7 +71,7 @@ class Semantic {
   Semantic(string);
 
   /* NULL means no semantic rule was found */
-  SemanticRule * getSemanticRule(int);
+  const SemanticRule * getSemanticRule(int);
 
 };
 

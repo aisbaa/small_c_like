@@ -1,4 +1,4 @@
-/*
+/**
  * @author: Aistis Jokubauskas
  * @author: Paulius Pilkauskas
  */
@@ -16,6 +16,7 @@
 
 #include "scanner.h"
 #include "syntax.h"
+#include "semantic.h"
 #include "analizer.h"
 #include "semantic.h"
 
@@ -46,24 +47,31 @@ int main(int argc, char **argv) {
     syntax = new Syntax("inner_augment_grammar_human.i");
   } catch (InvalidActionInaugmentedGrammar unexp) {
     cerr << "ERROR::Your augmented grammar must be faulty." << endl;
-    cerr << unexp.what() << endl;
+    cerr << "Got " << unexp.what() << endl;
     delete syntax;
     return 1;
   }
 
-  Semantic semantic("test_smenatic_loader.i");
+  Semantic semantic("inner_semantic_rules.i");
+  const SemanticRule * rule = semantic.getSemanticRule(-78);
+  cout << *(rule -> output -> stuff) << endl;
   
-  Analizer analizer(syntax, NULL, &lang);
+  Analizer analizer(syntax, &semantic, &lang);
 
   Token * token = NULL;
   while (
          (token = scanner.getNextToken()) != NULL
          )
-    analizer.check(token);
+    try {
+      analizer.check(token);
+    } catch (UnexpectedTokenException unexp) {
+      cerr << unexp.what() << endl;
+    }
 
   delete syntax;
   cout << "program is " << (analizer.complete() ? "correct": "not correct") << endl;
-  
-  return 0;
+  cout << "semantic output:" << endl
+       << analizer.getSemanticOutput();
 
+  return 0;
 }
