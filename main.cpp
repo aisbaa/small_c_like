@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
   Syntax * syntax = NULL;
   try {
-    syntax = new Syntax("inner_augment_grammar_human.i");
+    syntax = new Syntax("inner_augment_grammar_gen.i");
   } catch (InvalidActionInaugmentedGrammar unexp) {
     cerr << "ERROR::Your augmented grammar must be faulty." << endl;
     cerr << "Got " << unexp.what() << endl;
@@ -53,7 +53,12 @@ int main(int argc, char **argv) {
   }
 
   Semantic semantic("inner_semantic_rules.i");
-  
+  const SemanticRule * rule = semantic.getSemanticRule(-81);
+  cout << "action    : " << rule -> action << endl
+       << "stackSize : " << rule -> stackSize << endl
+       << "first rule: " << rule -> typeCheckValues[0] << "has to be 0"
+       << endl;
+
   Analizer analizer(syntax, &semantic, &lang);
 
   Token * token = NULL;
