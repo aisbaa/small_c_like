@@ -17,14 +17,18 @@ Semantic::Semantic(string fileName) {
     parse();
 
     /* Testing */
-    //SemanticRule *semantic = getSemanticRule(-10);
+    const SemanticRule *semantic = getSemanticRule(-10);
+    if (semantic) {
+	//cout << semantic->action << endl;
+	//OUTP * ou = semantic->output;
+	//cout << ou->fromStack << endl;
+    }
 }
 
 void Semantic::parse() {
     try {
 	while (this->file->good()) {
 	    Block block = getBlock();
-
 	    SemanticRule *semanticRule = makeSemanticRule(block);
 	    this->semanticRuleMap.insert( pair<int,SemanticRule *> (stringToInt(block.firstLine[0]), semanticRule) );
 	}
@@ -44,8 +48,8 @@ SemanticRule *Semantic::makeSemanticRule(Block block) {
     semanticRule->semanticValue   = stringToInt(block.thirdLine[2]);
 
     outputs = makeOutp(block.secondLine);
-
-    semanticRule->output = &outputs[0];
+    //semanticRule->output = &outputs[0];
+    semanticRule->outputs = outputs;
 
     return semanticRule;
 }
@@ -53,27 +57,30 @@ SemanticRule *Semantic::makeSemanticRule(Block block) {
 /* 
  * Parser
  */
+
 vector<OUTP> Semantic::makeOutp(vector<string> line) {
     vector<OUTP> outputs;
     OUTP outp;
+    vector<string>::iterator it;
     int outputsSize;
-    
-    for (int i = 0; i < 8; i++) {
-	if (line[i] != "$") {
-	    outp.stuff = &line[i];
+
+    for (it = line.begin(); it < line.end(); it++) {
+
+	if (*it != "$") {
+	    outp.stuff = &(*it);
 	    outp.fromStack = -1;
 	    outputs.push_back(outp);
 	}
 	else {
 	    outp.stuff = NULL;
-	    i++;
-	    outp.fromStack = stringToInt(line[i]);
+	    it++;
+	    outp.fromStack = stringToInt(*it);
 	    outputs.push_back(outp);
 	}
     }
 
     outputsSize = outputs.size();
-
+ 
     for (int i = 0; i < outputsSize; i++) {
 	if ((i+1) < outputsSize)
 	    outputs[i].next = &(outputs[i+1]);
@@ -84,36 +91,41 @@ vector<OUTP> Semantic::makeOutp(vector<string> line) {
     return outputs;
 }
 
-string Semantic::makeValue() {
-    string value = this->stream->getNextEntity();
-    if (value == "-")
-	return value += this->stream->getNextEntity();
-    return value;
-}
-
 Block Semantic::getBlock() {
     Block block;
     
-    block.firstLine  = getLineColumns(6);
-    block.secondLine = getLineColumns(8);
-    block.thirdLine  = getLineColumns(3);
+    block.firstLine  = getLineColumns();
+    block.secondLine = getLineColumns();
+    block.thirdLine  = getLineColumns();
    
     return block;
 }
 
-vector<string> Semantic::getLineColumns(int cols) {
+vector<string> Semantic::getLineColumns() {
+    string line = this->stream->getWholeLine();
+    string value;
+    int pos = 0;
     vector<string> columns;
 
-    for (int i = 0; i < cols; i++)
-	columns.push_back(makeValue());
+    while (line[pos] != '\0') {
+	value = "";
+
+	while (line[pos] != ' ' && line[pos] != '\0') {
+	    value += line[pos];
+	    pos++;
+	}
+
+	pos++;
+	columns.push_back(value);
+    }
 
     return columns;
+
 }
 
 int Semantic::stringToInt(string value) {
     return atoi(value.c_str());
 }
-
 /*
  * Public
  */
@@ -128,6 +140,7 @@ const SemanticRule * Semantic::getSemanticRule(int number) {
     
     for ( it=this->semanticRuleMap.begin() ; it != this->semanticRuleMap.end(); it++ )
 	cout << (*it).first << endl;
-
+    
     return NULL;
 }
+

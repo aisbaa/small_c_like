@@ -23,7 +23,8 @@ typedef struct SemanticRule {
     unsigned int stackSize;
     int * typeCheckValues; // very c'ish, maybe sould use vector or smth-else
     
-    OUTP * output; // here goes outp from file
+    vector<OUTP> outputs;
+    //OUTP * output; // here goes outp from file
   /*
     jei tau lengviau su vector - naudok vector vietoj OUTP
     vector<string>
@@ -55,18 +56,16 @@ class Semantic {
   void fillMap();
 
   void parse();
-
-  string makeValue();
-
+  
   SemanticRule *makeSemanticRule(Block);
 
-  vector<string> getLineColumns(int);
+  vector<string> getLineColumns();
   vector<OUTP> makeOutp(vector<string>);
 
   Block getBlock();
 
   int stringToInt(string);
-
+  
  public:
   Semantic(string);
 
