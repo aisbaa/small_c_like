@@ -17,6 +17,7 @@
 #include "scanner.h"
 #include "syntax.h"
 #include "analizer.h"
+#include "semantic.h"
 
 using namespace std;
 
@@ -50,6 +51,8 @@ int main(int argc, char **argv) {
     return 1;
   }
 
+  Semantic semantic("test_smenatic_loader.i");
+  
   Analizer analizer(syntax, NULL, &lang);
 
   Token * token = NULL;
@@ -60,7 +63,7 @@ int main(int argc, char **argv) {
 
   delete syntax;
   cout << "program is " << (analizer.complete() ? "correct": "not correct") << endl;
-
+  
   return 0;
 
 }

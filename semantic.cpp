@@ -17,13 +17,14 @@ Semantic::Semantic(string fileName) {
     parse();
 
     /* Testing */
-    SemanticRule *semantic = getSemanticRule(-15);
+    //SemanticRule *semantic = getSemanticRule(-10);
 }
 
 void Semantic::parse() {
     try {
 	while (this->file->good()) {
 	    Block block = getBlock();
+
 	    SemanticRule *semanticRule = makeSemanticRule(block);
 	    this->semanticRuleMap.insert( pair<int,SemanticRule *> (stringToInt(block.firstLine[0]), semanticRule) );
 	}
@@ -36,7 +37,8 @@ SemanticRule *Semantic::makeSemanticRule(Block block) {
     SemanticRule *semanticRule = new SemanticRule;
     vector<OUTP> outputs;
 
-    semanticRule->stackSize       = stringToInt(block.firstLine[1]);
+    semanticRule->action          = stringToInt(block.firstLine[1]);
+    semanticRule->stackSize       = stringToInt(block.firstLine[2]);
     semanticRule->tokenName       = block.thirdLine[0];
     semanticRule->innerLangValue  = stringToInt(block.thirdLine[1]);
     semanticRule->semanticValue   = stringToInt(block.thirdLine[2]);
@@ -92,10 +94,10 @@ string Semantic::makeValue() {
 Block Semantic::getBlock() {
     Block block;
     
-    block.firstLine  = getLineColumns(5);
+    block.firstLine  = getLineColumns(6);
     block.secondLine = getLineColumns(8);
     block.thirdLine  = getLineColumns(3);
-    
+   
     return block;
 }
 
@@ -123,7 +125,9 @@ SemanticRule * Semantic::getSemanticRule(int number) {
 
     if (it != this->semanticRuleMap.end())
 	return (*it).second;
+    
+    for ( it=this->semanticRuleMap.begin() ; it != this->semanticRuleMap.end(); it++ )
+	cout << (*it).first << endl;
 
     return NULL;
 }
-
