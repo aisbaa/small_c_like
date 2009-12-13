@@ -49,7 +49,7 @@ vector<int> Semantic::makeTypeCheckValues(vector<string> line) {
     vector<string>::iterator it;
     vector<int> typeCheckValues;
 
-    for (it = line.begin()+2; it < line.end(); it++) {
+    for (it = line.begin()+3; it < line.end(); it++) {
 	typeCheckValues.push_back(stringToInt(*it));
     }
 
@@ -74,12 +74,10 @@ vector<string> Semantic::getLineColumns() {
 
     while (line[pos] != '\0') {
 	value = "";
-
 	while (line[pos] != ' ' && line[pos] != '\0') {
 	    value += line[pos];
 	    pos++;
 	}
-
 	pos++;
 	columns.push_back(value);
     }
