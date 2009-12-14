@@ -53,11 +53,6 @@ int main(int argc, char **argv) {
   }
 
   Semantic semantic("inner_semantic_rules.i");
-  const SemanticRule * rule = semantic.getSemanticRule(-81);
-  cout << "action    : " << rule -> action << endl
-       << "stackSize : " << rule -> stackSize << endl
-       << "first rule: " << rule -> typeCheckValues[0] << "has to be 0"
-       << endl;
 
   Analizer analizer(syntax, &semantic, &lang);
 
@@ -69,6 +64,8 @@ int main(int argc, char **argv) {
       analizer.check(token);
     } catch (UnexpectedTokenException unexp) {
       cerr << unexp.what() << endl;
+    } catch (TokenTypeMissMatch miss) {
+      cerr << miss.what() << endl;
     }
 
   delete syntax;
