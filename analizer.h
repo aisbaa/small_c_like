@@ -49,20 +49,43 @@ class Analizer {
  private:
   string makeErrMsg(Token *);
 
-  /* tells if I should repeat without getting new token */
+  /**
+   * returns true if you should call syntaxStackOperation method with the same token
+   * returns false if no additional call is needed.
+   */
   bool syntaxStackOperation(int, int);
+
+
+  /**
+   * checks semantic stuff and generetes pseudo code
+   */
+  void semanticStackOperation(int);
 
   /**
    * logical parts of semanticStackOperation method
    */
 
+  /**
+   * preformes deep check on token
+   */
   bool deepTypeCheck(int , Token *);
+
+  /**
+   * pops tokens of semanticStack to the vector
+   */
   TokensInUse * getSemanticTokens(const unsigned int, vector<int> types);
 
-  void semanticStackOperation(int);
+  /**
+   * prints pseudo code to output atribute
+   */
+  void semanticPrintStuff(vector<string>, TokensInUse *);
 
   /**
    * Utils
+   */
+
+  /**
+   * puts tokens to tokenDump stack
    */
   void clienTokens(TokensInUse *);
 

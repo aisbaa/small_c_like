@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include <stack>
 #include <vector>
 
@@ -35,70 +37,22 @@ Analizer::~Analizer() {
   }
 }
 
-bool Analizer::syntaxStackOperation(int action, int new_state) {
-  switch (action) {
-  case action_pop:
-  case action_pop_check:
-    this -> syntaxStack.pop();
-    break;
+/*
+ * Small public utils
+ */
 
-  case action_push:
-  case action_push_check:
-    this -> syntaxStack.push(new_state);
-    break;
-
-  case action_reduction:
-  case action_reduction_check:
-    this -> syntaxStack.top() = new_state;
-    break;
-  }
-
-  if (action == action_push_check || action == action_pop_check || action == action_reduction_check)
-    return true;
-
-  return false;
+string Analizer::getSemanticOutput() {
+  return this -> output.str();
 }
 
-bool Analizer::deepTypeCheck(int mustBe, Token * token) {
-  if (token -> getInnerLang() == mustBe) return true;
-  
-  IdTable::iterator found = this -> idTable.find(token -> getSourceText());
-  if (found == this -> idTable.end()) return false;
+bool Analizer::complete() {
+  if (this -> gotErrorSyntax || this -> gotErrorSemantic)
+    return false;
 
-  return false;
-}
-
-TokensInUse * Analizer::getSemanticTokens(const unsigned int howMuch, vector<int>  types) {
-  string failMsg;
-  TokensInUse * workWith = new TokensInUse;
-
-  for (unsigned int pops = 0; pops < howMuch; pops++) {
-    workWith -> push_back(this -> semanticStack.top());
-
-    if (types[pops] != DONT_CHECK)
-      if (!deepTypeCheck(types[pops], this -> semanticStack.top()))
-        failMsg = "type miss matched with " + this -> semanticStack.top() -> tokenInfo();
-
-    this -> semanticStack.pop();
-  }
-
-  if (failMsg.size() > 0) {
-    clienTokens(workWith);
-    throw TokenTypeMissMatch(failMsg);
-  }
-
-  return workWith;
-}
-
-void Analizer::semanticStackOperation(int state) {
-  const SemanticRule * rule = this -> semantic -> getSemanticRule(state);
-  if (rule == NULL) return;
-
-  this -> output << rule -> outputs[0] << endl;
-
-  TokensInUse * tokensInUse = getSemanticTokens(rule -> stackSize, rule -> typeCheckValues);  
-
-  clienTokens(tokensInUse);
+  return (
+          this -> syntaxStack.size() == 1 &&
+          this -> syntaxStack.top() == INIT_STATE
+          );
 }
 
 /*
@@ -146,29 +100,32 @@ string Analizer::check(Token * token) {
   return analysisInfo;
 }
 
-string Analizer::getSemanticOutput() {
-  return this -> output.str();
-}
-
-bool Analizer::complete() {
-  if (this -> gotErrorSyntax || this -> gotErrorSemantic)
-    return false;
-
-  return (
-          this -> syntaxStack.size() == 1 &&
-          this -> syntaxStack.top() == INIT_STATE
-          );
-}
 /*
- * PRIVATE
+ * Syntax Methods
  */
 
-void Analizer::clienTokens(TokensInUse * tokens) {
-  for (unsigned int i = tokens -> size(); i > 0; i--) {
-    this -> tokenDump.push(tokens -> back());
-    tokens -> pop_back();
+bool Analizer::syntaxStackOperation(int action, int new_state) {
+  switch (action) {
+  case action_pop:
+  case action_pop_check:
+    this -> syntaxStack.pop();
+    break;
+
+  case action_push:
+  case action_push_check:
+    this -> syntaxStack.push(new_state);
+    break;
+
+  case action_reduction:
+  case action_reduction_check:
+    this -> syntaxStack.top() = new_state;
+    break;
   }
-  delete tokens;
+
+  if (action == action_push_check || action == action_pop_check || action == action_reduction_check)
+    return true;
+
+  return false;
 }
 
 /* makes my exceptions look better */
@@ -188,3 +145,89 @@ string Analizer::makeErrMsg(Token * token) {
 
   return errMsg;
 }
+
+/*
+ * Semantic
+ */
+
+void Analizer::semanticStackOperation(int state) {
+  const SemanticRule * rule = this -> semantic -> getSemanticRule(state);
+  if (rule == NULL) return;
+
+  TokensInUse * tokensInUse = getSemanticTokens(rule -> stackSize, rule -> typeCheckValues);  
+
+  //this -> output << rule -> outputs[0] << endl;
+ 
+  semanticPrintStuff(rule -> outputs, tokensInUse);
+  // semanticPutStuffToStack(rule, tokensInUse);
+  
+  clienTokens(tokensInUse);
+}
+
+/*
+ * Gets that many tokens as howMuch tells and checks their types
+ */
+
+TokensInUse * Analizer::getSemanticTokens(const unsigned int howMuch, vector<int>  types) {
+  string failMsg;
+  TokensInUse * workWith = new TokensInUse;
+
+  for (unsigned int pops = 0; pops < howMuch; pops++) {
+    workWith -> push_back(this -> semanticStack.top());
+
+    if (types[pops] != DONT_CHECK)
+      if (!deepTypeCheck(types[pops], this -> semanticStack.top()))
+        failMsg = "type miss matched with " + this -> semanticStack.top() -> tokenInfo();
+
+    this -> semanticStack.pop();
+  }
+
+  if (failMsg.size() > 0) {
+    clienTokens(workWith);
+    throw TokenTypeMissMatch(failMsg);
+  }
+
+  return workWith;
+}
+
+/*
+ * deep type checking preformed
+ * checks id table
+ */
+bool Analizer::deepTypeCheck(int mustBe, Token * token) {
+  if (token -> getInnerLang() == mustBe) return true;
+  
+  IdTable::iterator found = this -> idTable.find(token -> getSourceText());
+  if (found == this -> idTable.end()) return false;
+
+  return false;
+}
+
+/*
+ * prints pseudo code
+ */
+void Analizer::semanticPrintStuff(vector<string> stuff, TokensInUse * tokens) {
+  for (unsigned int i = 0; i < stuff.size(); i++) {
+    if (stuff.at(i).at(0) == '$')
+      this -> output << tokens -> at(atoi(stuff.at(i).substr(1).c_str())) -> getSourceText();
+    else
+      this -> output << stuff.at(i);
+
+    this -> output << " ";
+  }
+
+  this -> output << endl;
+}
+
+/*
+ * private utils
+ */
+
+void Analizer::clienTokens(TokensInUse * tokens) {
+  for (unsigned int i = tokens -> size(); i > 0; i--) {
+    this -> tokenDump.push(tokens -> back());
+    tokens -> pop_back();
+  }
+  delete tokens;
+}
+
