@@ -31,7 +31,6 @@ void Semantic::parse() {
 
 SemanticRule *Semantic::makeSemanticRule(Block block) {
     SemanticRule *semanticRule = new SemanticRule;
-    vector<OUTP> outputs;
 
     semanticRule->action          = stringToInt(block.firstLine[1]);
     semanticRule->stackSize       = stringToInt(block.firstLine[2]);

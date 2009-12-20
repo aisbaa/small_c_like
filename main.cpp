@@ -17,8 +17,9 @@
 #include "scanner.h"
 #include "syntax.h"
 #include "semantic.h"
+#include "idTable.h"
 #include "analizer.h"
-#include "semantic.h"
+
 
 using namespace std;
 
@@ -53,15 +54,16 @@ int main(int argc, char **argv) {
   }
 
   Semantic semantic("inner_semantic_rules.i");
+  IdTable idTable;
 
-  Analizer analizer(syntax, &semantic, &lang);
+  Analizer analizer(syntax, &semantic, &idTable, &lang);
 
   Token * token = NULL;
   while (
          (token = scanner.getNextToken()) != NULL
          )
     try {
-      analizer.check(token);
+      cout << analizer.check(token) << endl;
     } catch (UnexpectedTokenException unexp) {
       cerr << unexp.what() << endl;
     } catch (TokenTypeMissMatch miss) {

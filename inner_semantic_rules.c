@@ -10,18 +10,50 @@ DONT_PUSH DONT_PUSH DONT_PUSH
 /* closing brace } after int_main(){ */
 main_op_cl_be_en OUTPUT_SIGNLE 1 DONT_CHECK
 END_OF_FUNCT:
-DONT_PUSH DONT_PUSH DONT_PUSH
+DONT_PUSH_S DONT_PUSH DONT_PUSH
 
-/*
- * var registration, exmp.: int a
+/**
+ * FUNCTTION
  */
 
-/* starting registration queue */
-var_dec_i REGISTRATE_START 1 DONT_CHECK
-int $0
-$0 INT _INT_VAL_
+/* function declaration */
+function_name OUTPUT_SIGNLE 2 DONT_CHECK DONT_CHECK
+glob_funct $0
+DONT_PUSH DONT_PUSH DONT_PUSH
 
-/* var registration, exmp.: a after int 
-var_id REGISTRATE_SINGLE 1 _ID_VAL_
+/* function parameter */
+func_id OUTPUT_SIGNLE 2 DONT_CHECK DONT_CHECK
+fparam $0 $1
+DONT_PUSH DONT_PUSH DONT_PUSH
+
+/*end of function declaration */
+function_end OUTPUT_SIGNLE 2 DONT_CHECK DONT_CHECK
+func_end
+DONT_PUSH DONT_PUSH DONT_PUSH
+
+/**
+ * VARIABLE DECLARATION
+ */
+
+/* var registration, exmp.: int a */
+var_id OUTPUT_SIGNLE 2 DONT_CHECK DONT_CHECK
+VAR_DEC $0
+DONT_PUSH DONT_PUSH DONT_PUSH
+
+
+/**
+ * ARITMETHIC
+ */
+
+//                           ,;         number or variable that holds number
+aritm_single PUSH_TO_STACK 2 DONT_CHECK _INT_VAL
 DONT_OUTPUT
-*/
+$1 _INT_VAL_ _INT_VAL_
+
+/**
+ * RETURN
+ */
+//                               aritm     return
+return_semicolon OUTPUT_SIGNLE 2 _INT_VAL_ RETURN
+ret $0
+DONT_PUSH DONT_PUSH DONT_PUSH

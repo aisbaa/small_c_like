@@ -1,5 +1,6 @@
-int main() {
-  int sveikas = 5;
+int vienas(int a) {
+}
 
-  return 0;
+int main() {
+    return 0;
 }

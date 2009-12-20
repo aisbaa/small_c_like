@@ -11,8 +11,16 @@ using namespace std;
 
 Token::Token(int innerLangCode, string sourceText, Position::Position * foundIn) {
   this -> innerLangCode = innerLangCode;
+  this -> semanticValue = UNDEFINED;
   this -> sourceText = sourceText;
   this -> foundIn = foundIn;
+}
+
+Token::Token(int innerLangCode, int semanticValue, string sourceText) {
+  this -> innerLangCode = innerLangCode;
+  this -> semanticValue = semanticValue;
+  this -> sourceText = sourceText;
+  this -> foundIn = NULL;
 }
 
 Token::~Token() {
@@ -21,7 +29,7 @@ Token::~Token() {
 }
 
 /*
- * GETTERS
+ * GETTERS && SETTERS
  */
 
 void Token::setSemanticValue(int value) {
@@ -32,8 +40,17 @@ int Token::getSemanticValue() {
   return this -> semanticValue;
 }
 
+/*-*/
+void Token::setInnerLang(int value) {
+  this -> innerLangCode = value;
+}
+
 int Token::getInnerLang() {
   return this -> innerLangCode;
+}
+/*-*/
+void Token::setSourceText(string text) {
+  this -> sourceText = text;
 }
 
 string Token::getSourceText() {
@@ -59,7 +76,8 @@ ostream& operator<<(ostream& tokenInfo, const Token &token) {
   tokenInfo.width(4);
 
   tokenInfo << token.innerLangCode
-            << " ";
+            << " "
+            << token.semanticValue;
 
   tokenInfo.width(8);
   tokenInfo << token.sourceText;

@@ -1,13 +1,13 @@
 /**
- * CLASS ANALIZER
+ * CLASS Analizer
  *
  * This class controls syntax and semantic analisys.
  * Has stack with innerLang values for syntax purpose
  * Has stack with tokens for semantic purpose 
  */
 
-#ifndef ANALIZER
-#define ANALIZER
+#ifndef SMALL_C_LIKE_ANALIZER
+#define SMALL_C_LIKE_ANALIZER
 
 #include <iostream>
 #include <sstream>
@@ -17,25 +17,19 @@
 #include "innerLang.h"
 #include "syntax.h"
 #include "semantic.h"
+#include "idTable.h"
 #include "token.h"
 
 using namespace std;
 
-/* name and semantic value */
-typedef struct {
-  int semanticValue;
-  int semanticClass;
-} IdTableValue;
-
 typedef vector<Token *> TokensInUse;
-typedef map<string, IdTableValue> IdTable;
 class Analizer {
  private:
   InnerLang * lang;
   Syntax    * syntax;
   Semantic  * semantic;
 
-  IdTable idTable; // table for variables, function names, struct names, new types
+  IdTable * idTable; // table for variables, function names, struct names, new types
 
   ostringstream output;
 
@@ -46,23 +40,45 @@ class Analizer {
   stack<Token *> semanticStack;
   stack<Token *> tokenDump;
 
- private:
-  string makeErrMsg(Token *);
+ public:
+  Analizer(Syntax *, Semantic * =NULL, IdTable * = NULL, InnerLang * =NULL);
+  ~Analizer();
 
+  /**
+   * Returns syntactic reduction done on one token
+   */
+  string check(Token *);
+
+  string getSemanticOutput();
+
+  bool complete();
+
+ private:
+
+  /*
+   * SYNTAX
+   */
   /**
    * returns true if you should call syntaxStackOperation method with the same token
    * returns false if no additional call is needed.
    */
   bool syntaxStackOperation(int, int);
 
+  /**
+   * Makes my exception mesages look better
+   */
+  string makeErrMsg(Token *);
 
+  /*
+   * SEMANTIC
+   */
   /**
    * checks semantic stuff and generetes pseudo code
    */
   void semanticStackOperation(int);
 
   /**
-   * logical parts of semanticStackOperation method
+   * Logical parts of semanticStackOperation method
    */
 
   /**
@@ -81,6 +97,16 @@ class Analizer {
   void semanticPrintStuff(vector<string>, TokensInUse *);
 
   /**
+   * puts stuff to semanticStack accourding to the rule
+   */
+  void semanticPutStuffToStack(const SemanticRule *, TokensInUse *);
+
+  /**
+   * Returns pionter to string that should be output.
+   */
+  const string semanticSelectOutputStr(const string * tokenName, TokensInUse * tokens);
+
+  /**
    * Utils
    */
 
@@ -89,15 +115,6 @@ class Analizer {
    */
   void clienTokens(TokensInUse *);
 
- public:
-  Analizer(Syntax *, Semantic * =NULL, InnerLang * =NULL);
-  ~Analizer();
-
-  /* returns analysis information */
-  string check(Token *);
-  string getSemanticOutput();
-
-  bool complete();
 };
 
 #include <stdexcept>

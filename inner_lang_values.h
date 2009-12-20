@@ -65,6 +65,8 @@
 #define _CHAR_VAL_ 1004
 #define _STR_VAL_ 1005
 
+#define UNDEFINED -1
+
 #endif
 
 #ifndef SMALL_C_LIKE_SEMANTIC_ACTION_VALUES
@@ -72,6 +74,7 @@
 
 #define OUTPUT_SIGNLE 1
 #define OUTPUT_QUEUE  2
+#define PUSH_TO_STACK 3
 
 #define REGISTRATE_SINGLE 3
 #define REGISTRATE_START  4
@@ -80,8 +83,17 @@
 #define AUTO 10
 
 /* these are cheaty values*/
-#define DONT_CHECK 0 // dont check the type of poped item
-#define DONT_PUSH  0 // dont push new token to stack
+#define DONT_CHECK  0 // dont check the type of poped item
+#define DONT_PUSH   0 // dont push new token to stack
+
 #define DONT_OUTPUT # // dont write any stuff to output
+#define DONT_OUTPUT_SC "#" // dont write any stuff to output
+
+#define DONT_PUSH 0
+#define DONT_PUSH_SC "DONT_PUSH"
+
+#define semanticClass_Variable 0
+#define semanticClass_Structur 1
+#define semanticClass_Function 2
 
 #endif

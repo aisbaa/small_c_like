@@ -367,7 +367,8 @@ aritm_id         ::= aritm+*id SUB |
  */
 
 /* exmp.: 1 */
-POP              ::= aritm_id SEMICOLON /
+aritm_single     ::= aritm_id SEMICOLON |
+POP              ::= aritm_single SEMICOLON /
 POP              ::= aritm_id COMMA /
 POP              ::= aritm_id SQUARE_BRACKET_CLOSE /
 
@@ -518,34 +519,28 @@ function_name         ::= INT _ID_VAL_ ~
 function_name         ::= CHAR _ID_VAL_ ~
 function_name         ::= VOID _ID_VAL_ ~
 
-function_name_(       ::= function_name OPEN_BRACE ~
-function_name_(var    ::= function_name_( INT |
-function_name_(var    ::= function_name_( CHAR |
-func_param            ::= function_name_(var INT +
-func_param            ::= function_name_(var CHAR +
+function_name_op      ::= function_name OPEN_BRACE |
+param_dec_list        ::= function_name_op OPEN_BRACE +
 
-function_name_()      ::= function_name_( CLOSE_BRACE ~
+function_name_op_cl   ::= function_name_op CLOSE_BRACE ~
 
-function_name_(){     ::= function_name_(var BEGIN |
-function_name_(){     ::= function_name_() BEGIN |
-code_blk              ::= function_name_(){ BEGIN +
-POP                   ::= function_name_(){ END -
+function_name_be      ::= function_name_op_cl BEGIN |
+code_blk              ::= function_name_be BEGIN +
+function_end          ::= function_name_be END |
+POP                   ::= function_end END -
 
 /* FUNCTION PARAMETERS */
-func_param      ::= func_param INT ~
-func_param      ::= func_param CHAR ~
-func_id         ::= func_param _ID_VAL_ ~
+func_param            ::= param_dec_list INT ~
+func_param            ::= param_dec_list CHAR ~
+func_id               ::= func_param _ID_VAL_ ~
 
-func_id,        ::= func_id COMMA ~
+func_id_com           ::= func_id COMMA ~
 
-func_id,id      ::= func_id, INT ~
-func_id,id      ::= func_id, CHAR ~
-func_id,id      ::= func_id,id _ID_VAL_ ~
+func_param            ::= func_id_com INT ~
+func_param            ::= func_id_com CHAR ~
 
-func_id,        ::= func_id,id COMMA ~
-
-POP              ::= func_id CLOSE_BRACE -
-POP              ::= func_id,id CLOSE_BRACE -
+POP                   ::= param_dec_list CLOSE_BRACE /
+POP                   ::= func_id CLOSE_BRACE /
 /* EOF FUNCTION PARAMETERS */
 
 /* FUNCTION CALL */
@@ -567,7 +562,8 @@ POP              ::= main_op_cl_be_en END -
 /* RETURN */
 return           ::= code_blk RETURN *
 aritm            ::= return RETURN +
-POP              ::= return SEMICOLON -
+return_semicolon ::= return SEMICOLON |
+POP              ::= return_semicolon SEMICOLON -
 
 /* if () */
 if               ::= code_blk IF_DEC +

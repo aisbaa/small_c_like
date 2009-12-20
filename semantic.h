@@ -12,12 +12,6 @@
 
 using namespace std;
 
-typedef struct OUTP {
-    string * stuff;
-    int fromStack; // negative == dont use stack value
-    OUTP * next;
-} OUTP;
-
 typedef struct SemanticRule {
     unsigned int action;
     unsigned int stackSize;
@@ -26,7 +20,6 @@ typedef struct SemanticRule {
     vector<string> outputs;
 
     string tokenName;
-    
     int innerLangValue;
     int semanticValue;
 } SemanticRule;

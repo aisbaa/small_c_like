@@ -3,20 +3,19 @@
 #include <stack>
 #include <vector>
 
-/* action, type checking values */
-#include "inner_lang_values.h"
-
 #include "semantic.h"
 #include "syntax.h"
 #include "token.h"
 
+#include "inner_lang_values.h" // action, type checking values
 #include "analizer.h"
 
-Analizer::Analizer(Syntax * syntax, Semantic * semantic, InnerLang * lang) {
+Analizer::Analizer(Syntax * syntax, Semantic * semantic, IdTable * idTable, InnerLang * lang) {
   if (syntax == NULL) throw "Analizer can't check without Syntax object.";
   this -> syntax = syntax;
 
   this -> semantic = semantic;
+  this -> idTable = idTable;
   this -> lang = lang;
 
   this -> gotErrorSyntax = false;
@@ -56,7 +55,7 @@ bool Analizer::complete() {
 }
 
 /*
- * PUBLIC && BASE METHOD
+ * PUBLIC || SHOULD SAY BASE METHOD
  */
 
 string Analizer::check(Token * token) {
@@ -155,11 +154,9 @@ void Analizer::semanticStackOperation(int state) {
   if (rule == NULL) return;
 
   TokensInUse * tokensInUse = getSemanticTokens(rule -> stackSize, rule -> typeCheckValues);  
-
-  //this -> output << rule -> outputs[0] << endl;
  
   semanticPrintStuff(rule -> outputs, tokensInUse);
-  // semanticPutStuffToStack(rule, tokensInUse);
+  semanticPutStuffToStack(rule, tokensInUse);
   
   clienTokens(tokensInUse);
 }
@@ -196,10 +193,7 @@ TokensInUse * Analizer::getSemanticTokens(const unsigned int howMuch, vector<int
  */
 bool Analizer::deepTypeCheck(int mustBe, Token * token) {
   if (token -> getInnerLang() == mustBe) return true;
-  
-  IdTable::iterator found = this -> idTable.find(token -> getSourceText());
-  if (found == this -> idTable.end()) return false;
-
+  // todo
   return false;
 }
 
@@ -207,6 +201,8 @@ bool Analizer::deepTypeCheck(int mustBe, Token * token) {
  * prints pseudo code
  */
 void Analizer::semanticPrintStuff(vector<string> stuff, TokensInUse * tokens) {
+  if (stuff.at(0) == DONT_OUTPUT_SC) return;
+
   for (unsigned int i = 0; i < stuff.size(); i++) {
     if (stuff.at(i).at(0) == '$')
       this -> output << tokens -> at(atoi(stuff.at(i).substr(1).c_str())) -> getSourceText();
@@ -220,8 +216,29 @@ void Analizer::semanticPrintStuff(vector<string> stuff, TokensInUse * tokens) {
 }
 
 /*
+ *
+ */
+void Analizer::semanticPutStuffToStack(const SemanticRule *rule, TokensInUse * tokens) {
+  if (rule -> innerLangValue == DONT_PUSH) return;
+
+  Token * token = new Token(
+                            rule -> innerLangValue,
+                            rule -> semanticValue,
+                            semanticSelectOutputStr(&(rule -> tokenName), tokens)
+                            );
+  this -> semanticStack.push(token);
+}
+
+/*
  * private utils
  */
+const string Analizer::semanticSelectOutputStr(const string * tokenName, TokensInUse * tokens) {
+  if (tokenName -> at(0) != '$')
+    return string(*tokenName) ;
+
+  Token * token  = tokens -> at(atoi(tokenName -> substr(1).c_str()));
+  return token -> getSourceText();
+}
 
 void Analizer::clienTokens(TokensInUse * tokens) {
   for (unsigned int i = tokens -> size(); i > 0; i--) {

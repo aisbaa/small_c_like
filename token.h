@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+#include "inner_lang_values.h"
 #include "position.h"
 
 using namespace std;
@@ -22,13 +23,18 @@ class Token {
 
  public:
   Token(int, string, Position *);
+  Token(int, int, string);
   ~Token();
 
   void setSemanticValue(int value);
   int getSemanticValue();
 
+  void setInnerLang(int value);
   int getInnerLang();
+
+  void setSourceText(string text);
   string getSourceText();
+
   string tokenInfo();
 
   const Position * getPosition();
