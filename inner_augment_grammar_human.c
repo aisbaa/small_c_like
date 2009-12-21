@@ -256,21 +256,21 @@ aritm(           ::= aritm  OPEN_BRACE |
 aritm            ::= aritm( OPEN_BRACE +
 
 /* after first id sign */
-aritm_id+-(      ::= aritm_id+-  OPEN_BRACE |
+aritm_id+-(      ::= aritm_id_pm  OPEN_BRACE |
 aritm            ::= aritm_id+-( OPEN_BRACE +
 
 aritm_id*(       ::= aritm_id*  OPEN_BRACE |
 aritm            ::= aritm_id*( OPEN_BRACE +
 
 /* REMOVING ARITM LAYER */
-POP              ::= aritm_id+-id CLOSE_BRACE /
+POP              ::= aritm_id_pm_id CLOSE_BRACE /
 POP              ::= aritm_id CLOSE_BRACE /
 
 /* REDUCTION AFTER LAYER REMUVAL */
 
 /* closing brace ) */
 aritm_id         ::= aritm( CLOSE_BRACE ~
-aritm_id+-id     ::= aritm_id+-( CLOSE_BRACE ~
+aritm_id_pm_id     ::= aritm_id+-( CLOSE_BRACE ~
 aritm_id         ::= aritm_id*( CLOSE_BRACE ~
 
 /* NON LAYERED ARITM */
@@ -307,31 +307,31 @@ params             ::= aritm_func( OPEN_BRACE +
 
 aritm_id           ::= aritm_func( CLOSE_BRACE ~
 
-aritm_func(i       ::= aritm_id+- OPEN_BRACE |
+aritm_func(i       ::= aritm_id_pm OPEN_BRACE |
 
 params             ::= aritm_func(i OPEN_BRACE +
 
-aritm_id+-id       ::= aritm_func(i CLOSE_BRACE ~
+aritm_id_pm_id     ::= aritm_func(i CLOSE_BRACE ~
 
-aritm_func_i+i     ::= aritm_id+-id OPEN_BRACE |
+aritm_func_i+i     ::= aritm_id_pm_id OPEN_BRACE |
 params             ::= aritm_func_i+i OPEN_BRACE +
 
-aritm_id+-id       ::= aritm_func_i+i CLOSE_BRACE ~
+aritm_id_pm_id       ::= aritm_func_i+i CLOSE_BRACE ~
 
 /* + - after id or value */
-aritm_id+-       ::= aritm_id ADD ~
-aritm_id+-       ::= aritm_id SUB ~
+aritm_id_pm         ::= aritm_id ADD ~
+aritm_id_pm         ::= aritm_id SUB ~
 
 /* id or value after + - sign */
-aritm_id+-id     ::= aritm_id+- _ID_VAL_ ~
-aritm_id+-id     ::= aritm_id+- _INT_VAL_ ~
+aritm_id_pm_id     ::= aritm_id_pm _ID_VAL_ ~
+aritm_id_pm_id     ::= aritm_id_pm _INT_VAL_ ~
 
 /* + - after previous adition subtraction */
-aritm_id+-id+-     ::= aritm_id+-id ADD |
-aritm_id+-         ::= aritm_id+-id+- ADD ~
+aritm_id_pm_id_pm   ::= aritm_id_pm_id ADD |
+aritm_id_pm         ::= aritm_id_pm_id_pm ADD ~
 
-aritm_id+-id+-      ::= aritm_id+-id SUB |
-aritm_id+-          ::= aritm_id+-id SUB ~
+aritm_id_pm_id_pm  ::= aritm_id_pm_id SUB |
+aritm_id_pm        ::= aritm_id_pm_id SUB ~
 
 /* mul div mod after id */
 aritm_id*        ::= aritm_id MULTIPLICATION ~
@@ -343,9 +343,9 @@ aritm_id         ::= aritm_id* _INT_VAL_ ~
 aritm_id         ::= aritm_id* _ID_VAL_ ~
 
 /* mul div mod after id add sub id */
-aritm+*          ::= aritm_id+-id MULTIPLICATION ~
-aritm+*          ::= aritm_id+-id DIVISION ~
-aritm+*          ::= aritm_id+-id MODULUS ~
+aritm+*          ::= aritm_id_pm_id MULTIPLICATION ~
+aritm+*          ::= aritm_id_pm_id DIVISION ~
+aritm+*          ::= aritm_id_pm_id MODULUS ~
 
 /* id after [read one up] */
 aritm+*id        ::= aritm+* _INT_VAL_ ~
@@ -383,22 +383,22 @@ POP              ::= aritm_id GREATER /
 POP              ::= aritm_id LESS /
 
 /* exmp.: 1 + 1 */
-aritm_id_pm_id_eof ::= aritm_id+-id SEMICOLON |
+aritm_id_pm_id_eof ::= aritm_id_pm_id SEMICOLON |
 POP                ::= aritm_id_pm_id_eof SEMICOLON /
 
-aritm_id_pm_id_eof  ::= aritm_id+-id COMMA |
-POP                 ::= aritm_id+-id COMMA /
+aritm_id_pm_id_eof  ::= aritm_id_pm_id COMMA |
+POP                 ::= aritm_id_pm_id COMMA /
 
-aritm_id_pm_id_eof  ::= aritm_id+-id SQUARE_BRACKET_CLOSE |
-POP                 ::= aritm_id+-id SQUARE_BRACKET_CLOSE /
+aritm_id_pm_id_eof  ::= aritm_id_pm_id SQUARE_BRACKET_CLOSE |
+POP                 ::= aritm_id_pm_id SQUARE_BRACKET_CLOSE /
 
-POP              ::= aritm_id+-id IS_EQUAL_TO /
-POP              ::= aritm_id+-id NOT_EQUAL_TO /
-POP              ::= aritm_id+-id GREATER_OR_EQUAL /
-POP              ::= aritm_id+-id LESS_OR_EQUAL /
+POP              ::= aritm_id_pm_id IS_EQUAL_TO /
+POP              ::= aritm_id_pm_id NOT_EQUAL_TO /
+POP              ::= aritm_id_pm_id GREATER_OR_EQUAL /
+POP              ::= aritm_id_pm_id LESS_OR_EQUAL /
 
-POP              ::= aritm_id+-id GREATER /
-POP              ::= aritm_id+-id LESS /
+POP              ::= aritm_id_pm_id GREATER /
+POP              ::= aritm_id_pm_id LESS /
 
 /* exmp.: 1 + 1 * 1 */
 POP              ::= aritm+*id SEMICOLON /

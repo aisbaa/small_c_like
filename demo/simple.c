@@ -1,6 +1,5 @@
 int main() {
-  char c;
-  int a = 25;
-
-  return 0;
+  int a = 45;
+  int b = 1 + a;
+  return b;
 }

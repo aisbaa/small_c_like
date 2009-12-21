@@ -36,12 +36,12 @@ DONT_PUSH DONT_PUSH DONT_PUSH
  */
 /* var registration, exmp.: int a */
 var_id REGISTRATE_SINGLE 2 DONT_CHECK DONT_CHECK
-VAR_DEC $0 $1
+var $0 $1
 $0 _INT_VAL_ _INT_VAL_
 
 //                           aritm      =          id
 var_init_val OUTPUT_SIGNLE 3 _INIT_VAL_ DONT_CHECK _INIT_VAL_
-= , , $0 , $2
+= _ $0  $2
 DONT_PUSH_SC DONT_PUSH DONT_PUSH
 
 /**
@@ -51,6 +51,16 @@ DONT_PUSH_SC DONT_PUSH DONT_PUSH
 aritm_single PUSH_TO_STACK 2 DONT_CHECK _INT_VAL_
 DONT_OUTPUT
 $1 _INT_VAL_ _INT_VAL_
+
+//                           , or ;     number or variable that holds number
+aritm_id_pm_id_eof PUSH_TO_STACK 2 DONT_CHECK _INT_VAL_
+DONT_OUTPUT
+$1 _INT_VAL_ _INT_VAL_
+
+//                             number    sign       number
+aritm_id_pm_id OUTPUT_SIGNLE 3 _INT_VAL_ DONT_CHECK _INT_VAL_
+$1 $2 $0 @
+@ _INT_VAL_ _INT_VAL_
 
 /**
  * RETURN

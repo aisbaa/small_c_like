@@ -83,7 +83,7 @@ string Analizer::check(Token * token) {
     try { /* Semantic */
       if (!this -> gotErrorSemantic && this -> semantic != NULL)
         semanticStackOperation(new_state);
-    } catch(TokenTypeMissMatch) {
+    } catch (...) {
       this -> gotErrorSemantic = true;
       throw;
     }
@@ -212,12 +212,12 @@ TokensInUse * Analizer::getSemanticTokens(const unsigned int howMuch, vector<int
  * checks id table
  */
 bool Analizer::deepTypeCheck(int mustBe, Token * token) {
-  cout << "checking: " << *token << endl
-       << "must be " << mustBe << endl;
+  // cout << "checking: " << *token << endl
+  //   << "must be " << mustBe << endl;
   if (token -> getInnerLang() == mustBe) return true;
 
-  cout << "checking idTable: " << *token << endl;
-  cout << *(this -> idTable) << endl;
+  //  cout << "checking idTable: " << *token << endl;
+  // cout << *(this -> idTable) << endl;
   try {
     this -> idTable -> checkSemanticValue(token -> getSourceText(), mustBe);
   } catch (SemanticError) {

@@ -68,12 +68,14 @@ int main(int argc, char **argv) {
       cerr << unexp.what() << endl;
     } catch (TokenTypeMissMatch miss) {
       cerr << miss.what() << endl;
+    } catch (SemanticError miss) {
+      cerr << miss.what() << endl;
     }
 
   delete syntax;
 
   cout << "---------------------------------" << endl;
-  cout << "idTable:"
+  cout << "idTable (name sema ret):"
        << endl
        << idTable;
   cout << "---------------------------------" << endl;

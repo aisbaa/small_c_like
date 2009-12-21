@@ -22,52 +22,23 @@ int IdTable::getNextFunctParamSemantic() {
  * Huge method
  */
 bool IdTable::checkSemanticValue(string name, int ret) {
-  if (!this -> checkStack.empty()) {
+  IdTableMap::iterator found = this -> idTable.find(name);
+  if (found == this -> idTable.end())
+    throw SemanticError("Token " + name + " is not declared.");
 
-    semaCheck * check = &(this -> checkStack.top());
+  switch (found -> second.sema) {
+  case semanticClass_Variable:
+    cout << "found " << found -> first << " value " << found -> second.ret << " == " << ret << endl;
+    if (found -> second.ret != ret)
+      throw SemanticError("Vriable " + name + " value does not match.");
+    cout << "look at me" << endl;
+    break;
 
-    switch (check -> checking -> sema) {
-    case SEMA_STRC:
-      {
-        Params::iterator foundStructAttr = check -> checking -> list -> find(name);
+  case semanticClass_Structur:
+    break;
 
-        if (foundStructAttr == check -> checking -> list -> end())
-          throw SemanticError("struct does not have attribute called " + name + ".");
-        
-        if (foundStructAttr -> second != ret)
-          throw SemanticError("Struct attribute " + name + " value does not match.");
-        
-        this -> checkStack.pop();
-
-      } break;
-
-    case SEMA_FNCT:
-      {
-        IdTableMap::iterator found = this -> idTable.find(name);
-        if (found == this -> idTable.end())
-          throw SemanticError("Token " + name + " is not declared.");
-
-        if (found -> second.ret != ret)
-          throw SemanticError("Vriable " + name + " value does not match.");
-
-      } break;
-
-    }
-
-  } else {
-
-    IdTableMap::iterator found = this -> idTable.find(name);
-    if (found == this -> idTable.end())
-      throw SemanticError("Token " + name + " is not declared.");
-
-    switch (found -> second.sema) {
-    case semanticClass_Variable:
-      cout << "found " << found -> first << "value " << found -> second.ret << endl;
-      if (found -> second.ret != ret || found -> second.list != NULL)
-        throw SemanticError("Vriable " + name + " value does not match.");
-      break;
-    }
-      
+  case semanticClass_Function:
+    break;
   }
 
   return true;
@@ -80,7 +51,7 @@ void IdTable::registrateContinousStart(string name) {
   IdTableMap::iterator found = this -> idTable.find(name);
 
   if (found != this -> idTable.end())
-    throw "TODO: some rocks, already declared.";
+    throw SemanticError("Already declared " + name + ".");
   
   this -> seqRegStack.push(found -> second.sema);
 }
@@ -93,10 +64,9 @@ void IdTable::registrate(string name, int sema, int ret) {
   if (sema == SEMA_FNCT || sema == SEMA_STRC)
     newId.list = new Params;
 
-  if (this -> idTable.insert(pair<string, IdTableValue>(name, newId)).second == false) {
-    
-    throw "TODO: throw some rocks";
-  }
+  if (this -> idTable.insert(pair<string, IdTableValue>(name, newId)).second == false)
+    throw SemanticError("TODO: throw some rocks");
+
 }
 
 void IdTable::registrateContinousEnd() {
@@ -110,7 +80,7 @@ ostream& operator<<(ostream& output, IdTable &table) {
        it++
        )
     {
-      output.width(10);
+      output.width(4);
 
       output << it -> first
              << " "
