@@ -29,7 +29,7 @@ class Analizer {
   Syntax    * syntax;
   Semantic  * semantic;
 
-  IdTable * idTable; // table for variables, function names, struct names, new types
+  IdTable * idTable;
 
   ostringstream output;
 
@@ -39,6 +39,9 @@ class Analizer {
   stack<int> syntaxStack;
   stack<Token *> semanticStack;
   stack<Token *> tokenDump;
+
+  int currRegType;
+  unsigned int tmpVarCnt;
 
  public:
   Analizer(Syntax *, Semantic * =NULL, IdTable * = NULL, InnerLang * =NULL);

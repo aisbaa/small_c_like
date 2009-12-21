@@ -36,7 +36,6 @@
 
 /* reikia padaryti
    masyvai (panaudojimas)
-   f-jos (panaudojimas)
  */
 
 
@@ -57,6 +56,9 @@ id_useage        ::= code_blk _ID_VAL_ +
 /* code block */
 VAR_DEC_BLK      ::= code_blk INT *
 VAR_DEC_BLK      ::= code_blk CHAR *
+
+/* after variable declaration block */
+POP              ::= VAR_DEC_BLK SEMICOLON -
 
 /* after code block */
 POP              ::= code_blk END /
@@ -427,24 +429,29 @@ var_dec          ::= var_dec_i INT ~
 
 var_dec_c        ::= VAR_DEC_BLK CHAR *
 var_dec          ::= var_dec_c CHAR ~
-
+                                  /*
 var_dec_cust     ::= VAR_DEC_BLK _ID_VAL_ *
 var_dec          ::= var_dec_cust _ID_VAL_ ~
-
+                                  */
 /* works for any type of variable */
 var_id           ::= var_dec _ID_VAL_ ~
 var_dec          ::= var_id COMMA ~
 
-aritm            ::= var_id EQUALITY +
- 
+var_init         ::= var_id EQUALITY |
+aritm            ::= var_init EQUALITY +
+var_init_val     ::= var_init SEMICOLON |
+
+POP              ::= var_init_val SEMICOLON -
 POP              ::= var_id SEMICOLON -
  
 /* variable useage */
-var_use=         ::= id_useage EQUALITY |
-aritm            ::= var_use= EQUALITY +
-POP              ::= var_use= SEMICOLON -
+var_use_eql      ::= id_useage EQUALITY |
+aritm            ::= var_use_eql EQUALITY +
+POP              ::= var_use_eql SEMICOLON -
 
-/* ARRAY */
+/*
+ * ARRAY
+ */
 /* su char ir int vienodai */
 arr_dec[          ::= var_id SQUARE_BRACKET_OPEN |
 aritm             ::= arr_dec[ SQUARE_BRACKET_OPEN +

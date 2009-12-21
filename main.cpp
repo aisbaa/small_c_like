@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
          (token = scanner.getNextToken()) != NULL
          )
     try {
-      cout << analizer.check(token) << endl;
+      analizer.check(token);
     } catch (UnexpectedTokenException unexp) {
       cerr << unexp.what() << endl;
     } catch (TokenTypeMissMatch miss) {
@@ -71,6 +71,12 @@ int main(int argc, char **argv) {
     }
 
   delete syntax;
+
+  cout << "---------------------------------" << endl;
+  cout << "idTable:"
+       << endl
+       << idTable;
+  cout << "---------------------------------" << endl;
   cout << "program is " << (analizer.complete() ? "correct": "not correct") << endl;
   cout << "semantic output:" << endl
        << analizer.getSemanticOutput();

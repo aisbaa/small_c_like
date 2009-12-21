@@ -50,6 +50,8 @@ class IdTable {
  private:
   int getNextFunctParamSemantic();
 
+  friend ostream& operator<<(ostream& output, IdTable &table);
+
  public:
   /**
    * Returns true if id has semantic value as passed with int

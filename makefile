@@ -3,12 +3,12 @@ RWTOOL = rw
 
 CPP    = g++
 CC     = g++
-CFLAGS = -Wall -pedantic -c
+CFLAGS = -Wall -pedantic -c -g
 LFALGS = -g
 
 DEMO_DIR = demo
 
-SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp syntax.cpp analizer.cpp semantic.cpp
+SRCCPP = scanner.cpp rulemaster.cpp rulepawn.cpp token.cpp textstream.cpp innerLang.cpp position.cpp syntax.cpp analizer.cpp semantic.cpp idTable.cpp
 HDRCPP = $(SRCCPP:.cpp=.h)
 
 SRCC = ascii_info.c

@@ -22,6 +22,8 @@ Analizer::Analizer(Syntax * syntax, Semantic * semantic, IdTable * idTable, Inne
   this -> gotErrorSemantic = false;
 
   this -> syntaxStack.push(INIT_STATE);
+
+  this -> tmpVarCnt = 0;
 }
 
 Analizer::~Analizer() {
@@ -60,6 +62,8 @@ bool Analizer::complete() {
 
 string Analizer::check(Token * token) {
   this -> semanticStack.push(token);
+  if (token -> getInnerLang() == INT || token -> getInnerLang() == CHAR)
+    this -> currRegType = token -> getInnerLang() + 1000;
 
   bool repeat;
   string analysisInfo;
@@ -146,7 +150,7 @@ string Analizer::makeErrMsg(Token * token) {
 }
 
 /*
- * Semantic
+ * SEMANTIC
  */
 
 void Analizer::semanticStackOperation(int state) {
@@ -156,6 +160,16 @@ void Analizer::semanticStackOperation(int state) {
   TokensInUse * tokensInUse = getSemanticTokens(rule -> stackSize, rule -> typeCheckValues);  
  
   semanticPrintStuff(rule -> outputs, tokensInUse);
+
+  if (rule -> action == REGISTRATE_SINGLE) {
+    this -> idTable -> registrate(
+                                  semanticSelectOutputStr(&(rule -> tokenName), tokensInUse),
+                                  semanticClass_Variable,
+                                  this -> currRegType
+                                  );
+    cout << "reg: " << semanticSelectOutputStr(&(rule -> tokenName), tokensInUse) << endl;
+  }
+
   semanticPutStuffToStack(rule, tokensInUse);
   
   clienTokens(tokensInUse);
@@ -169,12 +183,18 @@ TokensInUse * Analizer::getSemanticTokens(const unsigned int howMuch, vector<int
   string failMsg;
   TokensInUse * workWith = new TokensInUse;
 
+  cout << "poped:" << endl;
+
   for (unsigned int pops = 0; pops < howMuch; pops++) {
     workWith -> push_back(this -> semanticStack.top());
 
-    if (types[pops] != DONT_CHECK)
+    if (types[pops] != DONT_CHECK) {
+      cout << "deepTypeCheck" << endl;
       if (!deepTypeCheck(types[pops], this -> semanticStack.top()))
         failMsg = "type miss matched with " + this -> semanticStack.top() -> tokenInfo();
+    } else {
+      cout << " " << *(this -> semanticStack.top()) << endl;
+    }
 
     this -> semanticStack.pop();
   }
@@ -192,11 +212,29 @@ TokensInUse * Analizer::getSemanticTokens(const unsigned int howMuch, vector<int
  * checks id table
  */
 bool Analizer::deepTypeCheck(int mustBe, Token * token) {
+  cout << "checking: " << *token << endl
+       << "must be " << mustBe << endl;
   if (token -> getInnerLang() == mustBe) return true;
-  // todo
-  return false;
+
+  cout << "checking idTable: " << *token << endl;
+  cout << *(this -> idTable) << endl;
+  try {
+    this -> idTable -> checkSemanticValue(token -> getSourceText(), mustBe);
+  } catch (SemanticError) {
+    cout << "got SemanticError with " << *token << endl;
+    this -> gotErrorSemantic = true;
+    return false;
+  }
+  
+  return true;
 }
 
+/*
+ * Id registration
+ 
+void Analizer::semanticRegistrate(const SemanticRule * rule, TokensInUse * tokensInUse) {
+}
+*/
 /*
  * prints pseudo code
  */
@@ -218,7 +256,7 @@ void Analizer::semanticPrintStuff(vector<string> stuff, TokensInUse * tokens) {
 /*
  *
  */
-void Analizer::semanticPutStuffToStack(const SemanticRule *rule, TokensInUse * tokens) {
+void Analizer::semanticPutStuffToStack(const SemanticRule * rule, TokensInUse * tokens) {
   if (rule -> innerLangValue == DONT_PUSH) return;
 
   Token * token = new Token(
@@ -227,6 +265,7 @@ void Analizer::semanticPutStuffToStack(const SemanticRule *rule, TokensInUse * t
                             semanticSelectOutputStr(&(rule -> tokenName), tokens)
                             );
   this -> semanticStack.push(token);
+  cout << "pushed: " << *token << endl;
 }
 
 /*

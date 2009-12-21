@@ -55,20 +55,22 @@ bool IdTable::checkSemanticValue(string name, int ret) {
     }
 
   } else {
+
     IdTableMap::iterator found = this -> idTable.find(name);
     if (found == this -> idTable.end())
       throw SemanticError("Token " + name + " is not declared.");
 
     switch (found -> second.sema) {
-    case SEMA_VAR:
+    case semanticClass_Variable:
+      cout << "found " << found -> first << "value " << found -> second.ret << endl;
       if (found -> second.ret != ret || found -> second.list != NULL)
         throw SemanticError("Vriable " + name + " value does not match.");
       break;
-
     }
       
   }
 
+  return true;
 }
 
 /*
@@ -91,10 +93,32 @@ void IdTable::registrate(string name, int sema, int ret) {
   if (sema == SEMA_FNCT || sema == SEMA_STRC)
     newId.list = new Params;
 
-  if (this -> idTable.insert(pair<string, IdTableValue>(name, newId)).second == false)
-    throw "TODO: some rocks";
+  if (this -> idTable.insert(pair<string, IdTableValue>(name, newId)).second == false) {
+    
+    throw "TODO: throw some rocks";
+  }
 }
 
 void IdTable::registrateContinousEnd() {
   this -> seqRegStack.pop();
+}
+
+ostream& operator<<(ostream& output, IdTable &table) {
+  for (
+       IdTableMap::iterator it = table.idTable.begin();
+       it != table.idTable.end();
+       it++
+       )
+    {
+      output.width(10);
+
+      output << it -> first
+             << " "
+             << it -> second.sema
+             << " "
+             << it -> second.ret
+             << endl;
+    }
+
+  return output;
 }

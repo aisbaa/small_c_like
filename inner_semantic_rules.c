@@ -34,19 +34,21 @@ DONT_PUSH DONT_PUSH DONT_PUSH
 /**
  * VARIABLE DECLARATION
  */
-
 /* var registration, exmp.: int a */
-var_id OUTPUT_SIGNLE 2 DONT_CHECK DONT_CHECK
-VAR_DEC $0
-DONT_PUSH DONT_PUSH DONT_PUSH
+var_id REGISTRATE_SINGLE 2 DONT_CHECK DONT_CHECK
+VAR_DEC $0 $1
+$0 _INT_VAL_ _INT_VAL_
 
+//                           aritm      =          id
+var_init_val OUTPUT_SIGNLE 3 _INIT_VAL_ DONT_CHECK _INIT_VAL_
+= , , $0 , $2
+DONT_PUSH_SC DONT_PUSH DONT_PUSH
 
 /**
  * ARITMETHIC
  */
-
-//                           ,;         number or variable that holds number
-aritm_single PUSH_TO_STACK 2 DONT_CHECK _INT_VAL
+//                           , or ;     number or variable that holds number
+aritm_single PUSH_TO_STACK 2 DONT_CHECK _INT_VAL_
 DONT_OUTPUT
 $1 _INT_VAL_ _INT_VAL_
 

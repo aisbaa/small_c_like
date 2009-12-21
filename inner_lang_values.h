@@ -76,9 +76,9 @@
 #define OUTPUT_QUEUE  2
 #define PUSH_TO_STACK 3
 
-#define REGISTRATE_SINGLE 3
-#define REGISTRATE_START  4
-#define REGISTRATE_END    5
+#define REGISTRATE_SINGLE 4
+#define REGISTRATE_START  5
+#define REGISTRATE_END    6
 
 #define AUTO 10
 

@@ -1,6 +1,6 @@
-int vienas(int a) {
-}
-
 int main() {
-    return 0;
+  char c;
+  int a = 25;
+
+  return 0;
 }
